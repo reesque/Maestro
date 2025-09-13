@@ -14,9 +14,10 @@ MediaPlayer::Track::Track(const std::string& tTitle, const std::string& tArtist,
     album = tAlbum;
 }
 
-MediaPlayer::MediaPlayer(QObject *parent)
+MediaPlayer::MediaPlayer(std::shared_ptr<Database> db, QObject *parent)
     : QObject{parent}
 {
+    m_db = db;
     m_player = new QMediaPlayer;
 
     connect(m_player, &QMediaPlayer::mediaStatusChanged, this, &MediaPlayer::onMediaStatusChanged);
@@ -37,7 +38,7 @@ void MediaPlayer::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
 void MediaPlayer::reindex()
 {
     // Clear db
-    emit clearDBTable(Database::Table::Track);
+    m_db->clearTable(Database::Table::Track);
 
     QString rootPath = QDir::homePath() + "/Music/";
     QStringList audioExtensions = {"*.mp3", "*.wav", "*.flac", "*.aac", "*.ogg", "*.m4a"};
@@ -50,7 +51,7 @@ void MediaPlayer::reindex()
 
         if (!f.isNull() && f.tag()) {
             TagLib::Tag *tag = f.tag();
-            emit insertDBTrack(currentPath,
+            m_db->insertTrack(currentPath,
                                QString::fromStdWString(tag->title().toWString()),
                                QString::fromStdWString(tag->artist().toWString()),
                                QString::fromStdWString(tag->album().toWString()));

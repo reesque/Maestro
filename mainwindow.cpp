@@ -4,6 +4,7 @@
 #include "database.h"
 #include "mainmenu.h"
 #include "musicmenu.h"
+#include "songsmenu.h"
 #include "statusbar.h"
 
 #include <memory>
@@ -20,12 +21,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     // Init database
-    m_database = new Database();
+    m_database = std::make_shared<Database>();
 
     // Init media player
-    m_mediaPlayer = new MediaPlayer();
-    connect(m_mediaPlayer, &MediaPlayer::clearDBTable, m_database, &Database::clearTable);
-    connect(m_mediaPlayer, &MediaPlayer::insertDBTrack, m_database, &Database::insertTrack);
+    m_mediaPlayer = std::make_shared<MediaPlayer>(m_database);
     m_mediaPlayer->reindex();
 
     // Init UI layout
@@ -56,14 +55,21 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete m_database;
-    delete m_mediaPlayer;
 }
 
 void MainWindow::switchScreenTo(ScreenType screenType)
 {
+    // Delete old screen
+    if (screenBox->layout()->count() > 0)
+    {
+        Screen *oldScreen = static_cast<Screen *>(screenBox->layout()->itemAt(0)->widget());
+
+        disconnect(oldScreen, &Screen::switchScreenTo, this, &MainWindow::switchScreenTo);
+        screenBox->layout()->removeItem(screenBox->layout()->itemAt(0));
+    }
+
     // New screen
-    Screen *newScreen;
+    Screen *newScreen = nullptr;
     switch (screenType)
     {
         case ScreenType::Main:
@@ -76,42 +82,15 @@ void MainWindow::switchScreenTo(ScreenType screenType)
             newScreen = new MusicMenu(this);
             break;
         }
+        case ScreenType::Songs:
+            newScreen = new SongsMenu(m_database, this);
+            break;
         default:
         {
             return;
         }
     }
 
-    newScreen->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);
     screenBox->layout()->addWidget(newScreen);
     connect(newScreen, &Screen::switchScreenTo, this, &MainWindow::switchScreenTo);
-    newScreen->hide();
-
-    // Old screen
-    if (screenBox->layout()->count() > 1)
-    {
-        // Move to offscreen position
-        newScreen->move(QPoint(800, 0));
-        newScreen->show();
-
-        Screen *oldScreen = static_cast<Screen*>(screenBox->children()[0]);
-
-        // Move right widget
-        QPropertyAnimation *moveAnim = new QPropertyAnimation(newScreen, "pos");
-        moveAnim->setDuration(200);
-        moveAnim->setStartValue(QPoint(800, 0));
-        moveAnim->setEndValue(QPoint(0, 0));
-        moveAnim->start(QAbstractAnimation::DeletionPolicy::DeleteWhenStopped);
-
-        // Dereference
-        connect(moveAnim, &QPropertyAnimation::finished, this, [=](){
-            disconnect(oldScreen, &Screen::switchScreenTo, this, &MainWindow::switchScreenTo);
-
-            screenBox->layout()->removeWidget(oldScreen);
-            oldScreen->deleteLater();
-        });
-    }
-
-    // Show new screen again
-    newScreen->show();
 }

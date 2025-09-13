@@ -24,8 +24,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QWidget *screenBox;
-    Database *m_database;
-    MediaPlayer *m_mediaPlayer;
+    std::shared_ptr<Database> m_database;
+    std::shared_ptr<MediaPlayer> m_mediaPlayer;
 };
 
 #endif // MAINWINDOW_H

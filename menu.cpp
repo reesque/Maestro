@@ -16,18 +16,13 @@ Menu::Menu(QWidget *parent) :
 
     ui->ListObject->setFocusPolicy(Qt::NoFocus);
 
-    menuList = std::make_unique<std::vector<MenuEntry>>();
+    menuList = std::make_unique<std::vector<BaseMenuEntry>>();
     connect(ui->ListObject, &QListWidget::itemClicked, this, &Menu::onItemClicked);
 }
 
 Menu::~Menu()
 {
     delete ui;
-}
-
-void Menu::clear()
-{
-    ui->ListObject->clear();
 }
 
 void Menu::onItemClicked(QListWidgetItem *item)

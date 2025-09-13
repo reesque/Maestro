@@ -2,6 +2,7 @@
 #define DATABASE_H
 
 #include <memory>
+#include <string>
 
 #include <QObject>
 #include <QtSql/QSqlDatabase>
@@ -15,20 +16,20 @@ public:
         Track = 0
     };
 
-    enum class Criteria
+    struct Track
     {
-        Title = 0,
-        Artist,
-        Album
+        std::string filePath;
+        std::string title;
+        std::string artist;
+        std::string album;
     };
 
     explicit Database(QObject *parent = nullptr);
     ~Database();
 
-public slots:
     void insertTrack(const QString& filePath, const QString& title,
                 const QString& artist, const QString& album);
-    void selectTracks(const Criteria& criteria, const QString& value);
+    std::vector<Track> getAllSongs();
     void clearTable(const Table& table);
 
 private:

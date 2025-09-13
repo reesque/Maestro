@@ -45,35 +45,24 @@ void Database::insertTrack(const QString& filePath, const QString& title,
     insert.exec();
 }
 
-void Database::selectTracks(const Criteria& criteria, const QString& value)
+std::vector<Database::Track> Database::getAllSongs()
 {
     std::stringstream queryStream;
-    QSqlQuery query;
+    queryStream << "SELECT * FROM " << getTableName(Table::Track) << ";";
 
-    std::string c;
-    switch (criteria)
-    {
-        case Criteria::Title:
-        {
-            c = "title";
-            break;
-        }
-        case Criteria::Artist:
-        {
-            c = "artist";
-            break;
-        }
-        case Criteria::Album:
-        {
-            c = "album";
-            break;
-        }
+    std::vector<Track> trackList;
+
+    QSqlQuery query(queryStream.str().c_str());
+    while (query.next()) {
+        Track track;
+        track.filePath = query.value(1).toString().toStdString();
+        track.title = query.value(2).toString().toStdString();
+        track.artist = query.value(3).toString().toStdString();
+        track.album = query.value(4).toString().toStdString();
+        trackList.push_back(track);
     }
 
-    queryStream << "SELECT * FROM " << getTableName(Table::Track)
-                << " WHERE " << c << " LIKE " << "%"  << value.toStdString() << "%;";
-
-    query.exec(queryStream.str().c_str());
+    return trackList;
 }
 
 void Database::clearTable(const Table& table)

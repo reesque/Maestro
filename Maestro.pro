@@ -12,30 +12,40 @@ INCLUDEPATH += /usr/include/taglib
 LIBS += -L/usr/lib -ltag
 
 SOURCES += \
+    basemenulistitem.cpp \
     database.cpp \
+    detailedmenulistitem.cpp \
     main.cpp \
     mainmenu.cpp \
     mainwindow.cpp \
     mediaplayer.cpp \
-    menu.cpp \
     menulistitem.cpp \
     musicmenu.cpp \
     screen.cpp \
+    songsmenu.cpp \
     statusbar.cpp
 
 HEADERS += \
+    basemenulistitem.h \
     database.h \
+    detailedmenulistitem.h \
     mainmenu.h \
     mainwindow.h \
     mediaplayer.h \
     menu.h \
+    menuentry.h \
     menulistitem.h \
     musicmenu.h \
     screen.h \
+    songsmenu.h \
     statusbar.h
 
 FORMS += \
+    detailedmenulistitem.ui \
     mainwindow.ui \
     menu.ui \
     menulistitem.ui \
     statusbar.ui
+
+RESOURCES += \
+    DefaultCoverArt.qrc

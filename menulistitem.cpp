@@ -1,10 +1,9 @@
 #include "menulistitem.h"
 #include "ui_menulistitem.h"
 
-MenuListItem::MenuListItem(std::string label, std::function<void()> activator, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::MenuListItem),
-    m_activator(activator)
+MenuListItem::MenuListItem(const std::string& label, std::function<void()> activator, QWidget *parent) :
+    BaseMenuListItem(activator, parent),
+    ui(new Ui::MenuListItem)
 {
     ui->setupUi(this);
     ui->MenuLabel->setText(QString::fromStdString(label));
@@ -13,9 +12,4 @@ MenuListItem::MenuListItem(std::string label, std::function<void()> activator, Q
 MenuListItem::~MenuListItem()
 {
     delete ui;
-}
-
-void MenuListItem::activate()
-{
-    m_activator();
 }

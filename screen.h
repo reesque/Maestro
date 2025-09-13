@@ -6,7 +6,8 @@
 enum class ScreenType
 {
     Main = 0,
-    Music
+    Music,
+    Songs
 };
 
 class Screen : public QWidget
