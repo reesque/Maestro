@@ -10,15 +10,19 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
+    mainmenu.cpp \
     mainwindow.cpp \
     menu.cpp \
     menulistitem.cpp \
+    musicmenu.cpp \
     statusbar.cpp
 
 HEADERS += \
+    mainmenu.h \
     mainwindow.h \
     menu.h \
     menulistitem.h \
+    musicmenu.h \
     statusbar.h
 
 FORMS += \

@@ -10,21 +10,13 @@ Menu::Menu(QWidget *parent) :
     ui->setupUi(this);
 
     ui->ListObject->setStyleSheet(
-        "QListWidget::item { background-color: white; }"
-        "QListWidget::item:selected { background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #0096FF, stop:1 #0066CC); }"
+        "QListWidget::item { background-color: white; border: none; }"
+        "QListWidget::item:selected { background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #0096FF, stop:1 #0066CC); border: none; }"
     );
 
     ui->ListObject->setFocusPolicy(Qt::NoFocus);
 
-    std::vector<std::string> tempMenu;
-    tempMenu.push_back("Music");
-    tempMenu.push_back("Videos");
-    tempMenu.push_back("Photos");
-    tempMenu.push_back("Settings");
-    tempMenu.push_back("Shuffle Songs");
-    tempMenu.push_back("Now Playing");
-
-    populateMenu(tempMenu);
+    connect(ui->ListObject, &QListWidget::itemClicked, this, &Menu::onItemClicked);
 }
 
 Menu::~Menu()
@@ -32,14 +24,29 @@ Menu::~Menu()
     delete ui;
 }
 
-void Menu::populateMenu(const std::vector<std::string>& entries)
+void Menu::clear()
 {
-    for (auto entry : entries)
+    ui->ListObject->clear();
+}
+
+void Menu::onItemClicked(QListWidgetItem *item)
+{
+    QWidget *qw = ui->ListObject->itemWidget(item);
+    static_cast<MenuListItem&>(*qw).activate();
+}
+
+void Menu::populateMenu()
+{
+    clear();
+
+    for (auto entry : *menuList)
     {
         QListWidgetItem *qitem = new QListWidgetItem(ui->ListObject);
-        MenuListItem *item = new MenuListItem(ui->ListObject, entry);
+        MenuListItem *item = new MenuListItem(entry.label, entry.activator, ui->ListObject);
         qitem->setSizeHint(item->sizeHint());
         ui->ListObject->addItem(qitem);
         ui->ListObject->setItemWidget(qitem, item);
     }
+
+    ui->ListObject->setCurrentRow(0);
 }
