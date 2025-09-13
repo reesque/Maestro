@@ -1,7 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include <QWidget>
+#include "screen.h"
 #include <QListWidgetItem>
 
 #include <functional>
@@ -10,10 +10,8 @@ namespace Ui {
 class Menu;
 }
 
-class Menu : public QWidget
+class Menu : public Screen
 {
-    Q_OBJECT
-
 protected:
     struct MenuEntry
     {
@@ -31,13 +29,11 @@ protected:
     void populateMenu();
 
 protected:
-    std::shared_ptr<std::vector<MenuEntry>> menuList;
-
-private slots:
-    void onItemClicked(QListWidgetItem *item);
-
-private:
     Ui::Menu *ui;
+    std::unique_ptr<std::vector<MenuEntry>> menuList;
+
+protected slots:
+    void onItemClicked(QListWidgetItem *item);
 };
 
 #endif // MENU_H

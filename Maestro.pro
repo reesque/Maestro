@@ -15,6 +15,7 @@ SOURCES += \
     menu.cpp \
     menulistitem.cpp \
     musicmenu.cpp \
+    screen.cpp \
     statusbar.cpp
 
 HEADERS += \
@@ -23,6 +24,7 @@ HEADERS += \
     menu.h \
     menulistitem.h \
     musicmenu.h \
+    screen.h \
     statusbar.h
 
 FORMS += \

@@ -26,7 +26,8 @@ void StatusBar::timeChanged(QDateTime dateTime)
 {
     auto localTime = dateTime.toLocalTime();
     std::stringstream timeStream;
-    timeStream << localTime.time().hour() << ":" << localTime.time().minute();
+    timeStream << std::setw(2) << std::setfill('0') << localTime.time().hour()
+               << ":" << std::setw(2) << std::setfill('0') << localTime.time().minute();
     ui->Time->setText(QString::fromStdString(timeStream.str()));
 }
 

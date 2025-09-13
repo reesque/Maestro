@@ -4,7 +4,7 @@
 #include "menulistitem.h"
 
 Menu::Menu(QWidget *parent) :
-    QWidget(parent),
+    Screen(parent),
     ui(new Ui::Menu)
 {
     ui->setupUi(this);
@@ -16,6 +16,7 @@ Menu::Menu(QWidget *parent) :
 
     ui->ListObject->setFocusPolicy(Qt::NoFocus);
 
+    menuList = std::make_unique<std::vector<MenuEntry>>();
     connect(ui->ListObject, &QListWidget::itemClicked, this, &Menu::onItemClicked);
 }
 
@@ -37,8 +38,6 @@ void Menu::onItemClicked(QListWidgetItem *item)
 
 void Menu::populateMenu()
 {
-    clear();
-
     for (auto entry : *menuList)
     {
         QListWidgetItem *qitem = new QListWidgetItem(ui->ListObject);
