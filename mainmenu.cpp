@@ -9,6 +9,7 @@ MainMenu::MainMenu(QWidget *parent) :
     menuList->push_back(MenuEntry {"Settings", [](){}});
     menuList->push_back(MenuEntry {"Shuffle Songs", [](){}});
     menuList->push_back(MenuEntry {"Now Playing", [](){}});
+    menuList->push_back(MenuEntry {"Quit", [](){}});
 
     populateMenu();
 }

@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "menu.h"
+#include "database.h"
 #include "mainmenu.h"
 #include "musicmenu.h"
 #include "statusbar.h"
@@ -19,6 +19,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    // Init database
+    Database::getInstance();
+
+    // Init UI layout
     ui->setupUi(this);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
