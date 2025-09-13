@@ -1,6 +1,6 @@
-QT += core gui
+QT += core gui sql
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia multimediawidgets
 
 CONFIG += c++17
 
@@ -8,11 +8,15 @@ CONFIG += c++17
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+INCLUDEPATH += /usr/include/taglib
+LIBS += -L/usr/lib -ltag
+
 SOURCES += \
     database.cpp \
     main.cpp \
     mainmenu.cpp \
     mainwindow.cpp \
+    mediaplayer.cpp \
     menu.cpp \
     menulistitem.cpp \
     musicmenu.cpp \
@@ -23,6 +27,7 @@ HEADERS += \
     database.h \
     mainmenu.h \
     mainwindow.h \
+    mediaplayer.h \
     menu.h \
     menulistitem.h \
     musicmenu.h \

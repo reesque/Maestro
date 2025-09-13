@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "screen.h"
+#include "mediaplayer.h"
 
 namespace Ui {
 class MainWindow;
@@ -23,6 +24,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QWidget *screenBox;
+    Database *m_database;
+    MediaPlayer *m_mediaPlayer;
 };
 
 #endif // MAINWINDOW_H

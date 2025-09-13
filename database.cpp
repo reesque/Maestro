@@ -2,10 +2,11 @@
 
 #include <QVariant>
 #include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
 
 #include <sstream>
 
-Database::Database()
+Database::Database(QObject *parent) : QObject{parent}
 {
     m_db = QSqlDatabase::addDatabase("QSQLITE");
     m_db.setDatabaseName("maestro.db");
@@ -18,8 +19,7 @@ Database::Database()
                "filepath TEXT, "
                "title TEXT, "
                "artist TEXT, "
-               "album TEXT, "
-               "duration INTEGER)");
+               "album TEXT)");
 }
 
 Database::~Database()
@@ -27,21 +27,25 @@ Database::~Database()
     m_db.close();
 }
 
-void Database::insert(const std::string& filePath, const std::string& title,
-                      const std::string& artist, const std::string& album, int duration)
+void Database::insertTrack(const QString& filePath, const QString& title,
+                      const QString& artist, const QString& album)
 {
+    std::stringstream queryStream;
+
+    queryStream << "INSERT INTO " << getTableName(Table::Track)
+                << " (filepath, title, artist, album)"
+                << " VALUES (?, ?, ?, ?)";
+
     QSqlQuery insert;
-    insert.prepare("INSERT INTO tracks (filepath, title, artist, album, duration) "
-                   "VALUES (?, ?, ?, ?, ?)");
-    insert.addBindValue(QVariant::fromValue(filePath));
-    insert.addBindValue(QVariant::fromValue(title));
-    insert.addBindValue(QVariant::fromValue(artist));
-    insert.addBindValue(QVariant::fromValue(album));
-    insert.addBindValue(QVariant::fromValue(duration));
+    insert.prepare(queryStream.str().c_str());
+    insert.addBindValue(filePath);
+    insert.addBindValue(title);
+    insert.addBindValue(artist);
+    insert.addBindValue(album);
     insert.exec();
 }
 
-void Database::select(const Criteria& criteria, const std::string& value)
+void Database::selectTracks(const Criteria& criteria, const QString& value)
 {
     std::stringstream queryStream;
     QSqlQuery query;
@@ -66,7 +70,44 @@ void Database::select(const Criteria& criteria, const std::string& value)
         }
     }
 
-    queryStream << "SELECT * FROM tracks" << " WHERE " << c << " LIKE " << value;
+    queryStream << "SELECT * FROM " << getTableName(Table::Track)
+                << " WHERE " << c << " LIKE " << "%"  << value.toStdString() << "%;";
 
     query.exec(queryStream.str().c_str());
+}
+
+void Database::clearTable(const Table& table)
+{
+    std::stringstream queryStream;
+    QSqlQuery query;
+
+    queryStream << "DELETE FROM " << getTableName(table) << ";";
+    query.exec(queryStream.str().c_str());
+
+    // Reset index too
+    std::stringstream querySqStream;
+    QSqlQuery querySq;
+
+    querySqStream << "DELETE FROM sqlite_sequence WHERE name=\'" << getTableName(table) << "\';";
+    querySq.exec(querySqStream.str().c_str());
+}
+
+std::string Database::getTableName(const Table& table)
+{
+    std::string t;
+    switch (table)
+    {
+        case Table::Track:
+        {
+            t = "tracks";
+            break;
+        }
+        default:
+        {
+            t = "unknown";
+            break;
+        }
+    }
+
+    return t;
 }

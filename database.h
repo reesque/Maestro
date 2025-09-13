@@ -3,11 +3,18 @@
 
 #include <memory>
 
+#include <QObject>
 #include <QtSql/QSqlDatabase>
 
-class Database
+class Database : public QObject
 {
+    Q_OBJECT
 public:
+    enum class Table
+    {
+        Track = 0
+    };
+
     enum class Criteria
     {
         Title = 0,
@@ -15,33 +22,23 @@ public:
         Album
     };
 
-    Database(const Database&) = delete;
-    Database& operator=(const Database&) = delete;
+    explicit Database(QObject *parent = nullptr);
+    ~Database();
 
-    static Database& getInstance() {
-        if (!instance)
-        {
-            instance.reset(new Database);
-        }
-
-        return *instance;
-    }
-
-    void insert(const std::string& filePath, const std::string& title,
-                const std::string& artist, const std::string& album, int duration);
-    void select(const Criteria& criteria, const std::string& value);
+public slots:
+    void insertTrack(const QString& filePath, const QString& title,
+                const QString& artist, const QString& album);
+    void selectTracks(const Criteria& criteria, const QString& value);
+    void clearTable(const Table& table);
 
 private:
-    Database();
-    ~Database() = default;
-
-    static void initDatabase() {
-    }
-
-    static std::unique_ptr<Database> instance;
+    std::string getTableName(const Table& table);
 
 private:
     QSqlDatabase m_db;
+    static std::unique_ptr<Database> instance;
 };
+
+Q_DECLARE_METATYPE(Database::Table);
 
 #endif // DATABASE_H

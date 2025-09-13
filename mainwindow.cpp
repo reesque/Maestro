@@ -20,7 +20,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     // Init database
-    Database::getInstance();
+    m_database = new Database();
+
+    // Init media player
+    m_mediaPlayer = new MediaPlayer();
+    connect(m_mediaPlayer, &MediaPlayer::clearDBTable, m_database, &Database::clearTable);
+    connect(m_mediaPlayer, &MediaPlayer::insertDBTrack, m_database, &Database::insertTrack);
+    m_mediaPlayer->reindex();
 
     // Init UI layout
     ui->setupUi(this);
@@ -50,6 +56,8 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete m_database;
+    delete m_mediaPlayer;
 }
 
 void MainWindow::switchScreenTo(ScreenType screenType)
