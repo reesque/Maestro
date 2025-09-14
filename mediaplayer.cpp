@@ -165,7 +165,8 @@ void MediaPlayer::reindex()
             m_db->insertTrack(currentPath,
                                QString::fromStdWString(tag->title().toWString()),
                                QString::fromStdWString(tag->artist().toWString()),
-                               QString::fromStdWString(tag->album().toWString()));
+                               QString::fromStdWString(tag->album().toWString()),
+                               tag->track());
 
             // Check if album art is extracted
             QString basePath = m_artworkPath + tag->album().toCString();

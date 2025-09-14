@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QShortcut>
+#include <QVector>
+#include <QVariant>
 
 enum class ScreenType
 {
@@ -11,6 +13,7 @@ enum class ScreenType
     Music,
     Songs,
     Album,
+    SongsByAlbum,
     NowPlaying
 };
 
@@ -23,7 +26,7 @@ public:
     ScreenType getPrevScreen();
 
 signals:
-    void switchScreenTo(ScreenType);
+    void switchScreenTo(ScreenType, QVector<QVariant> = QVector<QVariant>());
     void playTrack(int);
     void switchToPreviousScreen();
 

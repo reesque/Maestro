@@ -29,7 +29,8 @@ Database::Database(QObject *parent) : QObject{parent}
                "filepath TEXT, "
                "title TEXT, "
                "artist TEXT, "
-               "album TEXT)");
+               "album TEXT,"
+               "trackNum INTEGER)");
 }
 
 Database::~Database()
@@ -38,13 +39,13 @@ Database::~Database()
 }
 
 void Database::insertTrack(const QString& filePath, const QString& title,
-                      const QString& artist, const QString& album)
+                      const QString& artist, const QString& album, int trackNum)
 {
     std::stringstream queryStream;
 
     queryStream << "INSERT INTO " << getTableName(Table::Track)
-                << " (filepath, title, artist, album)"
-                << " VALUES (?, ?, ?, ?)";
+                << " (filepath, title, artist, album, trackNum)"
+                << " VALUES (?, ?, ?, ?, ?)";
 
     QSqlQuery insert;
     insert.prepare(queryStream.str().c_str());
@@ -52,6 +53,7 @@ void Database::insertTrack(const QString& filePath, const QString& title,
     insert.addBindValue(title);
     insert.addBindValue(artist);
     insert.addBindValue(album);
+    insert.addBindValue(trackNum);
     insert.exec();
 }
 
@@ -66,6 +68,31 @@ std::vector<Database::Track> Database::getAllTracks()
     while (query.next()) {
         Track track;
         track.id = query.value(0).toInt();
+        track.trackNum = query.value(5).toInt();
+        track.filePath = query.value(1).toString().toStdString();
+        track.title = query.value(2).toString().toStdString();
+        track.artist = query.value(3).toString().toStdString();
+        track.album = query.value(4).toString().toStdString();
+        trackList.push_back(track);
+    }
+
+    return trackList;
+}
+
+std::vector<Database::Track> Database::getTracksByAlbum(const std::string& albumName)
+{
+    std::stringstream queryStream;
+    queryStream << "SELECT * FROM " << getTableName(Table::Track)
+                << " WHERE album LIKE '" << albumName
+                << "' ORDER BY trackNum ASC;";
+
+    std::vector<Track> trackList;
+
+    QSqlQuery query(queryStream.str().c_str());
+    while (query.next()) {
+        Track track;
+        track.id = query.value(0).toInt();
+        track.trackNum = query.value(5).toInt();
         track.filePath = query.value(1).toString().toStdString();
         track.title = query.value(2).toString().toStdString();
         track.artist = query.value(3).toString().toStdString();

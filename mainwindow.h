@@ -19,7 +19,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void switchScreenTo(ScreenType screenType);
+    void switchScreenTo(ScreenType screenType, QVector<QVariant> args = QVector<QVariant>());
     void switchToPreviousScreen();
 
 private:

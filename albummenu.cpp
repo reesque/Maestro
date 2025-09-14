@@ -1,6 +1,8 @@
 #include "albummenu.h"
 
 #include <QDir>
+#include <QVector>
+#include <QVariant>
 
 #include <filesystem>
 
@@ -27,7 +29,11 @@ AlbumMenu::AlbumMenu(std::shared_ptr<Database> db, QWidget *parent) :
             artPath = trackArtPathJpg.toStdString();
         }
 
-        menuList->push_back(std::make_shared<ArtworkMenuEntry>(album, artPath, [](){}));
+        menuList->push_back(std::make_shared<ArtworkMenuEntry>(album, artPath, [=](){
+            QVector<QVariant> args;
+            args.push_back(QVariant(QString::fromStdString(album)));
+            emit switchScreenTo(ScreenType::SongsByAlbum, args);
+        }));
     }
 
     populateMenu();

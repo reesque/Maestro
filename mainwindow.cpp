@@ -60,7 +60,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::switchScreenTo(ScreenType screenType)
+void MainWindow::switchScreenTo(ScreenType screenType, QVector<QVariant> args)
 {
     // Delete old screen
     if (screenBox->layout()->count() > 0)
@@ -103,6 +103,12 @@ void MainWindow::switchScreenTo(ScreenType screenType)
         case ScreenType::Album:
         {
             newScreen = new AlbumMenu(m_database, this);
+            break;
+        }
+        case ScreenType::SongsByAlbum:
+        {
+            newScreen = new SongsMenu(m_database, SongsMenu::Filter::Album,
+                                      args.at(0).toString().toStdString(), this);
             break;
         }
         case ScreenType::NowPlaying:
