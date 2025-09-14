@@ -5,6 +5,8 @@
 #include "mediaplayer.h"
 #include "screen.h"
 
+#include <QTimer>
+
 namespace Ui {
 class NowPlaying;
 }
@@ -21,7 +23,11 @@ private slots:
     void onTrackInfoUpdate(MediaPlayer::Track track);
 
 private:
+    void tickSeekBar();
+
+private:
     Ui::NowPlaying *ui;
+    std::unique_ptr<QTimer> seekTimer;
     std::shared_ptr<Database> m_db;
     std::shared_ptr<MediaPlayer> m_mediaPlayer;
 };

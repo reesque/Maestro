@@ -66,7 +66,6 @@ void MainWindow::switchScreenTo(ScreenType screenType)
         Screen *oldScreen = static_cast<Screen *>(screenBox->layout()->itemAt(0)->widget());
 
         disconnect(oldScreen, &Screen::switchScreenTo, this, &MainWindow::switchScreenTo);
-        //disconnect(oldScreen, &Screen::playTrack, m_mediaPlayer.get(), &MediaPlayer::playTrack);
 
         screenBox->layout()->removeItem(screenBox->layout()->itemAt(0));
     }

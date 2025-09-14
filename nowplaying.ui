@@ -78,13 +78,13 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>360</width>
+          <width>340</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>360</width>
+          <width>340</width>
           <height>16777215</height>
          </size>
         </property>
@@ -93,13 +93,13 @@
           <number>0</number>
          </property>
          <property name="leftMargin">
-          <number>40</number>
+          <number>30</number>
          </property>
          <property name="topMargin">
           <number>90</number>
          </property>
          <property name="rightMargin">
-          <number>40</number>
+          <number>30</number>
          </property>
          <property name="bottomMargin">
           <number>90</number>
@@ -142,10 +142,10 @@
              <number>0</number>
             </property>
             <property name="topMargin">
-             <number>20</number>
+             <number>28</number>
             </property>
             <property name="rightMargin">
-             <number>10</number>
+             <number>20</number>
             </property>
             <property name="bottomMargin">
              <number>0</number>
@@ -272,6 +272,9 @@
       </size>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>10</number>
+      </property>
       <property name="leftMargin">
        <number>20</number>
       </property>
@@ -286,18 +289,41 @@
       </property>
       <item>
        <widget class="QLabel" name="TimeLeft">
+        <property name="minimumSize">
+         <size>
+          <width>50</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
         <property name="styleSheet">
          <string notr="true">background: transparent;</string>
         </property>
         <property name="text">
          <string>0:00</string>
         </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
        </widget>
       </item>
       <item>
        <widget class="QProgressBar" name="Seekbar">
+        <property name="maximum">
+         <number>1000</number>
+        </property>
         <property name="value">
-         <number>24</number>
+         <number>0</number>
         </property>
         <property name="textVisible">
          <bool>false</bool>
@@ -306,11 +332,31 @@
       </item>
       <item>
        <widget class="QLabel" name="TimeRight">
+        <property name="minimumSize">
+         <size>
+          <width>60</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>60</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
         <property name="styleSheet">
          <string notr="true">background: transparent;</string>
         </property>
         <property name="text">
          <string>-0:00</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>

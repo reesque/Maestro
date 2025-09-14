@@ -93,7 +93,52 @@ MediaPlayer::Track MediaPlayer::getTrackMetaData(int id)
     return trackMetaData;
 }
 
+std::string MediaPlayer::getElapsedTime()
+{
+    if (m_player->mediaStatus() != QMediaPlayer::BufferedMedia)
+    {
+        return "00:00";
+    }
+
+    return formatTime(m_player->position());
+}
+
+std::string MediaPlayer::getRemainingTime()
+{
+    if (m_player->mediaStatus() != QMediaPlayer::BufferedMedia)
+    {
+        return "-00:00";
+    }
+
+    return "-" + formatTime(m_player->duration() - m_player->position());
+}
+
+int MediaPlayer::getPercentage()
+{
+    if (m_player->mediaStatus() != QMediaPlayer::BufferedMedia)
+    {
+        return 0;
+    }
+
+    return static_cast<int>(static_cast<float>(m_player->position()) / static_cast<float>(m_player->duration()) * 1000);
+}
+
 MediaPlayer::Track MediaPlayer::getCurrentTrackMetaData()
 {
     return getTrackMetaData(m_currentTrackId);
+}
+
+std::string MediaPlayer::formatTime(qint64 ms) {
+    int seconds = ms / 1000;
+    int minutes = seconds / 60;
+    seconds = seconds % 60;
+
+    return QString("%1:%2")
+        .arg(minutes, 2, 10, QLatin1Char('0'))
+        .arg(seconds, 2, 10, QLatin1Char('0')).toStdString();
+}
+
+bool MediaPlayer::isPlaying()
+{
+    return m_player->state() == QMediaPlayer::PlayingState;
 }

@@ -27,6 +27,10 @@ public:
     void reindex();
     Track getTrackMetaData(int id);
     Track getCurrentTrackMetaData();
+    std::string getElapsedTime();
+    std::string getRemainingTime();
+    int getPercentage();
+    bool isPlaying();
 
 signals:
     void onTrackInfoUpdate(Track track);
@@ -36,6 +40,9 @@ public slots:
 
 private slots:
     void onMediaStatusChanged(QMediaPlayer::MediaStatus status);
+
+private:
+    std::string formatTime(qint64 ms);
 
 private:
     QMediaPlayer *m_player;
