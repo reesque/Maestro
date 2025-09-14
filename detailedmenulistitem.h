@@ -13,7 +13,8 @@ class DetailedMenuListItem : public BaseMenuListItem
 
 public:
     explicit DetailedMenuListItem(const std::string& header, const std::string& subtext,
-                                  std::function<void()> activator, QWidget *parent = nullptr);
+                                  const std::string& artworkPath, std::function<void()> activator,
+                                  QWidget *parent = nullptr);
     ~DetailedMenuListItem();
 
 private:

@@ -12,7 +12,7 @@ class ArtworkMenuListItem : public BaseMenuListItem
     Q_OBJECT
 
 public:
-    explicit ArtworkMenuListItem(const std::string& header,
+    explicit ArtworkMenuListItem(const std::string& header, const std::string& artworkPath,
                                  std::function<void()> activator, QWidget *parent = nullptr);
     ~ArtworkMenuListItem();
 

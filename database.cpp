@@ -1,15 +1,25 @@
 #include "database.h"
 
+#include <QDir>
 #include <QVariant>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 
 #include <sstream>
+#include <filesystem>
 
 Database::Database(QObject *parent) : QObject{parent}
 {
     m_db = QSqlDatabase::addDatabase("QSQLITE");
-    m_db.setDatabaseName("maestro.db");
+
+    QString basePath = QDir::homePath() + "/.config/maestro/";
+    QString dbPath = basePath + "maestro.db";
+    if (!std::filesystem::exists(basePath.toStdString()))
+    {
+        std::filesystem::create_directory(basePath.toStdString());
+    }
+
+    m_db.setDatabaseName(dbPath.toStdString().c_str());
 
     m_db.open();
 

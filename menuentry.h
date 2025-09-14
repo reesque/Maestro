@@ -30,12 +30,28 @@ struct DetailedMenuEntry : public BaseMenuEntry
 {
     std::string header;
     std::string subtext;
+    std::string artPath;
 
-    DetailedMenuEntry(std::string v_header, std::string v_subtext, std::function<void()> v_activator) :
+    DetailedMenuEntry(std::string v_header, std::string v_subtext,
+                      std::string v_artPath, std::function<void()> v_activator) :
         BaseMenuEntry(v_activator)
     {
         header = v_header;
         subtext = v_subtext;
+        artPath = v_artPath;
+    }
+};
+
+struct ArtworkMenuEntry : public BaseMenuEntry
+{
+    std::string header;
+    std::string artPath;
+
+    ArtworkMenuEntry(std::string v_header, std::string v_artPath, std::function<void()> v_activator) :
+        BaseMenuEntry(v_activator)
+    {
+        header = v_header;
+        artPath = v_artPath;
     }
 };
 

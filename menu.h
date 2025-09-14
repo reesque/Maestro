@@ -39,7 +39,7 @@ public:
         ui->ListObject->verticalScrollBar()->setStyleSheet(R"(
             QScrollBar:vertical {
                 background: transparent;
-                width: 6px;
+                width: 10px;
                 margin: 0px;
             }
 

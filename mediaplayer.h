@@ -8,6 +8,20 @@
 
 #include <QMediaPlayer>
 
+class ArtworkExtractor
+{
+public:
+    ArtworkExtractor(const ArtworkExtractor&) = delete;
+    ArtworkExtractor& operator=(const ArtworkExtractor&) = delete;
+
+    static void fromMP3(const std::string& filePath, const std::string& outPath);
+    static void fromM4a(const std::string& filePath, const std::string& outPath);
+
+private:
+    ArtworkExtractor() = delete;
+    ~ArtworkExtractor() = delete;
+};
+
 class MediaPlayer : public QObject
 {
     Q_OBJECT
@@ -48,6 +62,7 @@ private:
     QMediaPlayer *m_player;
     std::shared_ptr<Database> m_db;
     int m_currentTrackId;
+    QString m_artworkPath;
 };
 
 Q_DECLARE_METATYPE(MediaPlayer::Track);

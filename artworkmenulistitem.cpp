@@ -1,14 +1,19 @@
 #include "artworkmenulistitem.h"
 #include "ui_artworkmenulistitem.h"
 
-ArtworkMenuListItem::ArtworkMenuListItem(const std::string& header,
+ArtworkMenuListItem::ArtworkMenuListItem(const std::string& header, const std::string& artworkPath,
                                          std::function<void()> activator, QWidget *parent) :
-  BaseMenuListItem(activator, parent),
-  ui(new Ui::ArtworkMenuListItem)
+    BaseMenuListItem(activator, parent),
+    ui(new Ui::ArtworkMenuListItem)
 {
-  ui->setupUi(this);
+    ui->setupUi(this);
 
-  ui->HeaderLabel->setText(QString::fromStdString(header));
+    ui->HeaderLabel->setText(QString::fromStdString(header));
+    if (artworkPath != "")
+    {
+        QPixmap pixmap(QString::fromStdString(artworkPath));
+        ui->CoverArt->setPixmap(pixmap);
+    }
 }
 
 ArtworkMenuListItem::~ArtworkMenuListItem()

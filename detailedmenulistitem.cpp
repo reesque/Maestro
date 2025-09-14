@@ -1,8 +1,11 @@
 #include "detailedmenulistitem.h"
 #include "ui_detailedmenulistitem.h"
 
+#include <QPixmap>
+
 DetailedMenuListItem::DetailedMenuListItem(const std::string& header, const std::string& subtext,
-                                           std::function<void()> activator, QWidget *parent) :
+                                           const std::string& artworkPath, std::function<void()> activator,
+                                           QWidget *parent) :
     BaseMenuListItem(activator, parent),
     ui(new Ui::DetailedMenuListItem)
 {
@@ -10,6 +13,12 @@ DetailedMenuListItem::DetailedMenuListItem(const std::string& header, const std:
 
     ui->HeaderLabel->setText(QString::fromStdString(header));
     ui->SubtextLabel->setText(QString::fromStdString(subtext));
+
+    if (artworkPath != "")
+    {
+        QPixmap pixmap(QString::fromStdString(artworkPath));
+        ui->CoverArt->setPixmap(pixmap);
+    }
 }
 
 DetailedMenuListItem::~DetailedMenuListItem()
