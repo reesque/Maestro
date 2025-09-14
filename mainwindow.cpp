@@ -5,6 +5,7 @@
 #include "mainmenu.h"
 #include "musicmenu.h"
 #include "songsmenu.h"
+#include "albummenu.h"
 #include "statusbar.h"
 #include "nowplaying.h"
 
@@ -97,6 +98,11 @@ void MainWindow::switchScreenTo(ScreenType screenType)
         case ScreenType::Songs:
         {
             newScreen = new SongsMenu(m_database, this);
+            break;
+        }
+        case ScreenType::Album:
+        {
+            newScreen = new AlbumMenu(m_database, this);
             break;
         }
         case ScreenType::NowPlaying:

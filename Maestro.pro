@@ -12,6 +12,8 @@ INCLUDEPATH += /usr/include/taglib
 LIBS += -L/usr/lib -ltag
 
 SOURCES += \
+    albummenu.cpp \
+    artworkmenulistitem.cpp \
     basemenulistitem.cpp \
     database.cpp \
     detailedmenulistitem.cpp \
@@ -27,6 +29,8 @@ SOURCES += \
     statusbar.cpp
 
 HEADERS += \
+    albummenu.h \
+    artworkmenulistitem.h \
     basemenulistitem.h \
     database.h \
     detailedmenulistitem.h \
@@ -43,6 +47,7 @@ HEADERS += \
     statusbar.h
 
 FORMS += \
+    artworkmenulistitem.ui \
     detailedmenulistitem.ui \
     mainwindow.ui \
     menu.ui \

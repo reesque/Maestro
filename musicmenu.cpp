@@ -6,7 +6,7 @@ MusicMenu::MusicMenu(QWidget *parent) :
     prevScreen = ScreenType::Main;
 
     menuList->push_back(std::make_shared<LabelMenuEntry>("Songs", [=](){switchScreenTo(ScreenType::Songs);}));
-    menuList->push_back(std::make_shared<LabelMenuEntry>("Albums", [](){}));
+    menuList->push_back(std::make_shared<LabelMenuEntry>("Albums", [=](){switchScreenTo(ScreenType::Album);}));
     menuList->push_back(std::make_shared<LabelMenuEntry>("Artists", [](){}));
     menuList->push_back(std::make_shared<LabelMenuEntry>("Playlists", [](){}));
 

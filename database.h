@@ -32,6 +32,7 @@ public:
                 const QString& artist, const QString& album);
     std::vector<Track> getAllTracks();
     Track getTrack(int id);
+    std::vector<std::string> getAllAlbums();
     void clearTable(const Table& table);
 
 private:

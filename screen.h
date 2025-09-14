@@ -10,6 +10,7 @@ enum class ScreenType
     Main,
     Music,
     Songs,
+    Album,
     NowPlaying
 };
 

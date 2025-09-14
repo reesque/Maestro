@@ -86,6 +86,22 @@ Database::Track Database::getTrack(int id)
     return track;
 }
 
+std::vector<std::string> Database::getAllAlbums()
+{
+    std::stringstream queryStream;
+    queryStream << "SELECT DISTINCT album FROM " << getTableName(Table::Track) << ";";
+
+    std::vector<std::string> albumList;
+
+    QSqlQuery query(queryStream.str().c_str());
+    while (query.next())
+    {
+        albumList.push_back(query.value(0).toString().toStdString());
+    }
+
+    return albumList;
+}
+
 void Database::clearTable(const Table& table)
 {
     std::stringstream queryStream;
