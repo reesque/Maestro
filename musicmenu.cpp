@@ -8,7 +8,6 @@ MusicMenu::MusicMenu(QWidget *parent) :
     menuList->push_back(std::make_shared<LabelMenuEntry>("Songs", [=](){switchScreenTo(ScreenType::Songs);}));
     menuList->push_back(std::make_shared<LabelMenuEntry>("Albums", [=](){switchScreenTo(ScreenType::Album);}));
     menuList->push_back(std::make_shared<LabelMenuEntry>("Artists", [](){}));
-    menuList->push_back(std::make_shared<LabelMenuEntry>("Playlists", [](){}));
 
     populateMenu();
 }

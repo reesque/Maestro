@@ -12,6 +12,11 @@ AlbumMenu::AlbumMenu(std::shared_ptr<Database> db, QWidget *parent) :
     prevScreen = ScreenType::Music;
     m_db = db;
 
+    ui->ListObject->setStyleSheet(
+        "QListWidget::item { background-color: white; border-top: none; border-bottom: 1px solid #cccccc; }"
+        "QListWidget::item:selected { background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #0096FF, stop:1 #0066CC); border: none; }"
+    );
+
     QString artworkPath = QDir::homePath() + "/.config/maestro/artwork/";
     for (auto album : m_db->getAllAlbums())
     {

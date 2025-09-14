@@ -78,13 +78,13 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>340</width>
+          <width>380</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>340</width>
+          <width>380</width>
           <height>16777215</height>
          </size>
         </property>
@@ -96,13 +96,13 @@
           <number>30</number>
          </property>
          <property name="topMargin">
-          <number>90</number>
+          <number>60</number>
          </property>
          <property name="rightMargin">
           <number>30</number>
          </property>
          <property name="bottomMargin">
-          <number>90</number>
+          <number>60</number>
          </property>
          <item>
           <widget class="QLabel" name="CoverArt">

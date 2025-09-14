@@ -36,7 +36,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="spacing">
-    <number>0</number>
+    <number>10</number>
    </property>
    <property name="leftMargin">
     <number>0</number>
@@ -104,21 +104,24 @@
        <height>54</height>
       </size>
      </property>
+     <property name="styleSheet">
+      <string notr="true">border: none;</string>
+     </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <property name="spacing">
-       <number>10</number>
+       <number>0</number>
       </property>
       <property name="leftMargin">
-       <number>10</number>
+       <number>0</number>
       </property>
       <property name="topMargin">
-       <number>4</number>
+       <number>0</number>
       </property>
       <property name="rightMargin">
        <number>10</number>
       </property>
       <property name="bottomMargin">
-       <number>2</number>
+       <number>0</number>
       </property>
       <item>
        <widget class="QLabel" name="HeaderLabel">
@@ -131,13 +134,13 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>30</height>
+          <height>36</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>30</height>
+          <height>36</height>
          </size>
         </property>
         <property name="font">
@@ -180,7 +183,7 @@
          </font>
         </property>
         <property name="styleSheet">
-         <string notr="true">background: transparent; color: #333333;</string>
+         <string notr="true">background: transparent; color: #222222;</string>
         </property>
         <property name="text">
          <string>Subtext</string>
