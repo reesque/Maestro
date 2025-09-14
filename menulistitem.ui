@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>40</height>
+    <height>60</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,13 +19,13 @@
   <property name="minimumSize">
    <size>
     <width>0</width>
-    <height>40</height>
+    <height>60</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>16777215</width>
-    <height>40</height>
+    <height>60</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -35,6 +35,12 @@
    <string notr="true">background: #ffffff; border: none;</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>16</number>
+   </property>
    <item>
     <widget class="QLabel" name="MenuLabel">
      <property name="sizePolicy">
@@ -43,9 +49,15 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>60</height>
+      </size>
+     </property>
      <property name="font">
       <font>
-       <pointsize>14</pointsize>
+       <pointsize>18</pointsize>
        <bold>true</bold>
       </font>
      </property>
@@ -59,9 +71,15 @@
    </item>
    <item>
     <widget class="QLabel" name="Arrow">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="font">
       <font>
-       <pointsize>14</pointsize>
+       <pointsize>18</pointsize>
        <bold>true</bold>
       </font>
      </property>
