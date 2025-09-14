@@ -17,6 +17,7 @@ public:
         std::string artist;
         std::string album;
 
+        Track();
         Track(const std::string& tTitle, const std::string& tArtist, const std::string& tAlbum);
     };
 
@@ -24,14 +25,24 @@ public:
     ~MediaPlayer();
 
     void reindex();
+    Track getTrackMetaData(int id);
+    Track getCurrentTrackMetaData();
+
+signals:
+    void onTrackInfoUpdate(Track track);
+
+public slots:
+    void playTrack(int id);
 
 private slots:
     void onMediaStatusChanged(QMediaPlayer::MediaStatus status);
 
 private:
     QMediaPlayer *m_player;
-    std::unique_ptr<Track> m_currentTrack;
     std::shared_ptr<Database> m_db;
+    int m_currentTrackId;
 };
+
+Q_DECLARE_METATYPE(MediaPlayer::Track);
 
 #endif // MEDIAPLAYER_H

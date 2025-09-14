@@ -6,6 +6,7 @@
 #include "musicmenu.h"
 #include "songsmenu.h"
 #include "statusbar.h"
+#include "nowplaying.h"
 
 #include <memory>
 #include <iomanip>
@@ -65,6 +66,8 @@ void MainWindow::switchScreenTo(ScreenType screenType)
         Screen *oldScreen = static_cast<Screen *>(screenBox->layout()->itemAt(0)->widget());
 
         disconnect(oldScreen, &Screen::switchScreenTo, this, &MainWindow::switchScreenTo);
+        //disconnect(oldScreen, &Screen::playTrack, m_mediaPlayer.get(), &MediaPlayer::playTrack);
+
         screenBox->layout()->removeItem(screenBox->layout()->itemAt(0));
     }
 
@@ -83,8 +86,15 @@ void MainWindow::switchScreenTo(ScreenType screenType)
             break;
         }
         case ScreenType::Songs:
+        {
             newScreen = new SongsMenu(m_database, this);
             break;
+        }
+        case ScreenType::NowPlaying:
+        {
+            newScreen = new NowPlaying(m_database, m_mediaPlayer, this);
+            break;
+        }
         default:
         {
             return;
@@ -93,4 +103,5 @@ void MainWindow::switchScreenTo(ScreenType screenType)
 
     screenBox->layout()->addWidget(newScreen);
     connect(newScreen, &Screen::switchScreenTo, this, &MainWindow::switchScreenTo);
+    connect(newScreen, &Screen::playTrack, m_mediaPlayer.get(), &MediaPlayer::playTrack);
 }

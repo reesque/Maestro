@@ -21,6 +21,7 @@ SOURCES += \
     mediaplayer.cpp \
     menulistitem.cpp \
     musicmenu.cpp \
+    nowplaying.cpp \
     screen.cpp \
     songsmenu.cpp \
     statusbar.cpp
@@ -36,6 +37,7 @@ HEADERS += \
     menuentry.h \
     menulistitem.h \
     musicmenu.h \
+    nowplaying.h \
     screen.h \
     songsmenu.h \
     statusbar.h
@@ -45,6 +47,7 @@ FORMS += \
     mainwindow.ui \
     menu.ui \
     menulistitem.ui \
+    nowplaying.ui \
     statusbar.ui
 
 RESOURCES += \

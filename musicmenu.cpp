@@ -4,7 +4,7 @@ MusicMenu::MusicMenu(QWidget *parent) :
     Menu(parent)
 {
     menuList->push_back(std::make_shared<LabelMenuEntry>("Songs", [=](){switchScreenTo(ScreenType::Songs);}));
-    menuList->push_back(std::make_shared<LabelMenuEntry>("Albums", [=](){switchScreenTo(ScreenType::Main);}));
+    menuList->push_back(std::make_shared<LabelMenuEntry>("Albums", [](){}));
     menuList->push_back(std::make_shared<LabelMenuEntry>("Artists", [](){}));
     menuList->push_back(std::make_shared<LabelMenuEntry>("Playlists", [](){}));
 

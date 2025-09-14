@@ -18,6 +18,7 @@ public:
 
     struct Track
     {
+        int id;
         std::string filePath;
         std::string title;
         std::string artist;
@@ -29,7 +30,8 @@ public:
 
     void insertTrack(const QString& filePath, const QString& title,
                 const QString& artist, const QString& album);
-    std::vector<Track> getAllSongs();
+    std::vector<Track> getAllTracks();
+    Track getTrack(int id);
     void clearTable(const Table& table);
 
 private:

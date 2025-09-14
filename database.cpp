@@ -45,7 +45,7 @@ void Database::insertTrack(const QString& filePath, const QString& title,
     insert.exec();
 }
 
-std::vector<Database::Track> Database::getAllSongs()
+std::vector<Database::Track> Database::getAllTracks()
 {
     std::stringstream queryStream;
     queryStream << "SELECT * FROM " << getTableName(Table::Track) << ";";
@@ -55,6 +55,7 @@ std::vector<Database::Track> Database::getAllSongs()
     QSqlQuery query(queryStream.str().c_str());
     while (query.next()) {
         Track track;
+        track.id = query.value(0).toInt();
         track.filePath = query.value(1).toString().toStdString();
         track.title = query.value(2).toString().toStdString();
         track.artist = query.value(3).toString().toStdString();
@@ -63,6 +64,26 @@ std::vector<Database::Track> Database::getAllSongs()
     }
 
     return trackList;
+}
+
+Database::Track Database::getTrack(int id)
+{
+    std::stringstream queryStream;
+    queryStream << "SELECT * FROM " << getTableName(Table::Track) << " WHERE id = " << id << ";";
+
+    QSqlQuery query(queryStream.str().c_str());
+
+    Track track;
+    if (query.next())
+    {
+        track.id = query.value(0).toInt();
+        track.filePath = query.value(1).toString().toStdString();
+        track.title = query.value(2).toString().toStdString();
+        track.artist = query.value(3).toString().toStdString();
+        track.album = query.value(4).toString().toStdString();
+    }
+
+    return track;
 }
 
 void Database::clearTable(const Table& table)

@@ -7,7 +7,8 @@ enum class ScreenType
 {
     Main = 0,
     Music,
-    Songs
+    Songs,
+    NowPlaying
 };
 
 class Screen : public QWidget
@@ -19,6 +20,7 @@ public:
 
 signals:
     void switchScreenTo(ScreenType);
+    void playTrack(int);
 };
 
 #endif // SCREEN_H
