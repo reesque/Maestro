@@ -17,7 +17,12 @@ class NowPlaying : public Screen
 
 public:
     explicit NowPlaying(std::shared_ptr<Database> db, std::shared_ptr<MediaPlayer> mediaPlayer, QWidget *parent = nullptr);
-    ~NowPlaying();
+    ~NowPlaying() override;
+
+protected slots:
+    void upAction() override;
+    void dnAction() override;
+    void rightAction() override;
 
 private slots:
     void onTrackInfoUpdate(MediaPlayer::Track track);

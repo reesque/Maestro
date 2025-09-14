@@ -51,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralwidget->setLayout(layout);
 
     switchScreenTo(ScreenType::Main);
+    prevScreen = ScreenType::None;
 }
 
 MainWindow::~MainWindow()
@@ -66,7 +67,16 @@ void MainWindow::switchScreenTo(ScreenType screenType)
         Screen *oldScreen = static_cast<Screen *>(screenBox->layout()->itemAt(0)->widget());
 
         disconnect(oldScreen, &Screen::switchScreenTo, this, &MainWindow::switchScreenTo);
+        disconnect(oldScreen, &Screen::switchToPreviousScreen, this, &MainWindow::switchToPreviousScreen);
 
+        QLayoutItem *item = screenBox->layout()->takeAt(0);
+        if (item) {
+            QWidget *widget = item->widget();
+            if (widget) {
+                widget->deleteLater(); // Safe deletion in Qt
+            }
+            delete item; // Also delete the layout item
+        }
         screenBox->layout()->removeItem(screenBox->layout()->itemAt(0));
     }
 
@@ -101,6 +111,17 @@ void MainWindow::switchScreenTo(ScreenType screenType)
     }
 
     screenBox->layout()->addWidget(newScreen);
+    newScreen->setFocus();
+    prevScreen = newScreen->getPrevScreen();
     connect(newScreen, &Screen::switchScreenTo, this, &MainWindow::switchScreenTo);
+    connect(newScreen, &Screen::switchToPreviousScreen, this, &MainWindow::switchToPreviousScreen);
     connect(newScreen, &Screen::playTrack, m_mediaPlayer.get(), &MediaPlayer::playTrack);
+}
+
+void MainWindow::switchToPreviousScreen()
+{
+    if (prevScreen != ScreenType::None)
+    {
+        switchScreenTo(prevScreen);
+    }
 }

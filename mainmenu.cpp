@@ -3,12 +3,14 @@
 MainMenu::MainMenu(QWidget *parent) :
     Menu(parent)
 {
+    prevScreen = ScreenType::None;
+
     menuList->push_back(std::make_shared<LabelMenuEntry>("Music", [=](){switchScreenTo(ScreenType::Music);}));
     menuList->push_back(std::make_shared<LabelMenuEntry>("Videos", [](){}));
     menuList->push_back(std::make_shared<LabelMenuEntry>("Photos", [](){}));
     menuList->push_back(std::make_shared<LabelMenuEntry>("Settings", [](){}));
     menuList->push_back(std::make_shared<LabelMenuEntry>("Shuffle Songs", [](){}));
-    menuList->push_back(std::make_shared<LabelMenuEntry>("Now Playing", [](){}));
+    menuList->push_back(std::make_shared<LabelMenuEntry>("Now Playing", [=](){switchScreenTo(ScreenType::NowPlaying);}));
     menuList->push_back(std::make_shared<LabelMenuEntry>("Quit", [](){}));
 
     populateMenu();

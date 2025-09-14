@@ -5,6 +5,8 @@ NowPlaying::NowPlaying(std::shared_ptr<Database> db, std::shared_ptr<MediaPlayer
     Screen(parent),
     ui(new Ui::NowPlaying)
 {
+    prevScreen = ScreenType::Main;
+
     m_db = db;
     m_mediaPlayer = mediaPlayer;
 
@@ -57,3 +59,12 @@ void NowPlaying::tickSeekBar()
         ui->TimeRight->setText(QString::fromStdString(m_mediaPlayer->getRemainingTime()));
     }
 }
+
+void NowPlaying::upAction()
+{}
+
+void NowPlaying::dnAction()
+{}
+
+void NowPlaying::rightAction()
+{}

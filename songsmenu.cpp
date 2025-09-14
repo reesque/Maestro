@@ -3,6 +3,8 @@
 SongsMenu::SongsMenu(std::shared_ptr<Database> db, QWidget *parent) :
     Menu(parent)
 {
+    prevScreen = ScreenType::Music;
+
     m_db = db;
 
     std::vector<Database::Track> trackList = db->getAllTracks();
