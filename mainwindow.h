@@ -18,6 +18,9 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+signals:
+    void changeTitle(QString title);
+
 private slots:
     void switchScreenTo(ScreenType screenType, QVector<QVariant> args = QVector<QVariant>());
     void switchToPreviousScreen(QVector<QVariant> args);

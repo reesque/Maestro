@@ -56,9 +56,9 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QLabel" name="Time">
+    <widget class="QLabel" name="Title">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -70,10 +70,13 @@
       </font>
      </property>
      <property name="text">
-      <string>00:00</string>
+      <string>Menu</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
+     </property>
+     <property name="margin">
+      <number>10</number>
      </property>
     </widget>
    </item>

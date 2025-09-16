@@ -39,9 +39,12 @@ MainWindow::MainWindow(QWidget *parent) :
     layout->setSpacing(0);
     layout->setMargin(0);
 
+    // Status bar
     StatusBar *statusBar = new StatusBar(this);
     layout->addWidget(statusBar);
+    connect(this, &MainWindow::changeTitle, statusBar, &StatusBar::changeTitle);
 
+    // Content pane
     screenBox = new QWidget(this);
     screenBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
@@ -91,66 +94,79 @@ void MainWindow::switchScreenTo(ScreenType screenType, QVector<QVariant> args)
         case ScreenType::Main:
         {
             newScreen = new MainMenu(this);
+            emit changeTitle("Menu");
             break;
         }
         case ScreenType::Music:
         {
             newScreen = new MusicMenu(this);
+            emit changeTitle("Music");
             break;
         }
         case ScreenType::Songs:
         {
             newScreen = new SongsMenu(m_database, this);
+            emit changeTitle("Songs");
             break;
         }
         case ScreenType::Album:
         {
             newScreen = new AlbumMenu(m_database, this);
+            emit changeTitle("Albums");
             break;
         }
         case ScreenType::Artist:
         {
             newScreen = new ArtistMenu(m_database, this);
+            emit changeTitle("Artists");
             break;
         }
         case ScreenType::ArtistFilter:
         {
             newScreen = new ArtistFilterMenu(args.at(0).toString().toStdString(), this);
+            emit changeTitle(args.at(0).toString());
             break;
         }
         case ScreenType::SongsByAlbum:
         {
             newScreen = new SongsMenu(m_database, SongsMenu::Filter::Album, args, this);
+            emit changeTitle(args.at(0).toString());
             break;
         }
         case ScreenType::SongsByArtist:
         {
             newScreen = new SongsMenu(m_database, SongsMenu::Filter::Artist, args, this);
+            emit changeTitle(args.at(0).toString());
             break;
         }
         case ScreenType::SongsByAlbumArtist:
         {
             newScreen = new SongsMenu(m_database, SongsMenu::Filter::AlbumArtist, args, this);
+            emit changeTitle(args.at(0).toString());
             break;
         }
         case ScreenType::AlbumByArtist:
         {
             newScreen = new AlbumMenu(m_database, args.at(0).toString().toStdString(), this);
+            emit changeTitle(args.at(0).toString());
             break;
         }
         case ScreenType::NowPlaying:
         {
             newScreen = new NowPlaying(m_database, m_mediaPlayer, this);
+            emit changeTitle("Now Playing");
             break;
         }
         case ScreenType::Setting:
         {
             newScreen = new SettingMenu(this);
+            emit changeTitle("Settings");
             break;
         }
         case ScreenType::Reindex:
         {
             newScreen = new ReindexScreen(m_mediaPlayer, this);
+            emit changeTitle("Sync Library");
             break;
         }
         default:
