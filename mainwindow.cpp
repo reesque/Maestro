@@ -8,6 +8,8 @@
 #include "albummenu.h"
 #include "statusbar.h"
 #include "nowplaying.h"
+#include "settingmenu.h"
+#include "reindexscreen.h"
 
 #include <memory>
 #include <iomanip>
@@ -27,7 +29,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Init media player
     m_mediaPlayer = std::make_shared<MediaPlayer>(m_database);
-    m_mediaPlayer->reindex();
 
     // Init UI layout
     ui->setupUi(this);
@@ -114,6 +115,16 @@ void MainWindow::switchScreenTo(ScreenType screenType, QVector<QVariant> args)
         case ScreenType::NowPlaying:
         {
             newScreen = new NowPlaying(m_database, m_mediaPlayer, this);
+            break;
+        }
+        case ScreenType::Setting:
+        {
+            newScreen = new SettingMenu(this);
+            break;
+        }
+        case ScreenType::Reindex:
+        {
+            newScreen = new ReindexScreen(m_mediaPlayer, this);
             break;
         }
         default:

@@ -48,6 +48,7 @@ public:
 
 signals:
     void onTrackInfoUpdate(Track track);
+    void onIndexProgress(int progress, int total);
 
 public slots:
     void playTrack(int id);

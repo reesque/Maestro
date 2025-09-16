@@ -24,7 +24,9 @@ SOURCES += \
     menulistitem.cpp \
     musicmenu.cpp \
     nowplaying.cpp \
+    reindexscreen.cpp \
     screen.cpp \
+    settingmenu.cpp \
     songsmenu.cpp \
     statusbar.cpp
 
@@ -42,7 +44,9 @@ HEADERS += \
     menulistitem.h \
     musicmenu.h \
     nowplaying.h \
+    reindexscreen.h \
     screen.h \
+    settingmenu.h \
     songsmenu.h \
     statusbar.h
 
@@ -53,7 +57,8 @@ FORMS += \
     menu.ui \
     menulistitem.ui \
     nowplaying.ui \
+    reindexscreen.ui \
     statusbar.ui
 
 RESOURCES += \
-    DefaultCoverArt.qrc
+    assets.qrc

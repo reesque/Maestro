@@ -18,6 +18,8 @@
 
 #include <fstream>
 #include <filesystem>
+#include <thread>
+#include <chrono>
 
 void ArtworkExtractor::fromMP3(const std::string& filePath, const std::string& outPath)
 {
@@ -155,8 +157,13 @@ void MediaPlayer::reindex()
 
     QDirIterator it(rootPath, audioExtensions, QDir::Files, QDirIterator::Subdirectories);
 
+    std::vector<QString> files;
     while (it.hasNext()) {
-        QString currentPath = it.next();
+        files.push_back(it.next());
+    }
+
+    for (size_t i = 0; i < files.size(); ++i) {
+        QString currentPath = files[i];
         TagLib::FileRef f(currentPath.toStdString().c_str());
 
         // Check metadata
@@ -188,6 +195,8 @@ void MediaPlayer::reindex()
                 }
             }
         }
+
+        emit onIndexProgress(i + 1, files.size());
     }
 }
 

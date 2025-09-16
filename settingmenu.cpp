@@ -1,0 +1,19 @@
+#include "settingmenu.h"
+
+SettingMenu::SettingMenu(QWidget *parent) :
+    Menu(parent)
+{
+    prevScreen = ScreenType::Main;
+
+    menuList->push_back(std::make_shared<LabelMenuEntry>("Sync Library", [=](){switchScreenTo(ScreenType::Reindex);}));
+
+    populateMenu();
+}
+
+SettingMenu::~SettingMenu()
+{}
+
+MenuListItem* SettingMenu::createListItem(std::shared_ptr<LabelMenuEntry> entry)
+{
+    return new MenuListItem(entry->label, entry->activator, ui->ListObject);
+}

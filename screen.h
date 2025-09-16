@@ -14,7 +14,9 @@ enum class ScreenType
     Songs,
     Album,
     SongsByAlbum,
-    NowPlaying
+    NowPlaying,
+    Setting,
+    Reindex
 };
 
 class Screen : public QWidget
@@ -39,9 +41,9 @@ protected:
     std::unique_ptr<QShortcut> rightKey;
 
 protected slots:
-    virtual void upAction() = 0;
-    virtual void dnAction() = 0;
-    virtual void rightAction() = 0;
+    virtual void upAction();
+    virtual void dnAction();
+    virtual void rightAction();
     virtual void leftAction();
 };
 

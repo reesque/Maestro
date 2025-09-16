@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>assets/cover.png</file>
+        <file>assets/sync.png</file>
+    </qresource>
+</RCC>

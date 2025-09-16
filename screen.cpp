@@ -21,6 +21,15 @@ ScreenType Screen::getPrevScreen()
     return prevScreen;
 }
 
+void Screen::upAction()
+{}
+
+void Screen::dnAction()
+{}
+
+void Screen::rightAction()
+{}
+
 void Screen::leftAction()
 {
     emit switchToPreviousScreen();

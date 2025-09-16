@@ -16,17 +16,6 @@ NowPlaying::NowPlaying(std::shared_ptr<Database> db, std::shared_ptr<MediaPlayer
 
     ui->setupUi(this);
 
-    ui->Seekbar->setStyleSheet(
-            "QProgressBar {"
-            "    border: 2px solid grey;"
-            "    border-radius: 5px;"
-            "}"
-            "QProgressBar::chunk {"
-            "    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #0096FF, stop:1 #0066CC);"
-            "    width: 1px;"
-            "}"
-        );
-
     seekTimer = std::make_unique<QTimer>();
     connect(seekTimer.get(), &QTimer::timeout, this, &NowPlaying::tickSeekBar);
     seekTimer->start(10);
@@ -86,12 +75,3 @@ void NowPlaying::tickSeekBar()
         ui->TimeRight->setText(QString::fromStdString(m_mediaPlayer->getRemainingTime()));
     }
 }
-
-void NowPlaying::upAction()
-{}
-
-void NowPlaying::dnAction()
-{}
-
-void NowPlaying::rightAction()
-{}

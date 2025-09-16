@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <mutex>
 
 #include <QObject>
 #include <QtSql/QSqlDatabase>
@@ -38,11 +39,12 @@ public:
     void clearTable(const Table& table);
 
 private:
+    void execute(std::function<void(const QSqlDatabase&)> func);
     std::string getTableName(const Table& table);
 
 private:
-    QSqlDatabase m_db;
-    static std::unique_ptr<Database> instance;
+    QString m_appPath;
+    std::mutex m_mutex;
 };
 
 Q_DECLARE_METATYPE(Database::Table);

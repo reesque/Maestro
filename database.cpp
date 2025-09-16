@@ -6,153 +6,188 @@
 #include <QtSql/QSqlError>
 
 #include <sstream>
+#include <iostream>
 #include <filesystem>
 
 Database::Database(QObject *parent) : QObject{parent}
 {
-    m_db = QSqlDatabase::addDatabase("QSQLITE");
-
-    QString basePath = QDir::homePath() + "/.config/maestro/";
-    QString dbPath = basePath + "maestro.db";
-    if (!std::filesystem::exists(basePath.toStdString()))
+    m_appPath = QDir::homePath() + "/.config/maestro/";
+    if (!std::filesystem::exists(m_appPath.toStdString()))
     {
-        std::filesystem::create_directory(basePath.toStdString());
+        std::filesystem::create_directory(m_appPath.toStdString());
     }
 
-    m_db.setDatabaseName(dbPath.toStdString().c_str());
-
-    m_db.open();
-
-    QSqlQuery query;
-    query.exec("CREATE TABLE IF NOT EXISTS tracks ("
-               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-               "filepath TEXT, "
-               "title TEXT, "
-               "artist TEXT, "
-               "album TEXT,"
-               "trackNum INTEGER)");
+    execute([](const QSqlDatabase& db){
+        QSqlQuery query(db);
+        query.exec("CREATE TABLE IF NOT EXISTS tracks ("
+                   "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                   "filepath TEXT, "
+                   "title TEXT, "
+                   "artist TEXT, "
+                   "album TEXT,"
+                   "trackNum INTEGER)");
+    });
 }
 
 Database::~Database()
+{}
+
+void Database::execute(std::function<void(const QSqlDatabase&)> func)
 {
-    m_db.close();
+    m_mutex.lock();
+
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "default");
+        QString dbPath = m_appPath + "maestro.db";
+
+        db.setDatabaseName(dbPath);
+
+        if (!db.open()) {
+            m_mutex.unlock();
+            return;
+        }
+
+        func(db);
+
+        db.close();
+    }
+
+    QSqlDatabase::removeDatabase("default");
+
+    m_mutex.unlock();
 }
 
 void Database::insertTrack(const QString& filePath, const QString& title,
                       const QString& artist, const QString& album, int trackNum)
 {
-    std::stringstream queryStream;
+    execute([=](const QSqlDatabase& db){
+        std::stringstream queryStream;
 
-    queryStream << "INSERT INTO " << getTableName(Table::Track)
-                << " (filepath, title, artist, album, trackNum)"
-                << " VALUES (?, ?, ?, ?, ?)";
+        queryStream << "INSERT INTO " << getTableName(Table::Track)
+                    << " (filepath, title, artist, album, trackNum)"
+                    << " VALUES (?, ?, ?, ?, ?)";
 
-    QSqlQuery insert;
-    insert.prepare(queryStream.str().c_str());
-    insert.addBindValue(filePath);
-    insert.addBindValue(title);
-    insert.addBindValue(artist);
-    insert.addBindValue(album);
-    insert.addBindValue(trackNum);
-    insert.exec();
+        QSqlQuery insert(db);
+        insert.prepare(queryStream.str().c_str());
+        insert.addBindValue(filePath);
+        insert.addBindValue(title);
+        insert.addBindValue(artist);
+        insert.addBindValue(album);
+        insert.addBindValue(trackNum);
+        insert.exec();
+    });
 }
 
 std::vector<Database::Track> Database::getAllTracks()
 {
-    std::stringstream queryStream;
-    queryStream << "SELECT * FROM " << getTableName(Table::Track) << ";";
-
     std::vector<Track> trackList;
 
-    QSqlQuery query(queryStream.str().c_str());
-    while (query.next()) {
-        Track track;
-        track.id = query.value(0).toInt();
-        track.trackNum = query.value(5).toInt();
-        track.filePath = query.value(1).toString().toStdString();
-        track.title = query.value(2).toString().toStdString();
-        track.artist = query.value(3).toString().toStdString();
-        track.album = query.value(4).toString().toStdString();
-        trackList.push_back(track);
-    }
+    execute([this, &trackList](const QSqlDatabase& db){
+        std::stringstream queryStream;
+        queryStream << "SELECT * FROM " << getTableName(Table::Track) << ";";
+
+        QSqlQuery query(db);
+        query.exec(queryStream.str().c_str());
+        while (query.next()) {
+            Track track;
+            track.id = query.value(0).toInt();
+            track.trackNum = query.value(5).toInt();
+            track.filePath = query.value(1).toString().toStdString();
+            track.title = query.value(2).toString().toStdString();
+            track.artist = query.value(3).toString().toStdString();
+            track.album = query.value(4).toString().toStdString();
+            trackList.push_back(track);
+        }
+    });
 
     return trackList;
 }
 
 std::vector<Database::Track> Database::getTracksByAlbum(const std::string& albumName)
 {
-    std::stringstream queryStream;
-    queryStream << "SELECT * FROM " << getTableName(Table::Track)
-                << " WHERE album LIKE '" << albumName
-                << "' ORDER BY trackNum ASC;";
-
     std::vector<Track> trackList;
 
-    QSqlQuery query(queryStream.str().c_str());
-    while (query.next()) {
-        Track track;
-        track.id = query.value(0).toInt();
-        track.trackNum = query.value(5).toInt();
-        track.filePath = query.value(1).toString().toStdString();
-        track.title = query.value(2).toString().toStdString();
-        track.artist = query.value(3).toString().toStdString();
-        track.album = query.value(4).toString().toStdString();
-        trackList.push_back(track);
-    }
+    execute([this, &trackList, albumName](const QSqlDatabase& db){
+        std::stringstream queryStream;
+        queryStream << "SELECT * FROM " << getTableName(Table::Track)
+                    << " WHERE album LIKE '" << albumName
+                    << "' ORDER BY trackNum ASC;";
+
+        QSqlQuery query(db);
+        query.exec(queryStream.str().c_str());
+        while (query.next()) {
+            Track track;
+            track.id = query.value(0).toInt();
+            track.trackNum = query.value(5).toInt();
+            track.filePath = query.value(1).toString().toStdString();
+            track.title = query.value(2).toString().toStdString();
+            track.artist = query.value(3).toString().toStdString();
+            track.album = query.value(4).toString().toStdString();
+            trackList.push_back(track);
+        }
+    });
 
     return trackList;
 }
 
 Database::Track Database::getTrack(int id)
 {
-    std::stringstream queryStream;
-    queryStream << "SELECT * FROM " << getTableName(Table::Track) << " WHERE id = " << id << ";";
-
-    QSqlQuery query(queryStream.str().c_str());
-
     Track track;
-    if (query.next())
-    {
-        track.id = query.value(0).toInt();
-        track.filePath = query.value(1).toString().toStdString();
-        track.title = query.value(2).toString().toStdString();
-        track.artist = query.value(3).toString().toStdString();
-        track.album = query.value(4).toString().toStdString();
-    }
+    execute([this, &track, id](const QSqlDatabase& db){
+        std::stringstream queryStream;
+        queryStream << "SELECT * FROM " << getTableName(Table::Track) << " WHERE id = " << id << ";";
+
+        QSqlQuery query(db);
+        query.exec(queryStream.str().c_str());
+
+        if (query.next())
+        {
+            track.id = query.value(0).toInt();
+            track.filePath = query.value(1).toString().toStdString();
+            track.title = query.value(2).toString().toStdString();
+            track.artist = query.value(3).toString().toStdString();
+            track.album = query.value(4).toString().toStdString();
+        }
+    });
 
     return track;
 }
 
 std::vector<std::string> Database::getAllAlbums()
 {
-    std::stringstream queryStream;
-    queryStream << "SELECT DISTINCT album FROM " << getTableName(Table::Track) << ";";
-
     std::vector<std::string> albumList;
 
-    QSqlQuery query(queryStream.str().c_str());
-    while (query.next())
-    {
-        albumList.push_back(query.value(0).toString().toStdString());
-    }
+    execute([this, &albumList](const QSqlDatabase& db){
+        std::stringstream queryStream;
+        queryStream << "SELECT DISTINCT album FROM " << getTableName(Table::Track) << ";";
+
+        QSqlQuery query(db);
+        query.exec(queryStream.str().c_str());
+        while (query.next())
+        {
+            albumList.push_back(query.value(0).toString().toStdString());
+        }
+    });
 
     return albumList;
 }
 
 void Database::clearTable(const Table& table)
 {
-    std::stringstream queryStream;
-    QSqlQuery query;
+    execute([this, table](const QSqlDatabase& db){
+        std::stringstream queryStream;
+        QSqlQuery query(db);
 
-    queryStream << "DELETE FROM " << getTableName(table) << ";";
-    query.exec(queryStream.str().c_str());
+        queryStream << "DELETE FROM " << getTableName(table) << ";";
+        query.exec(queryStream.str().c_str());
 
-    // Reset index too
-    std::stringstream querySqStream;
-    QSqlQuery querySq;
+        // Reset index too
+        std::stringstream querySqStream;
+        QSqlQuery querySq(db);
 
-    querySqStream << "DELETE FROM sqlite_sequence WHERE name=\'" << getTableName(table) << "\';";
-    querySq.exec(querySqStream.str().c_str());
+        querySqStream << "DELETE FROM sqlite_sequence WHERE name=\'" << getTableName(table) << "\';";
+        querySq.exec(querySqStream.str().c_str());
+    });
 }
 
 std::string Database::getTableName(const Table& table)
