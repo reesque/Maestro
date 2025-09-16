@@ -130,6 +130,32 @@ std::vector<Database::Track> Database::getTracksByAlbum(const std::string& album
     return trackList;
 }
 
+std::vector<Database::Track> Database::getTracksByArtist(const std::string& artistName)
+{
+    std::vector<Track> trackList;
+
+    execute([this, &trackList, artistName](const QSqlDatabase& db){
+        std::stringstream queryStream;
+        queryStream << "SELECT * FROM " << getTableName(Table::Track)
+                    << " WHERE artist LIKE '" << artistName << "';";
+
+        QSqlQuery query(db);
+        query.exec(queryStream.str().c_str());
+        while (query.next()) {
+            Track track;
+            track.id = query.value(0).toInt();
+            track.trackNum = query.value(5).toInt();
+            track.filePath = query.value(1).toString().toStdString();
+            track.title = query.value(2).toString().toStdString();
+            track.artist = query.value(3).toString().toStdString();
+            track.album = query.value(4).toString().toStdString();
+            trackList.push_back(track);
+        }
+    });
+
+    return trackList;
+}
+
 Database::Track Database::getTrack(int id)
 {
     Track track;
@@ -160,6 +186,45 @@ std::vector<std::string> Database::getAllAlbums()
     execute([this, &albumList](const QSqlDatabase& db){
         std::stringstream queryStream;
         queryStream << "SELECT DISTINCT album FROM " << getTableName(Table::Track) << ";";
+
+        QSqlQuery query(db);
+        query.exec(queryStream.str().c_str());
+        while (query.next())
+        {
+            albumList.push_back(query.value(0).toString().toStdString());
+        }
+    });
+
+    return albumList;
+}
+
+std::vector<std::string> Database::getAllArtists()
+{
+    std::vector<std::string> artistList;
+
+    execute([this, &artistList](const QSqlDatabase& db){
+        std::stringstream queryStream;
+        queryStream << "SELECT DISTINCT artist FROM " << getTableName(Table::Track) << ";";
+
+        QSqlQuery query(db);
+        query.exec(queryStream.str().c_str());
+        while (query.next())
+        {
+            artistList.push_back(query.value(0).toString().toStdString());
+        }
+    });
+
+    return artistList;
+}
+
+std::vector<std::string> Database::getAlbumByArtist(const std::string& artistName)
+{
+    std::vector<std::string> albumList;
+
+    execute([this, &albumList, artistName](const QSqlDatabase& db){
+        std::stringstream queryStream;
+        queryStream << "SELECT DISTINCT album FROM " << getTableName(Table::Track)
+                    << " WHERE artist LIKE '" << artistName << "';";
 
         QSqlQuery query(db);
         query.exec(queryStream.str().c_str());

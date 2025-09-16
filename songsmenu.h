@@ -11,11 +11,12 @@ public:
     enum class Filter
     {
         Album = 0,
-        Artist
+        Artist,
+        AlbumArtist
     };
 
     explicit SongsMenu(std::shared_ptr<Database> db, QWidget *parent = nullptr);
-    explicit SongsMenu(std::shared_ptr<Database> db, Filter filter, std::string byValue, QWidget *parent = nullptr);
+    explicit SongsMenu(std::shared_ptr<Database> db, Filter filter, QVector<QVariant> values, QWidget *parent = nullptr);
     ~SongsMenu() override;
 
 protected:

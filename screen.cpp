@@ -32,5 +32,5 @@ void Screen::rightAction()
 
 void Screen::leftAction()
 {
-    emit switchToPreviousScreen();
+    emit switchToPreviousScreen(prevScreenArgs);
 }

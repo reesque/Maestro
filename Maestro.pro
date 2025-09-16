@@ -13,6 +13,8 @@ LIBS += -L/usr/lib -ltag
 
 SOURCES += \
     albummenu.cpp \
+    artistfiltermenu.cpp \
+    artistmenu.cpp \
     artworkmenulistitem.cpp \
     basemenulistitem.cpp \
     database.cpp \
@@ -32,6 +34,8 @@ SOURCES += \
 
 HEADERS += \
     albummenu.h \
+    artistfiltermenu.h \
+    artistmenu.h \
     artworkmenulistitem.h \
     basemenulistitem.h \
     database.h \

@@ -13,7 +13,12 @@ enum class ScreenType
     Music,
     Songs,
     Album,
+    Artist,
+    ArtistFilter,
+    AlbumByArtist,
     SongsByAlbum,
+    SongsByArtist,
+    SongsByAlbumArtist,
     NowPlaying,
     Setting,
     Reindex
@@ -30,10 +35,11 @@ public:
 signals:
     void switchScreenTo(ScreenType, QVector<QVariant> = QVector<QVariant>());
     void playTrack(int);
-    void switchToPreviousScreen();
+    void switchToPreviousScreen(QVector<QVariant>);
 
 protected:
     ScreenType prevScreen;
+    QVector<QVariant> prevScreenArgs;
 
     std::unique_ptr<QShortcut> upKey;
     std::unique_ptr<QShortcut> dnKey;

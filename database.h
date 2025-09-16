@@ -33,9 +33,12 @@ public:
     void insertTrack(const QString& filePath, const QString& title,
                 const QString& artist, const QString& album, int trackNum);
     std::vector<Track> getAllTracks();
-    std::vector<Track> getTracksByAlbum(const std::string& albumName);
-    Track getTrack(int id);
     std::vector<std::string> getAllAlbums();
+    std::vector<std::string> getAllArtists();
+    std::vector<Track> getTracksByAlbum(const std::string& albumName);
+    std::vector<Track> getTracksByArtist(const std::string& artistName);
+    std::vector<std::string> getAlbumByArtist(const std::string& artistName);
+    Track getTrack(int id);
     void clearTable(const Table& table);
 
 private:

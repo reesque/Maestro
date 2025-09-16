@@ -6,6 +6,8 @@
 #include "musicmenu.h"
 #include "songsmenu.h"
 #include "albummenu.h"
+#include "artistmenu.h"
+#include "artistfiltermenu.h"
 #include "statusbar.h"
 #include "nowplaying.h"
 #include "settingmenu.h"
@@ -106,10 +108,34 @@ void MainWindow::switchScreenTo(ScreenType screenType, QVector<QVariant> args)
             newScreen = new AlbumMenu(m_database, this);
             break;
         }
+        case ScreenType::Artist:
+        {
+            newScreen = new ArtistMenu(m_database, this);
+            break;
+        }
+        case ScreenType::ArtistFilter:
+        {
+            newScreen = new ArtistFilterMenu(args.at(0).toString().toStdString(), this);
+            break;
+        }
         case ScreenType::SongsByAlbum:
         {
-            newScreen = new SongsMenu(m_database, SongsMenu::Filter::Album,
-                                      args.at(0).toString().toStdString(), this);
+            newScreen = new SongsMenu(m_database, SongsMenu::Filter::Album, args, this);
+            break;
+        }
+        case ScreenType::SongsByArtist:
+        {
+            newScreen = new SongsMenu(m_database, SongsMenu::Filter::Artist, args, this);
+            break;
+        }
+        case ScreenType::SongsByAlbumArtist:
+        {
+            newScreen = new SongsMenu(m_database, SongsMenu::Filter::AlbumArtist, args, this);
+            break;
+        }
+        case ScreenType::AlbumByArtist:
+        {
+            newScreen = new AlbumMenu(m_database, args.at(0).toString().toStdString(), this);
             break;
         }
         case ScreenType::NowPlaying:
@@ -141,10 +167,10 @@ void MainWindow::switchScreenTo(ScreenType screenType, QVector<QVariant> args)
     connect(newScreen, &Screen::playTrack, m_mediaPlayer.get(), &MediaPlayer::playTrack);
 }
 
-void MainWindow::switchToPreviousScreen()
+void MainWindow::switchToPreviousScreen(QVector<QVariant> args)
 {
     if (prevScreen != ScreenType::None)
     {
-        switchScreenTo(prevScreen);
+        switchScreenTo(prevScreen, args);
     }
 }
