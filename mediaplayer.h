@@ -2,11 +2,13 @@
 #define MEDIAPLAYER_H
 
 #include "database.h"
+#include "datastruct.h"
 
 #include <QObject>
 #include <QQueue>
 
 #include <QMediaPlayer>
+#include <QMediaPlaylist>
 
 class ArtworkExtractor
 {
@@ -26,15 +28,6 @@ class MediaPlayer : public QObject
 {
     Q_OBJECT
 public:
-    struct Track {
-        std::string title;
-        std::string artist;
-        std::string album;
-
-        Track();
-        Track(const std::string& tTitle, const std::string& tArtist, const std::string& tAlbum);
-    };
-
     explicit MediaPlayer(std::shared_ptr<Database> db, QObject *parent = nullptr);
     ~MediaPlayer();
 
@@ -45,27 +38,33 @@ public:
     std::string getRemainingTime();
     int getPercentage();
     bool isPlaying();
+    bool isMediaReady();
+    void togglePause();
+    void next();
+    void previous();
 
 signals:
     void onTrackInfoUpdate(Track track);
     void onIndexProgress(int progress, int total);
+    void onPlaybackStateChanged(PlaybackStatus playbackStatus);
 
 public slots:
-    void playTrack(int id);
+    void playTrack(QVector<Track> queue, int position);
+    void queueTrack(int id);
 
 private slots:
-    void onMediaStatusChanged(QMediaPlayer::MediaStatus status);
+    void currentMediaChanged(const QMediaContent &media);
+    void onStateChanged(QMediaPlayer::State state);
 
 private:
     std::string formatTime(qint64 ms);
 
 private:
     QMediaPlayer *m_player;
+    QMediaPlaylist *m_playlist;
     std::shared_ptr<Database> m_db;
-    int m_currentTrackId;
     QString m_artworkPath;
+    std::vector<Track> m_mediaQueue;
 };
-
-Q_DECLARE_METATYPE(MediaPlayer::Track);
 
 #endif // MEDIAPLAYER_H

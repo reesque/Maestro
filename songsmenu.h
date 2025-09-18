@@ -2,6 +2,7 @@
 #define SONGSMENU_H
 
 #include "database.h"
+#include "datastruct.h"
 #include "menu.h"
 #include "detailedmenulistitem.h"
 
@@ -23,7 +24,7 @@ protected:
     DetailedMenuListItem* createListItem(std::shared_ptr<DetailedMenuEntry> entry) override;
 
 private:
-    void fillSongRecords(std::vector<Database::Track> records);
+    void fillSongRecords(std::vector<Track> records);
 
 private:
     std::shared_ptr<Database> m_db;

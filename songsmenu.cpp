@@ -1,6 +1,7 @@
 #include "songsmenu.h"
 
 #include <QDir>
+#include <QVector>
 
 #include <filesystem>
 
@@ -50,7 +51,7 @@ DetailedMenuListItem* SongsMenu::createListItem(std::shared_ptr<DetailedMenuEntr
     return new DetailedMenuListItem(entry->header, entry->subtext, entry->artPath, entry->activator, ui->ListObject);
 }
 
-void SongsMenu::fillSongRecords(std::vector<Database::Track> records)
+void SongsMenu::fillSongRecords(std::vector<Track> records)
 {
     ui->ListObject->setStyleSheet(
         "QListWidget::item { background-color: white; border-top: none; border-bottom: 1px solid #cccccc; }"
@@ -58,11 +59,10 @@ void SongsMenu::fillSongRecords(std::vector<Database::Track> records)
     );
 
     QString artworkPath = QDir::homePath() + "/.config/maestro/artwork/";
-    //for (auto track : db->getAllTracks())
-    for (auto track : records)
+    for (unsigned queueNum = 0; queueNum < records.size(); ++queueNum)
     {
         // Check if artwork is available
-        QString trackArtworkPath = artworkPath + track.album.c_str();
+        QString trackArtworkPath = artworkPath + records[queueNum].album.c_str();
         QString trackArtPathPng = trackArtworkPath + ".png";
         QString trackArtPathJpg = trackArtworkPath + ".jpg";
         std::string artPath = "";
@@ -77,9 +77,9 @@ void SongsMenu::fillSongRecords(std::vector<Database::Track> records)
 
         // Create menu list
         menuList->push_back(std::make_shared<DetailedMenuEntry>(
-            track.title, track.artist, artPath, [=](){
+            records[queueNum].title, records[queueNum].artist, artPath, [=](){
                 emit switchScreenTo(ScreenType::NowPlaying);
-                emit playTrack(track.id);
+                emit playTrack(QVector<Track>(records.begin(), records.end()), queueNum);
             }
         ));
     }

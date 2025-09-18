@@ -64,22 +64,17 @@ public:
         connect(ui->ListObject, &QListWidget::itemClicked, this, &Menu::onItemClicked);
 
         // Keyboard config
-        upKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Up), this);
         connect(upKey.get(), &QShortcut::activated, this, &Menu::upAction);
-
-        dnKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Down), this);
-        connect(dnKey.get(), &QShortcut::activated, this, &Menu::dnAction);
-
-        rightKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Right), this);
-        connect(rightKey.get(), &QShortcut::activated, this, &Menu::rightAction);
+        connect(downKey.get(), &QShortcut::activated, this, &Menu::downAction);
+        connect(confirmKey.get(), &QShortcut::activated, this, &Menu::confirmAction);
     }
 
     virtual ~Menu()
     {
         disconnect(ui->ListObject, &QListWidget::itemClicked, this, &Menu::onItemClicked);
         disconnect(upKey.get(), &QShortcut::activated, this, &Menu::upAction);
-        disconnect(dnKey.get(), &QShortcut::activated, this, &Menu::dnAction);
-        disconnect(rightKey.get(), &QShortcut::activated, this, &Menu::rightAction);
+        disconnect(downKey.get(), &QShortcut::activated, this, &Menu::downAction);
+        disconnect(confirmKey.get(), &QShortcut::activated, this, &Menu::confirmAction);
 
         delete ui;
     }
@@ -118,12 +113,12 @@ protected slots:
         ui->ListObject->setCurrentRow(std::max(ui->ListObject->currentRow() - 1, 0));
     }
 
-    void dnAction() override
+    void downAction() override
     {
         ui->ListObject->setCurrentRow(std::min(ui->ListObject->currentRow() + 1, ui->ListObject->count() - 1));
     }
 
-    void rightAction() override
+    void confirmAction() override
     {
         emit ui->ListObject->itemClicked(ui->ListObject->currentItem());
     }

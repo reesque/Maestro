@@ -39,6 +39,7 @@ HEADERS += \
     artworkmenulistitem.h \
     basemenulistitem.h \
     database.h \
+    datastruct.h \
     detailedmenulistitem.h \
     mainmenu.h \
     mainwindow.h \

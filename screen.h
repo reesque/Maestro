@@ -1,6 +1,8 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
+#include "datastruct.h"
+
 #include <QWidget>
 #include <QShortcut>
 #include <QVector>
@@ -34,23 +36,28 @@ public:
 
 signals:
     void switchScreenTo(ScreenType, QVector<QVariant> = QVector<QVariant>());
-    void playTrack(int);
     void switchToPreviousScreen(QVector<QVariant>);
+    void playTrack(QVector<Track>, int);
+    void queueTrack(int);
 
 protected:
     ScreenType prevScreen;
     QVector<QVariant> prevScreenArgs;
 
     std::unique_ptr<QShortcut> upKey;
-    std::unique_ptr<QShortcut> dnKey;
+    std::unique_ptr<QShortcut> downKey;
     std::unique_ptr<QShortcut> leftKey;
     std::unique_ptr<QShortcut> rightKey;
+    std::unique_ptr<QShortcut> backKey;
+    std::unique_ptr<QShortcut> confirmKey;
 
 protected slots:
     virtual void upAction();
-    virtual void dnAction();
+    virtual void downAction();
     virtual void rightAction();
     virtual void leftAction();
+    virtual void backAction();
+    virtual void confirmAction();
 };
 
 #endif // SCREEN_H

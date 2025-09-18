@@ -90,27 +90,14 @@ void ArtworkExtractor::fromM4a(const std::string& filePath, const std::string& o
     imgFile.close();
 }
 
-MediaPlayer::Track::Track(const std::string& tTitle, const std::string& tArtist, const std::string& tAlbum)
-{
-    title = tTitle;
-    artist = tArtist;
-    album = tAlbum;
-}
-
-MediaPlayer::Track::Track()
-{
-    title = "Unknown";
-    artist = "Unknown";
-    album = "Unknown";
-}
-
 MediaPlayer::MediaPlayer(std::shared_ptr<Database> db, QObject *parent)
     : QObject{parent}
 {
     m_db = db;
     m_player = new QMediaPlayer;
+    m_playlist = new QMediaPlaylist;
 
-    m_currentTrackId = -1;
+    m_player->setPlaylist(m_playlist);
 
     // Check path exists
     QString appPath = QDir::homePath() + "/.config/maestro";
@@ -125,26 +112,61 @@ MediaPlayer::MediaPlayer(std::shared_ptr<Database> db, QObject *parent)
         std::filesystem::create_directory(m_artworkPath.toStdString());
     }
 
-    connect(m_player, &QMediaPlayer::mediaStatusChanged, this, &MediaPlayer::onMediaStatusChanged);
+    connect(m_playlist, &QMediaPlaylist::currentMediaChanged, this, &MediaPlayer::currentMediaChanged);
+    connect(m_player, &QMediaPlayer::stateChanged, this, &MediaPlayer::onStateChanged);
 }
 
 MediaPlayer::~MediaPlayer()
-{}
-
-void MediaPlayer::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
 {
-    if (status == QMediaPlayer::BufferedMedia) {
-        emit onTrackInfoUpdate(getCurrentTrackMetaData());
-    }
+    disconnect(m_player, &QMediaPlayer::currentMediaChanged, this, &MediaPlayer::currentMediaChanged);
+    disconnect(m_player, &QMediaPlayer::stateChanged, this, &MediaPlayer::onStateChanged);
 }
 
-void MediaPlayer::playTrack(int id)
+void MediaPlayer::currentMediaChanged(const QMediaContent &media)
 {
-    Database::Track track = m_db->getTrack(id);
-    m_currentTrackId = id;
+    emit onTrackInfoUpdate(getCurrentTrackMetaData());
+}
 
-    m_player->setMedia(QUrl::fromLocalFile(track.filePath.c_str()));
+void MediaPlayer::playTrack(QVector<Track> queue, int position)
+{
+    m_playlist->clear();
+    m_mediaQueue.clear();
+    for (auto track : queue)
+    {
+        queueTrack(track.id);
+        m_mediaQueue.push_back(track);
+    }
+
+    m_playlist->setCurrentIndex(position);
     m_player->play();
+}
+
+void MediaPlayer::queueTrack(int id)
+{
+    Track track = m_db->getTrack(id);
+    m_playlist->addMedia(QUrl::fromLocalFile(track.filePath.c_str()));
+}
+
+void MediaPlayer::onStateChanged(QMediaPlayer::State state)
+{
+    switch (state)
+    {
+        case (QMediaPlayer::PlayingState):
+        {
+            emit onPlaybackStateChanged(PlaybackStatus::Playing);
+            break;
+        }
+        case (QMediaPlayer::PausedState):
+        {
+            emit onPlaybackStateChanged(PlaybackStatus::Paused);
+            break;
+        }
+        default:
+        {
+            emit onPlaybackStateChanged(PlaybackStatus::Stopped);
+            break;
+        }
+    }
 }
 
 void MediaPlayer::reindex()
@@ -200,21 +222,14 @@ void MediaPlayer::reindex()
     }
 }
 
-MediaPlayer::Track MediaPlayer::getTrackMetaData(int id)
+Track MediaPlayer::getTrackMetaData(int id)
 {
     if (id < 1)
     {
         return Track();
     }
 
-    Database::Track track = m_db->getTrack(id);
-    MediaPlayer::Track trackMetaData;
-
-    trackMetaData.title = track.title;
-    trackMetaData.artist = track.artist;
-    trackMetaData.album = track.album;
-
-    return trackMetaData;
+    return m_db->getTrack(id);
 }
 
 std::string MediaPlayer::getElapsedTime()
@@ -244,12 +259,12 @@ int MediaPlayer::getPercentage()
         return 0;
     }
 
-    return static_cast<int>(static_cast<float>(m_player->position()) / static_cast<float>(m_player->duration()) * 1000);
+    return static_cast<int>(static_cast<float>(m_player->position()) / static_cast<float>(m_player->duration()) * 100);
 }
 
-MediaPlayer::Track MediaPlayer::getCurrentTrackMetaData()
+Track MediaPlayer::getCurrentTrackMetaData()
 {
-    return getTrackMetaData(m_currentTrackId);
+    return getTrackMetaData(m_mediaQueue[m_playlist->currentIndex()].id);
 }
 
 std::string MediaPlayer::formatTime(qint64 ms) {
@@ -265,4 +280,31 @@ std::string MediaPlayer::formatTime(qint64 ms) {
 bool MediaPlayer::isPlaying()
 {
     return m_player->state() == QMediaPlayer::PlayingState;
+}
+
+void MediaPlayer::togglePause()
+{
+    if (isPlaying())
+    {
+        m_player->pause();
+    }
+    else
+    {
+        m_player->play();
+    }
+}
+
+void MediaPlayer::next()
+{
+    m_playlist->next();
+}
+
+void MediaPlayer::previous()
+{
+    m_playlist->previous();
+}
+
+bool MediaPlayer::isMediaReady()
+{
+    return m_player->mediaStatus() == QMediaPlayer::BufferedMedia;
 }

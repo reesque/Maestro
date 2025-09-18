@@ -1,6 +1,8 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
+#include "datastruct.h"
+
 #include <memory>
 #include <string>
 #include <mutex>
@@ -15,16 +17,6 @@ public:
     enum class Table
     {
         Track = 0
-    };
-
-    struct Track
-    {
-        int id;
-        int trackNum;
-        std::string filePath;
-        std::string title;
-        std::string artist;
-        std::string album;
     };
 
     explicit Database(QObject *parent = nullptr);

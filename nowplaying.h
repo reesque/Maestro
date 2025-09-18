@@ -2,14 +2,23 @@
 #define NOWPLAYING_H
 
 #include "database.h"
+#include "datastruct.h"
 #include "mediaplayer.h"
 #include "screen.h"
 
 #include <QTimer>
+#include <QProxyStyle>
+#include <QPainter>
+#include <QStyleOptionProgressBar>
 
 namespace Ui {
 class NowPlaying;
 }
+
+class RoundedProgressBarStyle : public QProxyStyle {
+    void drawControl(ControlElement element, const QStyleOption* option,
+                         QPainter* painter, const QWidget* widget = nullptr) const override;
+};
 
 class NowPlaying : public Screen
 {
@@ -19,8 +28,13 @@ public:
     explicit NowPlaying(std::shared_ptr<Database> db, std::shared_ptr<MediaPlayer> mediaPlayer, QWidget *parent = nullptr);
     ~NowPlaying() override;
 
+protected slots:
+    void leftAction() override;
+    void rightAction() override;
+    void confirmAction() override;
+
 private slots:
-    void onTrackInfoUpdate(MediaPlayer::Track track);
+    void onTrackInfoUpdate(Track track);
 
 private:
     void tickSeekBar();

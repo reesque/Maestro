@@ -5,6 +5,53 @@
 
 #include <filesystem>
 
+void RoundedProgressBarStyle::drawControl(ControlElement element, const QStyleOption* option,
+                     QPainter* painter, const QWidget* widget) const {
+    if (element == CE_ProgressBarContents)
+    {
+        const QStyleOptionProgressBar* progressBarOption = qstyleoption_cast<const QStyleOptionProgressBar*>(option);
+        if (!progressBarOption)
+        {
+            return;
+        }
+
+        QRect rect = progressBarOption->rect;
+        qreal radius = rect.height() / 2.0;
+
+        double percent = (double)(progressBarOption->progress - progressBarOption->minimum) /
+                         (progressBarOption->maximum - progressBarOption->minimum);
+
+        QRectF chunkRect = rect.adjusted(0, 0, -(1.0 - percent) * rect.width(), 0);
+
+        painter->save();
+        painter->setRenderHint(QPainter::Antialiasing);
+        painter->setBrush(QColor("#000000"));
+        painter->setPen(Qt::NoPen);
+        painter->drawRoundedRect(chunkRect, radius, radius);
+        painter->restore();
+    }
+    else if (element == CE_ProgressBarGroove)
+    {
+        const QStyleOptionProgressBar* progressBarOption = qstyleoption_cast<const QStyleOptionProgressBar*>(option);
+        if (!progressBarOption) {
+            return;
+        }
+
+        QRect rect = progressBarOption->rect;
+        qreal radius = rect.height() / 2.0;
+
+        painter->save();
+        painter->setRenderHint(QPainter::Antialiasing);
+        painter->setBrush(QColor("#aaaaaa"));
+        painter->setPen(Qt::NoPen);
+        painter->drawRoundedRect(rect, radius, radius);
+        painter->restore();
+    }
+    else {
+        QProxyStyle::drawControl(element, option, painter, widget);
+    }
+}
+
 NowPlaying::NowPlaying(std::shared_ptr<Database> db, std::shared_ptr<MediaPlayer> mediaPlayer, QWidget *parent) :
     Screen(parent),
     ui(new Ui::NowPlaying)
@@ -16,23 +63,36 @@ NowPlaying::NowPlaying(std::shared_ptr<Database> db, std::shared_ptr<MediaPlayer
 
     ui->setupUi(this);
 
+    ui->Seekbar->setStyle(new RoundedProgressBarStyle);
+
     seekTimer = std::make_unique<QTimer>();
     connect(seekTimer.get(), &QTimer::timeout, this, &NowPlaying::tickSeekBar);
     seekTimer->start(10);
 
     connect(m_mediaPlayer.get(), &MediaPlayer::onTrackInfoUpdate, this, &NowPlaying::onTrackInfoUpdate);
-    onTrackInfoUpdate(m_mediaPlayer->getCurrentTrackMetaData());
+    if (m_mediaPlayer->isMediaReady())
+    {
+        onTrackInfoUpdate(m_mediaPlayer->getCurrentTrackMetaData());
+    }
+
+    // Keyboard config
+    connect(leftKey.get(), &QShortcut::activated, this, &NowPlaying::leftAction);
+    connect(rightKey.get(), &QShortcut::activated, this, &NowPlaying::rightAction);
+    connect(confirmKey.get(), &QShortcut::activated, this, &NowPlaying::confirmAction);
 }
 
 NowPlaying::~NowPlaying()
 {
     disconnect(m_mediaPlayer.get(), &MediaPlayer::onTrackInfoUpdate, this, &NowPlaying::onTrackInfoUpdate);
     disconnect(seekTimer.get(), &QTimer::timeout, this, &NowPlaying::tickSeekBar);
+    disconnect(leftKey.get(), &QShortcut::activated, this, &NowPlaying::leftAction);
+    disconnect(rightKey.get(), &QShortcut::activated, this, &NowPlaying::rightAction);
+    disconnect(confirmKey.get(), &QShortcut::activated, this, &NowPlaying::confirmAction);
 
     delete ui;
 }
 
-void NowPlaying::onTrackInfoUpdate(MediaPlayer::Track track)
+void NowPlaying::onTrackInfoUpdate(Track track)
 {
     // Update track stats
     ui->Title->setText(QString::fromStdString(track.title));
@@ -74,4 +134,19 @@ void NowPlaying::tickSeekBar()
         ui->TimeLeft->setText(QString::fromStdString(m_mediaPlayer->getElapsedTime()));
         ui->TimeRight->setText(QString::fromStdString(m_mediaPlayer->getRemainingTime()));
     }
+}
+
+void NowPlaying::leftAction()
+{
+    m_mediaPlayer->previous();
+}
+
+void NowPlaying::rightAction()
+{
+    m_mediaPlayer->next();
+}
+
+void NowPlaying::confirmAction()
+{
+    m_mediaPlayer->togglePause();
 }

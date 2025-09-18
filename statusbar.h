@@ -1,6 +1,8 @@
 #ifndef STATUSBAR_H
 #define STATUSBAR_H
 
+#include "datastruct.h"
+
 #include <QWidget>
 
 namespace Ui {
@@ -17,6 +19,7 @@ public:
 
 public slots:
     void changeTitle(QString title);
+    void onPlaybackStateChanged(PlaybackStatus playbackStatus);
 
 private:
     Ui::StatusBar *ui;

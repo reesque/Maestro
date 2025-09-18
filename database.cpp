@@ -78,7 +78,7 @@ void Database::insertTrack(const QString& filePath, const QString& title,
     });
 }
 
-std::vector<Database::Track> Database::getAllTracks()
+std::vector<Track> Database::getAllTracks()
 {
     std::vector<Track> trackList;
 
@@ -103,7 +103,7 @@ std::vector<Database::Track> Database::getAllTracks()
     return trackList;
 }
 
-std::vector<Database::Track> Database::getTracksByAlbum(const std::string& albumName)
+std::vector<Track> Database::getTracksByAlbum(const std::string& albumName)
 {
     std::vector<Track> trackList;
 
@@ -130,7 +130,7 @@ std::vector<Database::Track> Database::getTracksByAlbum(const std::string& album
     return trackList;
 }
 
-std::vector<Database::Track> Database::getTracksByArtist(const std::string& artistName)
+std::vector<Track> Database::getTracksByArtist(const std::string& artistName)
 {
     std::vector<Track> trackList;
 
@@ -156,7 +156,7 @@ std::vector<Database::Track> Database::getTracksByArtist(const std::string& arti
     return trackList;
 }
 
-Database::Track Database::getTrack(int id)
+Track Database::getTrack(int id)
 {
     Track track;
     execute([this, &track, id](const QSqlDatabase& db){

@@ -43,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent) :
     StatusBar *statusBar = new StatusBar(this);
     layout->addWidget(statusBar);
     connect(this, &MainWindow::changeTitle, statusBar, &StatusBar::changeTitle);
+    connect(m_mediaPlayer.get(), &MediaPlayer::onPlaybackStateChanged,
+            statusBar, &StatusBar::onPlaybackStateChanged);
 
     // Content pane
     screenBox = new QWidget(this);
@@ -94,7 +96,7 @@ void MainWindow::switchScreenTo(ScreenType screenType, QVector<QVariant> args)
         case ScreenType::Main:
         {
             newScreen = new MainMenu(this);
-            emit changeTitle("Menu");
+            emit changeTitle("Maestro");
             break;
         }
         case ScreenType::Music:
@@ -181,6 +183,7 @@ void MainWindow::switchScreenTo(ScreenType screenType, QVector<QVariant> args)
     connect(newScreen, &Screen::switchScreenTo, this, &MainWindow::switchScreenTo);
     connect(newScreen, &Screen::switchToPreviousScreen, this, &MainWindow::switchToPreviousScreen);
     connect(newScreen, &Screen::playTrack, m_mediaPlayer.get(), &MediaPlayer::playTrack);
+    connect(newScreen, &Screen::queueTrack, m_mediaPlayer.get(), &MediaPlayer::queueTrack);
 }
 
 void MainWindow::switchToPreviousScreen(QVector<QVariant> args)
