@@ -1,6 +1,8 @@
 #include "reindexscreen.h"
 #include "ui_reindexscreen.h"
 
+#include "roundedprogressbarstyle.h"
+
 #include <thread>
 
 #include <QTimer>
@@ -12,6 +14,8 @@ ReindexScreen::ReindexScreen(std::shared_ptr<MediaPlayer> mediaPlayer, QWidget *
     m_mediaPlayer = mediaPlayer;
 
     ui->setupUi(this);
+
+    ui->Progress->setStyle(new RoundedProgressBarStyle);
 
     connect(mediaPlayer.get(), &MediaPlayer::onIndexProgress, this, &ReindexScreen::onIndexProgress);
 

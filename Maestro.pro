@@ -29,6 +29,7 @@ SOURCES += \
     musicmenu.cpp \
     nowplaying.cpp \
     reindexscreen.cpp \
+    roundedprogressbarstyle.cpp \
     screen.cpp \
     settingmenu.cpp \
     songsmenu.cpp \
@@ -53,6 +54,7 @@ HEADERS += \
     musicmenu.h \
     nowplaying.h \
     reindexscreen.h \
+    roundedprogressbarstyle.h \
     screen.h \
     settingmenu.h \
     songsmenu.h \

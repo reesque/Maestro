@@ -7,18 +7,10 @@
 #include "screen.h"
 
 #include <QTimer>
-#include <QProxyStyle>
-#include <QPainter>
-#include <QStyleOptionProgressBar>
 
 namespace Ui {
 class NowPlaying;
 }
-
-class RoundedProgressBarStyle : public QProxyStyle {
-    void drawControl(ControlElement element, const QStyleOption* option,
-                         QPainter* painter, const QWidget* widget = nullptr) const override;
-};
 
 class NowPlaying : public Screen
 {
