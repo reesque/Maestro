@@ -10,13 +10,13 @@ Controller::Controller(std::shared_ptr<Settings> setting, QWidget *parent)
     // Debounce timer
     m_faceBtnDebounceTimer = new QTimer(this);
     m_faceBtnDebounceTimer->setSingleShot(true);
-    m_faceBtnDebounceTimer->setInterval(m_setting->getFaceBtnResponsiveLevel());
+    m_faceBtnDebounceTimer->setInterval(levelToMillisec(m_setting->getFaceBtnResponsiveLevel()));
     m_acceptFaceBtnInput = true;
     connect(m_faceBtnDebounceTimer, &QTimer::timeout, this, &Controller::allowFaceBtnInput);
 
     m_dpadDebounceTimer = new QTimer(this);
     m_dpadDebounceTimer->setSingleShot(true);
-    m_dpadDebounceTimer->setInterval(m_setting->getDpadResponsiveLevel());
+    m_dpadDebounceTimer->setInterval(levelToMillisec(m_setting->getDpadResponsiveLevel()));
     m_acceptDpadInput = true;
     connect(m_dpadDebounceTimer, &QTimer::timeout, this, &Controller::allowDpadInput);
 
@@ -104,7 +104,7 @@ void Controller::connectGamepad(int id)
 
 void Controller::controllerButtonUpChanged(bool value)
 {
-    if (value && m_acceptDpadInput)
+    if (!value && m_acceptDpadInput)
     {
         emit triggerUpAction();
         m_acceptDpadInput = false;
@@ -114,7 +114,7 @@ void Controller::controllerButtonUpChanged(bool value)
 
 void Controller::controllerButtonDownChanged(bool value)
 {
-    if (value && m_acceptDpadInput)
+    if (!value && m_acceptDpadInput)
     {
         emit triggerDownAction();
         m_acceptDpadInput = false;
@@ -124,7 +124,7 @@ void Controller::controllerButtonDownChanged(bool value)
 
 void Controller::controllerButtonLeftChanged(bool value)
 {
-    if (value && m_acceptDpadInput)
+    if (!value && m_acceptDpadInput)
     {
         emit triggerLeftAction();
         m_acceptDpadInput = false;
@@ -134,7 +134,7 @@ void Controller::controllerButtonLeftChanged(bool value)
 
 void Controller::controllerButtonRightChanged(bool value)
 {
-    if (value && m_acceptDpadInput)
+    if (!value && m_acceptDpadInput)
     {
         emit triggerRightAction();
         m_acceptDpadInput = false;
@@ -144,7 +144,7 @@ void Controller::controllerButtonRightChanged(bool value)
 
 void Controller::controllerButtonAChanged(bool value)
 {
-    if (value && m_acceptFaceBtnInput)
+    if (!value && m_acceptFaceBtnInput)
     {
         emit triggerConfirmAction();
         m_acceptFaceBtnInput = false;
@@ -154,7 +154,7 @@ void Controller::controllerButtonAChanged(bool value)
 
 void Controller::controllerButtonBChanged(bool value)
 {
-    if (value && m_acceptFaceBtnInput)
+    if (!value && m_acceptFaceBtnInput)
     {
         emit triggerBackAction();
         m_acceptFaceBtnInput = false;
