@@ -12,6 +12,7 @@
 #include "nowplaying.h"
 #include "settingmenu.h"
 #include "reindexscreen.h"
+#include "controllermenu.h"
 
 #include <memory>
 #include <iomanip>
@@ -29,11 +30,16 @@ MainWindow::MainWindow(QWidget *parent) :
     // Init database
     m_database = std::make_shared<Database>();
 
+    // Init setting
+    m_setting = std::make_shared<Settings>(m_database);
+
     // Init media player
     m_mediaPlayer = std::make_shared<MediaPlayer>(m_database);
 
     // Init controller
-    m_controller = std::make_shared<Controller>(this);
+    m_controller = std::make_shared<Controller>(m_setting, this);
+    connect(m_setting.get(), &Settings::onDpadResponsiveLevelChanged, m_controller.get(), &Controller::onDpadResponsiveLevelChanged);
+    connect(m_setting.get(), &Settings::onFaceBtnResponsiveLevelChanged, m_controller.get(), &Controller::onFaceBtnResponsiveLevelChanged);
 
     // Init UI layout
     ui->setupUi(this);
@@ -179,6 +185,12 @@ void MainWindow::switchScreenTo(ScreenType screenType, QVector<QVariant> args)
         {
             newScreen = new ReindexScreen(m_mediaPlayer, this);
             emit changeTitle("Sync Library");
+            break;
+        }
+        case ScreenType::Controller:
+        {
+            newScreen = new ControllerMenu(m_setting, this);
+            emit changeTitle("Controller Settings");
             break;
         }
         default:

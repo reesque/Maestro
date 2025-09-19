@@ -3,9 +3,10 @@
 
 #include <QMainWindow>
 
-#include "screen.h"
-#include "mediaplayer.h"
 #include "controller.h"
+#include "screen.h"
+#include "settings.h"
+#include "mediaplayer.h"
 
 namespace Ui {
 class MainWindow;
@@ -32,6 +33,7 @@ private:
     std::shared_ptr<Database> m_database;
     std::shared_ptr<MediaPlayer> m_mediaPlayer;
     std::shared_ptr<Controller> m_controller;
+    std::shared_ptr<Settings> m_setting;
     ScreenType prevScreen;
 };
 

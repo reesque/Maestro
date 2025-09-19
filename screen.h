@@ -22,7 +22,8 @@ enum class ScreenType
     SongsByAlbumArtist,
     NowPlaying,
     Setting,
-    Reindex
+    Reindex,
+    Controller
 };
 
 class Screen : public QWidget

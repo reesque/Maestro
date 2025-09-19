@@ -2,36 +2,38 @@
 
 #include <iostream>
 
-Controller::Controller(QWidget *parent)
-    : QObject{parent}, currentGamepad(nullptr)
+Controller::Controller(std::shared_ptr<Settings> setting, QWidget *parent)
+    : QObject{parent}, m_currentGamepad(nullptr)
 {
-    // Debounce timer
-    fastDebounceTimer = new QTimer(this);
-    fastDebounceTimer->setSingleShot(true);
-    fastDebounceTimer->setInterval(300);
-    acceptFaceBtnInput = true;
-    connect(fastDebounceTimer, &QTimer::timeout, this, &Controller::allowFaceBtnInput);
+    m_setting = setting;
 
-    slowDebounceTimer = new QTimer(this);
-    slowDebounceTimer->setSingleShot(true);
-    slowDebounceTimer->setInterval(1000);
-    acceptDpadInput = true;
-    connect(slowDebounceTimer, &QTimer::timeout, this, &Controller::allowDpadInput);
+    // Debounce timer
+    m_faceBtnDebounceTimer = new QTimer(this);
+    m_faceBtnDebounceTimer->setSingleShot(true);
+    m_faceBtnDebounceTimer->setInterval(m_setting->getFaceBtnResponsiveLevel());
+    m_acceptFaceBtnInput = true;
+    connect(m_faceBtnDebounceTimer, &QTimer::timeout, this, &Controller::allowFaceBtnInput);
+
+    m_dpadDebounceTimer = new QTimer(this);
+    m_dpadDebounceTimer->setSingleShot(true);
+    m_dpadDebounceTimer->setInterval(m_setting->getDpadResponsiveLevel());
+    m_acceptDpadInput = true;
+    connect(m_dpadDebounceTimer, &QTimer::timeout, this, &Controller::allowDpadInput);
 
     // Keyboard config
-    leftKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Left), parent);
-    rightKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Right), parent);
-    upKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Up), parent);
-    downKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Down), parent);
-    backKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Escape), parent);
-    confirmKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Space), parent);
+    m_leftKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Left), parent);
+    m_rightKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Right), parent);
+    m_upKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Up), parent);
+    m_downKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Down), parent);
+    m_backKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Escape), parent);
+    m_confirmKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Space), parent);
 
-    connect(leftKey.get(), &QShortcut::activated, this, &Controller::triggerLeftAction);
-    connect(rightKey.get(), &QShortcut::activated, this, &Controller::triggerRightAction);
-    connect(upKey.get(), &QShortcut::activated, this, &Controller::triggerUpAction);
-    connect(downKey.get(), &QShortcut::activated, this, &Controller::triggerDownAction);
-    connect(backKey.get(), &QShortcut::activated, this, &Controller::triggerBackAction);
-    connect(confirmKey.get(), &QShortcut::activated, this, &Controller::triggerConfirmAction);
+    connect(m_leftKey.get(), &QShortcut::activated, this, &Controller::triggerLeftAction);
+    connect(m_rightKey.get(), &QShortcut::activated, this, &Controller::triggerRightAction);
+    connect(m_upKey.get(), &QShortcut::activated, this, &Controller::triggerUpAction);
+    connect(m_downKey.get(), &QShortcut::activated, this, &Controller::triggerDownAction);
+    connect(m_backKey.get(), &QShortcut::activated, this, &Controller::triggerBackAction);
+    connect(m_confirmKey.get(), &QShortcut::activated, this, &Controller::triggerConfirmAction);
 
     // Gamepad config
     connect(QGamepadManager::instance(), &QGamepadManager::connectedGamepadsChanged, this, &Controller::connectedGamepadsChanged);
@@ -44,109 +46,119 @@ Controller::Controller(QWidget *parent)
 
 Controller::~Controller()
 {
-    disconnect(leftKey.get(), &QShortcut::activated, this, &Controller::triggerLeftAction);
-    disconnect(rightKey.get(), &QShortcut::activated, this, &Controller::triggerRightAction);
-    disconnect(upKey.get(), &QShortcut::activated, this, &Controller::triggerUpAction);
-    disconnect(downKey.get(), &QShortcut::activated, this, &Controller::triggerDownAction);
-    disconnect(backKey.get(), &QShortcut::activated, this, &Controller::triggerBackAction);
-    disconnect(confirmKey.get(), &QShortcut::activated, this, &Controller::triggerConfirmAction);
+    disconnect(m_leftKey.get(), &QShortcut::activated, this, &Controller::triggerLeftAction);
+    disconnect(m_rightKey.get(), &QShortcut::activated, this, &Controller::triggerRightAction);
+    disconnect(m_upKey.get(), &QShortcut::activated, this, &Controller::triggerUpAction);
+    disconnect(m_downKey.get(), &QShortcut::activated, this, &Controller::triggerDownAction);
+    disconnect(m_backKey.get(), &QShortcut::activated, this, &Controller::triggerBackAction);
+    disconnect(m_confirmKey.get(), &QShortcut::activated, this, &Controller::triggerConfirmAction);
+}
+
+void Controller::onDpadResponsiveLevelChanged(int level)
+{
+    m_dpadDebounceTimer->setInterval(levelToMillisec(level));
+}
+
+void Controller::onFaceBtnResponsiveLevelChanged(int level)
+{
+    m_faceBtnDebounceTimer->setInterval(levelToMillisec(level));
 }
 
 void Controller::allowFaceBtnInput()
 {
-    acceptFaceBtnInput = true;
+    m_acceptFaceBtnInput = true;
 }
 
 void Controller::allowDpadInput()
 {
-    acceptDpadInput = true;
+    m_acceptDpadInput = true;
 }
 
 void Controller::disconnectGamepad()
 {
-    if (currentGamepad)
+    if (m_currentGamepad)
     {
-        disconnect(currentGamepad, &QGamepad::buttonLeftChanged, this, &Controller::controllerButtonLeftChanged);
-        disconnect(currentGamepad, &QGamepad::buttonRightChanged, this, &Controller::controllerButtonRightChanged);
-        disconnect(currentGamepad, &QGamepad::buttonUpChanged, this, &Controller::controllerButtonUpChanged);
-        disconnect(currentGamepad, &QGamepad::buttonDownChanged, this, &Controller::controllerButtonDownChanged);
-        disconnect(currentGamepad, &QGamepad::buttonBChanged, this, &Controller::controllerButtonBChanged);
-        disconnect(currentGamepad, &QGamepad::buttonAChanged, this, &Controller::controllerButtonAChanged);
-        delete currentGamepad;
-        currentGamepad = nullptr;
+        disconnect(m_currentGamepad, &QGamepad::buttonLeftChanged, this, &Controller::controllerButtonLeftChanged);
+        disconnect(m_currentGamepad, &QGamepad::buttonRightChanged, this, &Controller::controllerButtonRightChanged);
+        disconnect(m_currentGamepad, &QGamepad::buttonUpChanged, this, &Controller::controllerButtonUpChanged);
+        disconnect(m_currentGamepad, &QGamepad::buttonDownChanged, this, &Controller::controllerButtonDownChanged);
+        disconnect(m_currentGamepad, &QGamepad::buttonBChanged, this, &Controller::controllerButtonBChanged);
+        disconnect(m_currentGamepad, &QGamepad::buttonAChanged, this, &Controller::controllerButtonAChanged);
+        delete m_currentGamepad;
+        m_currentGamepad = nullptr;
     }
 }
 
 void Controller::connectGamepad(int id)
 {
     disconnectGamepad();
-    currentGamepad = new QGamepad(id, this);
+    m_currentGamepad = new QGamepad(id, this);
 
-    connect(currentGamepad, &QGamepad::buttonLeftChanged, this, &Controller::controllerButtonLeftChanged);
-    connect(currentGamepad, &QGamepad::buttonRightChanged, this, &Controller::controllerButtonRightChanged);
-    connect(currentGamepad, &QGamepad::buttonUpChanged, this, &Controller::controllerButtonUpChanged);
-    connect(currentGamepad, &QGamepad::buttonDownChanged, this, &Controller::controllerButtonDownChanged);
-    connect(currentGamepad, &QGamepad::buttonBChanged, this, &Controller::controllerButtonBChanged);
-    connect(currentGamepad, &QGamepad::buttonAChanged, this, &Controller::controllerButtonAChanged);
+    connect(m_currentGamepad, &QGamepad::buttonLeftChanged, this, &Controller::controllerButtonLeftChanged);
+    connect(m_currentGamepad, &QGamepad::buttonRightChanged, this, &Controller::controllerButtonRightChanged);
+    connect(m_currentGamepad, &QGamepad::buttonUpChanged, this, &Controller::controllerButtonUpChanged);
+    connect(m_currentGamepad, &QGamepad::buttonDownChanged, this, &Controller::controllerButtonDownChanged);
+    connect(m_currentGamepad, &QGamepad::buttonBChanged, this, &Controller::controllerButtonBChanged);
+    connect(m_currentGamepad, &QGamepad::buttonAChanged, this, &Controller::controllerButtonAChanged);
 }
 
 void Controller::controllerButtonUpChanged(bool value)
 {
-    if (value && acceptDpadInput)
+    if (value && m_acceptDpadInput)
     {
         emit triggerUpAction();
-        acceptDpadInput = false;
-        slowDebounceTimer->start();
+        m_acceptDpadInput = false;
+        m_dpadDebounceTimer->start();
     }
 }
 
 void Controller::controllerButtonDownChanged(bool value)
 {
-    if (value && acceptDpadInput)
+    if (value && m_acceptDpadInput)
     {
         emit triggerDownAction();
-        acceptDpadInput = false;
-        slowDebounceTimer->start();
+        m_acceptDpadInput = false;
+        m_dpadDebounceTimer->start();
     }
 }
 
 void Controller::controllerButtonLeftChanged(bool value)
 {
-    if (value && acceptDpadInput)
+    if (value && m_acceptDpadInput)
     {
         emit triggerLeftAction();
-        acceptDpadInput = false;
-        slowDebounceTimer->start();
+        m_acceptDpadInput = false;
+        m_dpadDebounceTimer->start();
     }
 }
 
 void Controller::controllerButtonRightChanged(bool value)
 {
-    if (value && acceptDpadInput)
+    if (value && m_acceptDpadInput)
     {
         emit triggerRightAction();
-        acceptDpadInput = false;
-        slowDebounceTimer->start();
+        m_acceptDpadInput = false;
+        m_dpadDebounceTimer->start();
     }
 }
 
 void Controller::controllerButtonAChanged(bool value)
 {
-    if (value && acceptFaceBtnInput)
+    if (value && m_acceptFaceBtnInput)
     {
         emit triggerConfirmAction();
-        acceptFaceBtnInput = false;
-        fastDebounceTimer->start();
+        m_acceptFaceBtnInput = false;
+        m_faceBtnDebounceTimer->start();
     }
 }
 
 void Controller::controllerButtonBChanged(bool value)
 {
-    if (value && acceptFaceBtnInput)
+    if (value && m_acceptFaceBtnInput)
     {
         emit triggerBackAction();
-        acceptFaceBtnInput = false;
-        fastDebounceTimer->start();
+        m_acceptFaceBtnInput = false;
+        m_faceBtnDebounceTimer->start();
     }
 }
 
@@ -154,16 +166,22 @@ void Controller::connectedGamepadsChanged()
 {
     QList<int> gamepads = QGamepadManager::instance()->connectedGamepads();
 
-    if (currentGamepad)
+    if (m_currentGamepad)
     {
-        if (gamepads.size() == 0 ||  currentGamepad->deviceId() != gamepads[gamepads.size() - 1])
+        if (gamepads.size() == 0 ||  m_currentGamepad->deviceId() != gamepads[gamepads.size() - 1])
         {
             disconnectGamepad();
         }
     }
 
-    if (gamepads.size() > 0 && !currentGamepad)
+    if (gamepads.size() > 0 && !m_currentGamepad)
     {
         connectGamepad(gamepads[gamepads.size() - 1]);
     }
+}
+
+int Controller::levelToMillisec(int level)
+{
+    // 250 base level
+    return 250 + level * 250;
 }

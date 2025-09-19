@@ -6,6 +6,7 @@ SettingMenu::SettingMenu(QWidget *parent) :
     prevScreen = ScreenType::Main;
 
     menuList->push_back(std::make_shared<LabelMenuEntry>("Sync Library", [=](){switchScreenTo(ScreenType::Reindex);}));
+    menuList->push_back(std::make_shared<LabelMenuEntry>("Controller", [=](){switchScreenTo(ScreenType::Controller);}));
 
     populateMenu();
 }

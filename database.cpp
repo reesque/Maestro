@@ -17,15 +17,43 @@ Database::Database(QObject *parent) : QObject{parent}
         std::filesystem::create_directory(m_appPath.toStdString());
     }
 
-    execute([](const QSqlDatabase& db){
-        QSqlQuery query(db);
-        query.exec("CREATE TABLE IF NOT EXISTS tracks ("
+    // Create tracks table
+    execute([=](const QSqlDatabase& db){
+        // Create track table
+        QSqlQuery tracksTableCreate(db);
+        tracksTableCreate.exec("CREATE TABLE IF NOT EXISTS tracks ("
                    "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                    "filepath TEXT, "
                    "title TEXT, "
                    "artist TEXT, "
                    "album TEXT,"
                    "trackNum INTEGER)");
+
+        // Create settings table
+        QSqlQuery settingsTableCreate(db);
+        settingsTableCreate.exec("CREATE TABLE IF NOT EXISTS settings ("
+                   "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                   "key TEXT, "
+                   "value TEXT)");
+
+
+        auto defaultSettings = [db, this](int index, const QString& key, const QString& value){
+            std::stringstream queryStream;
+
+            queryStream << "INSERT OR IGNORE INTO " << getTableName(Table::Setting)
+                        << " (id, key, value)"
+                        << " VALUES (?, ?, ?)";
+
+            QSqlQuery insert(db);
+            insert.prepare(queryStream.str().c_str());
+            insert.addBindValue(index);
+            insert.addBindValue(key);
+            insert.addBindValue(value);
+            insert.exec();
+        };
+
+        defaultSettings(0, "DpadResponsiveLevel", QString::number(0));
+        defaultSettings(1, "FaceBtnResponsiveLevel", QString::number(0));
     });
 }
 
@@ -255,6 +283,38 @@ void Database::clearTable(const Table& table)
     });
 }
 
+std::string Database::getSetting(const std::string& key)
+{
+
+    std::string result = "";
+
+    execute([this, &result, key](const QSqlDatabase& db){
+        std::stringstream queryStream;
+        queryStream << "SELECT value FROM " << getTableName(Table::Setting)
+                    << " WHERE key LIKE '" << key << "';";
+
+        QSqlQuery query(db);
+        query.exec(queryStream.str().c_str());
+        if (query.next()) {
+            result = query.value(0).toString().toStdString();
+        }
+    });
+
+    return result;
+}
+
+void Database::setSetting(const std::string& key, const std::string& value)
+{
+    execute([this, key, value](const QSqlDatabase& db){
+        std::stringstream queryStream;
+        queryStream << "UPDATE " << getTableName(Table::Setting)
+                    << " SET value='" << value << "' WHERE key LIKE '" << key <<"';";
+
+        QSqlQuery query(db);
+        query.exec(queryStream.str().c_str());
+    });
+}
+
 std::string Database::getTableName(const Table& table)
 {
     std::string t;
@@ -263,6 +323,11 @@ std::string Database::getTableName(const Table& table)
         case Table::Track:
         {
             t = "tracks";
+            break;
+        }
+        case Table::Setting:
+        {
+            t = "settings";
             break;
         }
         default:

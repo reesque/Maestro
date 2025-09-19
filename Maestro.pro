@@ -19,6 +19,7 @@ SOURCES += \
     artworkmenulistitem.cpp \
     basemenulistitem.cpp \
     controller.cpp \
+    controllermenu.cpp \
     database.cpp \
     detailedmenulistitem.cpp \
     main.cpp \
@@ -32,6 +33,8 @@ SOURCES += \
     roundedprogressbarstyle.cpp \
     screen.cpp \
     settingmenu.cpp \
+    settings.cpp \
+    settingssliderlistitem.cpp \
     songsmenu.cpp \
     statusbar.cpp
 
@@ -42,6 +45,7 @@ HEADERS += \
     artworkmenulistitem.h \
     basemenulistitem.h \
     controller.h \
+    controllermenu.h \
     database.h \
     datastruct.h \
     detailedmenulistitem.h \
@@ -57,6 +61,8 @@ HEADERS += \
     roundedprogressbarstyle.h \
     screen.h \
     settingmenu.h \
+    settings.h \
+    settingssliderlistitem.h \
     songsmenu.h \
     statusbar.h
 
@@ -68,6 +74,7 @@ FORMS += \
     menulistitem.ui \
     nowplaying.ui \
     reindexscreen.ui \
+    settingssliderlistitem.ui \
     statusbar.ui
 
 RESOURCES += \

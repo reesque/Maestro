@@ -7,6 +7,7 @@
 #include <memory>
 #include <string>
 #include <mutex>
+#include <map>
 
 #include <QObject>
 #include <QtSql/QSqlDatabase>
@@ -17,7 +18,8 @@ class Database : public QObject
 public:
     enum class Table
     {
-        Track = 0
+        Track = 0,
+        Setting
     };
 
     explicit Database(QObject *parent = nullptr);
@@ -33,6 +35,8 @@ public:
     std::vector<std::string> getAlbumByArtist(const std::string& artistName);
     Track getTrack(int id);
     void clearTable(const Table& table);
+    std::string getSetting(const std::string& key);
+    void setSetting(const std::string& key, const std::string& value);
 
 private:
     void execute(std::function<void(const QSqlDatabase&)> func);

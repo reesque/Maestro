@@ -1,6 +1,8 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include "settings.h"
+
 #include <memory>
 
 #include <QObject>
@@ -13,8 +15,12 @@ class Controller : public QObject
 {
     Q_OBJECT
 public:
-    Controller(QWidget *parent = nullptr);
+    Controller(std::shared_ptr<Settings> settings, QWidget *parent);
     ~Controller() override;
+
+public slots:
+    void onDpadResponsiveLevelChanged(int level);
+    void onFaceBtnResponsiveLevelChanged(int level);
 
 signals:
     void triggerUpAction();
@@ -38,21 +44,24 @@ private slots:
 private:
     void disconnectGamepad();
     void connectGamepad(int id);
+    int levelToMillisec(int level);
 
 private:
-    std::unique_ptr<QShortcut> upKey;
-    std::unique_ptr<QShortcut> downKey;
-    std::unique_ptr<QShortcut> leftKey;
-    std::unique_ptr<QShortcut> rightKey;
-    std::unique_ptr<QShortcut> backKey;
-    std::unique_ptr<QShortcut> confirmKey;
+    std::unique_ptr<QShortcut> m_upKey;
+    std::unique_ptr<QShortcut> m_downKey;
+    std::unique_ptr<QShortcut> m_leftKey;
+    std::unique_ptr<QShortcut> m_rightKey;
+    std::unique_ptr<QShortcut> m_backKey;
+    std::unique_ptr<QShortcut> m_confirmKey;
 
-    QTimer *fastDebounceTimer;
-    QTimer *slowDebounceTimer;
-    QGamepad *currentGamepad;
+    std::shared_ptr<Settings> m_setting;
 
-    bool acceptFaceBtnInput;
-    bool acceptDpadInput;
+    QTimer *m_faceBtnDebounceTimer;
+    QTimer *m_dpadDebounceTimer;
+    QGamepad *m_currentGamepad;
+
+    bool m_acceptFaceBtnInput;
+    bool m_acceptDpadInput;
 };
 
 #endif // CONTROLLER_H
