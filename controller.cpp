@@ -37,8 +37,6 @@ Controller::~Controller()
     disconnect(downKey.get(), &QShortcut::activated, this, &Controller::triggerDownAction);
     disconnect(backKey.get(), &QShortcut::activated, this, &Controller::triggerBackAction);
     disconnect(confirmKey.get(), &QShortcut::activated, this, &Controller::triggerConfirmAction);
-
-    disconnectGamepad();
 }
 
 void Controller::disconnectGamepad()
