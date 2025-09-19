@@ -25,7 +25,8 @@ signals:
     void triggerConfirmAction();
 
 private slots:
-    void allowNextInput();
+    void allowLetterInput();
+    void allowArrowInput();
     void connectedGamepadsChanged();
     void controllerButtonUpChanged(bool value);
     void controllerButtonDownChanged(bool value);
@@ -46,10 +47,12 @@ private:
     std::unique_ptr<QShortcut> backKey;
     std::unique_ptr<QShortcut> confirmKey;
 
-    QTimer *debounceTimer;
-
+    QTimer *fastDebounceTimer;
+    QTimer *slowDebounceTimer;
     QGamepad *currentGamepad;
-    bool acceptInput;
+
+    bool acceptFaceBtnInput;
+    bool acceptDpadInput;
 };
 
 #endif // CONTROLLER_H

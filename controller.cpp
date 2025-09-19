@@ -3,14 +3,20 @@
 #include <iostream>
 
 Controller::Controller(QWidget *parent)
-    : QObject{parent}
+    : QObject{parent}, currentGamepad(nullptr)
 {
     // Debounce timer
-    debounceTimer = new QTimer(this);
-    debounceTimer->setSingleShot(true);
-    debounceTimer->setInterval(300);
-    acceptInput = true;
-    connect(debounceTimer, &QTimer::timeout, this, &Controller::allowNextInput);
+    fastDebounceTimer = new QTimer(this);
+    fastDebounceTimer->setSingleShot(true);
+    fastDebounceTimer->setInterval(300);
+    acceptFaceBtnInput = true;
+    connect(fastDebounceTimer, &QTimer::timeout, this, &Controller::allowLetterInput);
+
+    slowDebounceTimer = new QTimer(this);
+    slowDebounceTimer->setSingleShot(true);
+    slowDebounceTimer->setInterval(1000);
+    acceptDpadInput = true;
+    connect(slowDebounceTimer, &QTimer::timeout, this, &Controller::allowArrowInput);
 
     // Keyboard config
     leftKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Left), parent);
@@ -46,9 +52,14 @@ Controller::~Controller()
     disconnect(confirmKey.get(), &QShortcut::activated, this, &Controller::triggerConfirmAction);
 }
 
-void Controller::allowNextInput()
+void Controller::allowLetterInput()
 {
-    acceptInput = true;
+    acceptFaceBtnInput = true;
+}
+
+void Controller::allowArrowInput()
+{
+    acceptDpadInput = true;
 }
 
 void Controller::disconnectGamepad()
@@ -81,61 +92,61 @@ void Controller::connectGamepad(int id)
 
 void Controller::controllerButtonUpChanged(bool value)
 {
-    if (value && acceptInput)
+    if (value && acceptDpadInput)
     {
         emit triggerUpAction();
-        acceptInput = false;
-        debounceTimer->start();
+        acceptDpadInput = false;
+        slowDebounceTimer->start();
     }
 }
 
 void Controller::controllerButtonDownChanged(bool value)
 {
-    if (value && acceptInput)
+    if (value && acceptDpadInput)
     {
         emit triggerDownAction();
-        acceptInput = false;
-        debounceTimer->start();
+        acceptDpadInput = false;
+        slowDebounceTimer->start();
     }
 }
 
 void Controller::controllerButtonLeftChanged(bool value)
 {
-    if (value && acceptInput)
+    if (value && acceptDpadInput)
     {
         emit triggerLeftAction();
-        acceptInput = false;
-        debounceTimer->start();
+        acceptDpadInput = false;
+        slowDebounceTimer->start();
     }
 }
 
 void Controller::controllerButtonRightChanged(bool value)
 {
-    if (value && acceptInput)
+    if (value && acceptDpadInput)
     {
         emit triggerRightAction();
-        acceptInput = false;
-        debounceTimer->start();
+        acceptDpadInput = false;
+        slowDebounceTimer->start();
     }
 }
 
 void Controller::controllerButtonAChanged(bool value)
 {
-    if (value && acceptInput)
+    if (value && acceptFaceBtnInput)
     {
         emit triggerConfirmAction();
-        acceptInput = false;
-        debounceTimer->start();
+        acceptFaceBtnInput = false;
+        fastDebounceTimer->start();
     }
 }
 
 void Controller::controllerButtonBChanged(bool value)
 {
-    if (value && acceptInput)
+    if (value && acceptFaceBtnInput)
     {
         emit triggerBackAction();
-        acceptInput = false;
-        debounceTimer->start();
+        acceptFaceBtnInput = false;
+        fastDebounceTimer->start();
     }
 }
 
