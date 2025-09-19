@@ -22,6 +22,13 @@ struct Track
     {
         return !(id==otherTrack.id);
     }
+
+    static Track NonExist()
+    {
+        Track t {-1, -1, "", "", "", ""};
+
+        return t;
+    }
 };
 
 Q_DECLARE_METATYPE(Track);

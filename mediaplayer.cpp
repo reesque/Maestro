@@ -278,7 +278,13 @@ int MediaPlayer::getPercentage()
 
 Track MediaPlayer::getCurrentTrackMetaData()
 {
-    return getTrackMetaData(m_mediaQueue[m_playlist->currentIndex()].id);
+    int pos = m_playlist->currentIndex();
+    if (pos >= 0)
+    {
+        return getTrackMetaData(m_mediaQueue[pos].id);
+    }
+
+    return Track::NonExist();
 }
 
 std::string MediaPlayer::formatTime(qint64 ms) {
@@ -311,11 +317,29 @@ void MediaPlayer::togglePause()
 void MediaPlayer::next()
 {
     m_playlist->next();
+
+    // Skip if the track loops back
+    if (m_playlist->currentIndex() < 0)
+    {
+        m_playlist->clear();
+        return;
+    }
+
+    m_player->play();
 }
 
 void MediaPlayer::previous()
 {
     m_playlist->previous();
+
+    // Skip if the track loops back
+    if (m_playlist->currentIndex() < 0)
+    {
+        m_playlist->clear();
+        return;
+    }
+
+    m_player->play();
 }
 
 bool MediaPlayer::isMediaReady()

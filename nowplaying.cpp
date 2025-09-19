@@ -41,6 +41,22 @@ NowPlaying::~NowPlaying()
 
 void NowPlaying::onTrackInfoUpdate(Track track)
 {
+    if (track == Track::NonExist())
+    {
+        // Update track stats
+        ui->Title->setText("Title");
+        ui->Artist->setText("Artist");
+        ui->Album->setText("Album");
+
+        // Update player stats
+        ui->TimeLeft->setText("00:00");
+        ui->TimeRight->setText("-00:00");
+        ui->Seekbar->setValue(0);
+
+        ui->CoverArt->setPixmap(QPixmap(":/icons/assets/cover.png"));
+        return;
+    }
+
     // Update track stats
     ui->Title->setText(QString::fromStdString(track.title));
     ui->Artist->setText(QString::fromStdString(track.artist));
