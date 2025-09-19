@@ -29,7 +29,7 @@ class MediaPlayer : public QObject
     Q_OBJECT
 public:
     explicit MediaPlayer(std::shared_ptr<Database> db, QObject *parent = nullptr);
-    ~MediaPlayer();
+    ~MediaPlayer() override;
 
     void reindex();
     Track getTrackMetaData(int id);

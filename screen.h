@@ -4,7 +4,6 @@
 #include "datastruct.h"
 
 #include <QWidget>
-#include <QShortcut>
 #include <QVector>
 #include <QVariant>
 
@@ -40,24 +39,17 @@ signals:
     void playTrack(QVector<Track>, int);
     void queueTrack(int);
 
-protected:
-    ScreenType prevScreen;
-    QVector<QVariant> prevScreenArgs;
-
-    std::unique_ptr<QShortcut> upKey;
-    std::unique_ptr<QShortcut> downKey;
-    std::unique_ptr<QShortcut> leftKey;
-    std::unique_ptr<QShortcut> rightKey;
-    std::unique_ptr<QShortcut> backKey;
-    std::unique_ptr<QShortcut> confirmKey;
-
-protected slots:
+public slots:
     virtual void upAction();
     virtual void downAction();
     virtual void rightAction();
     virtual void leftAction();
     virtual void backAction();
     virtual void confirmAction();
+
+protected:
+    ScreenType prevScreen;
+    QVector<QVariant> prevScreenArgs;
 };
 
 #endif // SCREEN_H

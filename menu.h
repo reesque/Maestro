@@ -62,19 +62,11 @@ public:
 
         menuList = std::make_unique<std::vector<std::shared_ptr<BaseMenuEntry>>>();
         connect(ui->ListObject, &QListWidget::itemClicked, this, &Menu::onItemClicked);
-
-        // Keyboard config
-        connect(upKey.get(), &QShortcut::activated, this, &Menu::upAction);
-        connect(downKey.get(), &QShortcut::activated, this, &Menu::downAction);
-        connect(confirmKey.get(), &QShortcut::activated, this, &Menu::confirmAction);
     }
 
     virtual ~Menu()
     {
         disconnect(ui->ListObject, &QListWidget::itemClicked, this, &Menu::onItemClicked);
-        disconnect(upKey.get(), &QShortcut::activated, this, &Menu::upAction);
-        disconnect(downKey.get(), &QShortcut::activated, this, &Menu::downAction);
-        disconnect(confirmKey.get(), &QShortcut::activated, this, &Menu::confirmAction);
 
         delete ui;
     }

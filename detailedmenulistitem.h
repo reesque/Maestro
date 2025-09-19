@@ -15,7 +15,7 @@ public:
     explicit DetailedMenuListItem(const std::string& header, const std::string& subtext,
                                   const std::string& artworkPath, std::function<void()> activator,
                                   QWidget *parent = nullptr);
-    ~DetailedMenuListItem();
+    ~DetailedMenuListItem() override;
 
 private:
     Ui::DetailedMenuListItem *ui;

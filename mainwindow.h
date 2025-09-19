@@ -5,6 +5,7 @@
 
 #include "screen.h"
 #include "mediaplayer.h"
+#include "controller.h"
 
 namespace Ui {
 class MainWindow;
@@ -16,7 +17,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow() override;
 
 signals:
     void changeTitle(QString title);
@@ -30,6 +31,7 @@ private:
     QWidget *screenBox;
     std::shared_ptr<Database> m_database;
     std::shared_ptr<MediaPlayer> m_mediaPlayer;
+    std::shared_ptr<Controller> m_controller;
     ScreenType prevScreen;
 };
 

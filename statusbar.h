@@ -15,7 +15,7 @@ class StatusBar : public QWidget
 
 public:
     explicit StatusBar(QWidget *parent = nullptr);
-    ~StatusBar();
+    ~StatusBar() override;
 
 public slots:
     void changeTitle(QString title);

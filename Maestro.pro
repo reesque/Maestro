@@ -1,6 +1,6 @@
 QT += core gui sql
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia multimediawidgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia multimediawidgets gamepad
 
 CONFIG += c++17
 
@@ -17,6 +17,7 @@ SOURCES += \
     artistmenu.cpp \
     artworkmenulistitem.cpp \
     basemenulistitem.cpp \
+    controller.cpp \
     database.cpp \
     detailedmenulistitem.cpp \
     main.cpp \
@@ -38,6 +39,7 @@ HEADERS += \
     artistmenu.h \
     artworkmenulistitem.h \
     basemenulistitem.h \
+    controller.h \
     database.h \
     datastruct.h \
     detailedmenulistitem.h \

@@ -20,7 +20,7 @@ public:
     };
 
     explicit Database(QObject *parent = nullptr);
-    ~Database();
+    ~Database() override;
 
     void insertTrack(const QString& filePath, const QString& title,
                 const QString& artist, const QString& album, int trackNum);

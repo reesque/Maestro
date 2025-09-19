@@ -14,7 +14,7 @@ class ReindexScreen : public Screen
 
 public:
     explicit ReindexScreen(std::shared_ptr<MediaPlayer> mediaPlayer, QWidget *parent = nullptr);
-    ~ReindexScreen();
+    ~ReindexScreen() override;
 
 private slots:
     void onIndexProgress(int progress, int total);

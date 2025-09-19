@@ -74,20 +74,12 @@ NowPlaying::NowPlaying(std::shared_ptr<Database> db, std::shared_ptr<MediaPlayer
     {
         onTrackInfoUpdate(m_mediaPlayer->getCurrentTrackMetaData());
     }
-
-    // Keyboard config
-    connect(leftKey.get(), &QShortcut::activated, this, &NowPlaying::leftAction);
-    connect(rightKey.get(), &QShortcut::activated, this, &NowPlaying::rightAction);
-    connect(confirmKey.get(), &QShortcut::activated, this, &NowPlaying::confirmAction);
 }
 
 NowPlaying::~NowPlaying()
 {
     disconnect(m_mediaPlayer.get(), &MediaPlayer::onTrackInfoUpdate, this, &NowPlaying::onTrackInfoUpdate);
     disconnect(seekTimer.get(), &QTimer::timeout, this, &NowPlaying::tickSeekBar);
-    disconnect(leftKey.get(), &QShortcut::activated, this, &NowPlaying::leftAction);
-    disconnect(rightKey.get(), &QShortcut::activated, this, &NowPlaying::rightAction);
-    disconnect(confirmKey.get(), &QShortcut::activated, this, &NowPlaying::confirmAction);
 
     delete ui;
 }

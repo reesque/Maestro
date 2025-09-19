@@ -32,6 +32,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // Init media player
     m_mediaPlayer = std::make_shared<MediaPlayer>(m_database);
 
+    // Init controller
+    m_controller = std::make_shared<Controller>(this);
+
     // Init UI layout
     ui->setupUi(this);
 
@@ -78,13 +81,20 @@ void MainWindow::switchScreenTo(ScreenType screenType, QVector<QVariant> args)
         disconnect(oldScreen, &Screen::switchScreenTo, this, &MainWindow::switchScreenTo);
         disconnect(oldScreen, &Screen::switchToPreviousScreen, this, &MainWindow::switchToPreviousScreen);
 
+        disconnect(m_controller.get(), &Controller::triggerLeftAction, oldScreen, &Screen::leftAction);
+        disconnect(m_controller.get(), &Controller::triggerRightAction, oldScreen, &Screen::rightAction);
+        disconnect(m_controller.get(), &Controller::triggerUpAction, oldScreen, &Screen::upAction);
+        disconnect(m_controller.get(), &Controller::triggerDownAction, oldScreen, &Screen::downAction);
+        disconnect(m_controller.get(), &Controller::triggerBackAction, oldScreen, &Screen::backAction);
+        disconnect(m_controller.get(), &Controller::triggerConfirmAction, oldScreen, &Screen::confirmAction);
+
         QLayoutItem *item = screenBox->layout()->takeAt(0);
         if (item) {
             QWidget *widget = item->widget();
             if (widget) {
-                widget->deleteLater(); // Safe deletion in Qt
+                widget->deleteLater();
             }
-            delete item; // Also delete the layout item
+            delete item;
         }
         screenBox->layout()->removeItem(screenBox->layout()->itemAt(0));
     }
@@ -184,6 +194,13 @@ void MainWindow::switchScreenTo(ScreenType screenType, QVector<QVariant> args)
     connect(newScreen, &Screen::switchToPreviousScreen, this, &MainWindow::switchToPreviousScreen);
     connect(newScreen, &Screen::playTrack, m_mediaPlayer.get(), &MediaPlayer::playTrack);
     connect(newScreen, &Screen::queueTrack, m_mediaPlayer.get(), &MediaPlayer::queueTrack);
+
+    connect(m_controller.get(), &Controller::triggerLeftAction, newScreen, &Screen::leftAction);
+    connect(m_controller.get(), &Controller::triggerRightAction, newScreen, &Screen::rightAction);
+    connect(m_controller.get(), &Controller::triggerUpAction, newScreen, &Screen::upAction);
+    connect(m_controller.get(), &Controller::triggerDownAction, newScreen, &Screen::downAction);
+    connect(m_controller.get(), &Controller::triggerBackAction, newScreen, &Screen::backAction);
+    connect(m_controller.get(), &Controller::triggerConfirmAction, newScreen, &Screen::confirmAction);
 }
 
 void MainWindow::switchToPreviousScreen(QVector<QVariant> args)

@@ -13,7 +13,7 @@ class MenuListItem : public BaseMenuListItem
 
 public:
     explicit MenuListItem(const std::string& label, std::function<void()> activator, QWidget *parent = nullptr);
-    ~MenuListItem();
+    ~MenuListItem() override;
 
 private:
     Ui::MenuListItem *ui;
