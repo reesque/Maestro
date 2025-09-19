@@ -177,11 +177,25 @@ void MediaPlayer::reindex()
     QString rootPath = QDir::homePath() + "/Music/";
     QStringList audioExtensions = {"*.mp3", "*.wav", "*.flac", "*.aac", "*.ogg", "*.m4a"};
 
+    // If dir doesn't exist, just return
+    if (!std::filesystem::exists(rootPath.toStdString()))
+    {
+        emit onIndexProgress(1, 1);
+        return;
+    }
+
     QDirIterator it(rootPath, audioExtensions, QDir::Files, QDirIterator::Subdirectories);
 
     std::vector<QString> files;
     while (it.hasNext()) {
         files.push_back(it.next());
+    }
+
+    // No files to discover
+    if (files.size() == 0)
+    {
+        emit onIndexProgress(1, 1);
+        return;
     }
 
     for (size_t i = 0; i < files.size(); ++i) {
