@@ -25,8 +25,8 @@ signals:
     void triggerConfirmAction();
 
 private slots:
-    void allowLetterInput();
-    void allowArrowInput();
+    void allowFaceBtnInput();
+    void allowDpadInput();
     void connectedGamepadsChanged();
     void controllerButtonUpChanged(bool value);
     void controllerButtonDownChanged(bool value);

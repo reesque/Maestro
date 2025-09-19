@@ -10,13 +10,13 @@ Controller::Controller(QWidget *parent)
     fastDebounceTimer->setSingleShot(true);
     fastDebounceTimer->setInterval(300);
     acceptFaceBtnInput = true;
-    connect(fastDebounceTimer, &QTimer::timeout, this, &Controller::allowLetterInput);
+    connect(fastDebounceTimer, &QTimer::timeout, this, &Controller::allowFaceBtnInput);
 
     slowDebounceTimer = new QTimer(this);
     slowDebounceTimer->setSingleShot(true);
     slowDebounceTimer->setInterval(1000);
     acceptDpadInput = true;
-    connect(slowDebounceTimer, &QTimer::timeout, this, &Controller::allowArrowInput);
+    connect(slowDebounceTimer, &QTimer::timeout, this, &Controller::allowDpadInput);
 
     // Keyboard config
     leftKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Left), parent);
@@ -52,12 +52,12 @@ Controller::~Controller()
     disconnect(confirmKey.get(), &QShortcut::activated, this, &Controller::triggerConfirmAction);
 }
 
-void Controller::allowLetterInput()
+void Controller::allowFaceBtnInput()
 {
     acceptFaceBtnInput = true;
 }
 
-void Controller::allowArrowInput()
+void Controller::allowDpadInput()
 {
     acceptDpadInput = true;
 }
