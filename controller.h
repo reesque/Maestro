@@ -1,6 +1,8 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include <memory>
+
 #include <QObject>
 #include <QShortcut>
 #include <QGamepadManager>

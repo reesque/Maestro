@@ -3,6 +3,7 @@
 
 #include "datastruct.h"
 
+#include <functional>
 #include <memory>
 #include <string>
 #include <mutex>

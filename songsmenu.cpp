@@ -79,7 +79,12 @@ void SongsMenu::fillSongRecords(std::vector<Track> records)
         menuList->push_back(std::make_shared<DetailedMenuEntry>(
             records[queueNum].title, records[queueNum].artist, artPath, [=](){
                 emit switchScreenTo(ScreenType::NowPlaying);
-                emit playTrack(QVector<Track>(records.begin(), records.end()), queueNum);
+                QVector<Track> vec;
+		vec.reserve(records.size());
+		for (const auto& track : records) {
+    		    vec.append(track);
+		}
+		emit playTrack(vec, queueNum);
             }
         ));
     }

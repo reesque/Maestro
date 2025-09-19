@@ -6,6 +6,8 @@
 
 #include "ui_menu.h"
 
+#include <memory>
+
 #include <QListWidgetItem>
 #include <QScrollBar>
 
