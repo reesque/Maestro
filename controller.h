@@ -7,6 +7,7 @@
 #include <QShortcut>
 #include <QGamepadManager>
 #include <QGamepad>
+#include <QTimer>
 
 class Controller : public QObject
 {
@@ -24,6 +25,7 @@ signals:
     void triggerConfirmAction();
 
 private slots:
+    void allowNextInput();
     void connectedGamepadsChanged();
     void controllerButtonUpChanged(bool value);
     void controllerButtonDownChanged(bool value);
@@ -44,7 +46,10 @@ private:
     std::unique_ptr<QShortcut> backKey;
     std::unique_ptr<QShortcut> confirmKey;
 
+    QTimer *debounceTimer;
+
     QGamepad *currentGamepad;
+    bool acceptInput;
 };
 
 #endif // CONTROLLER_H

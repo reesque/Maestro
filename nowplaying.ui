@@ -78,7 +78,7 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>340</width>
+          <width>350</width>
           <height>0</height>
          </size>
         </property>
@@ -321,9 +321,15 @@
       </property>
       <item>
        <widget class="QLabel" name="TimeLeft">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>50</width>
+          <width>60</width>
           <height>0</height>
          </size>
         </property>

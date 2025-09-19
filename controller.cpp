@@ -5,6 +5,13 @@
 Controller::Controller(QWidget *parent)
     : QObject{parent}
 {
+    // Debounce timer
+    debounceTimer = new QTimer(this);
+    debounceTimer->setSingleShot(true);
+    debounceTimer->setInterval(300);
+    acceptInput = true;
+    connect(debounceTimer, &QTimer::timeout, this, &Controller::allowNextInput);
+
     // Keyboard config
     leftKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Left), parent);
     rightKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Right), parent);
@@ -39,6 +46,11 @@ Controller::~Controller()
     disconnect(confirmKey.get(), &QShortcut::activated, this, &Controller::triggerConfirmAction);
 }
 
+void Controller::allowNextInput()
+{
+    acceptInput = true;
+}
+
 void Controller::disconnectGamepad()
 {
     if (currentGamepad)
@@ -69,49 +81,61 @@ void Controller::connectGamepad(int id)
 
 void Controller::controllerButtonUpChanged(bool value)
 {
-    if (value)
+    if (value && acceptInput)
     {
         emit triggerUpAction();
+        acceptInput = false;
+        debounceTimer->start();
     }
 }
 
 void Controller::controllerButtonDownChanged(bool value)
 {
-    if (value)
+    if (value && acceptInput)
     {
         emit triggerDownAction();
+        acceptInput = false;
+        debounceTimer->start();
     }
 }
 
 void Controller::controllerButtonLeftChanged(bool value)
 {
-    if (value)
+    if (value && acceptInput)
     {
         emit triggerLeftAction();
+        acceptInput = false;
+        debounceTimer->start();
     }
 }
 
 void Controller::controllerButtonRightChanged(bool value)
 {
-    if (value)
+    if (value && acceptInput)
     {
         emit triggerRightAction();
+        acceptInput = false;
+        debounceTimer->start();
     }
 }
 
 void Controller::controllerButtonAChanged(bool value)
 {
-    if (value)
+    if (value && acceptInput)
     {
         emit triggerConfirmAction();
+        acceptInput = false;
+        debounceTimer->start();
     }
 }
 
 void Controller::controllerButtonBChanged(bool value)
 {
-    if (value)
+    if (value && acceptInput)
     {
         emit triggerBackAction();
+        acceptInput = false;
+        debounceTimer->start();
     }
 }
 
