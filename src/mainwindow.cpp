@@ -22,6 +22,7 @@
 #include <QSizePolicy>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
+#include <QPropertyAnimation>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -56,19 +57,23 @@ MainWindow::MainWindow(QWidget *parent) :
             statusBar, &StatusBar::onPlaybackStateChanged);
 
     // Content pane
-    screenBox = new QWidget(this);
-    screenBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    //screenBox = new QWidget(this);
+    //screenBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    QHBoxLayout *screenLayout = new QHBoxLayout(screenBox);
-    screenLayout->setAlignment(Qt::AlignCenter);
-    screenLayout->setSpacing(0);
-    screenLayout->setMargin(0);
+    screenStack = new QStackedWidget(this);
+    screenStack->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    layout->addWidget(screenBox);
+    //QHBoxLayout *screenLayout = new QHBoxLayout(screenBox);
+    //screenLayout->setAlignment(Qt::AlignCenter);
+    //screenLayout->setSpacing(0);
+    //screenLayout->setMargin(0);
+
+    //layout->addWidget(screenBox);
+    layout->addWidget(screenStack);
 
     ui->centralwidget->setLayout(layout);
 
-    switchScreenTo(ScreenType::Main);
+    switchScreenTo(ScreenType::Main, QVector<QVariant>(), ScreenAnimationType::None);
     prevScreen = ScreenType::None;
 }
 
@@ -77,34 +82,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::switchScreenTo(ScreenType screenType, QVector<QVariant> args)
+void MainWindow::switchScreenTo(ScreenType screenType,
+                                QVector<QVariant> args,
+                                ScreenAnimationType screenAnimationType)
 {
-    // Delete old screen
-    if (screenBox->layout()->count() > 0)
-    {
-        Screen *oldScreen = static_cast<Screen *>(screenBox->layout()->itemAt(0)->widget());
-
-        disconnect(oldScreen, &Screen::switchScreenTo, this, &MainWindow::switchScreenTo);
-        disconnect(oldScreen, &Screen::switchToPreviousScreen, this, &MainWindow::switchToPreviousScreen);
-
-        disconnect(m_controller.get(), &Controller::triggerLeftAction, oldScreen, &Screen::leftAction);
-        disconnect(m_controller.get(), &Controller::triggerRightAction, oldScreen, &Screen::rightAction);
-        disconnect(m_controller.get(), &Controller::triggerUpAction, oldScreen, &Screen::upAction);
-        disconnect(m_controller.get(), &Controller::triggerDownAction, oldScreen, &Screen::downAction);
-        disconnect(m_controller.get(), &Controller::triggerBackAction, oldScreen, &Screen::backAction);
-        disconnect(m_controller.get(), &Controller::triggerConfirmAction, oldScreen, &Screen::confirmAction);
-
-        QLayoutItem *item = screenBox->layout()->takeAt(0);
-        if (item) {
-            QWidget *widget = item->widget();
-            if (widget) {
-                widget->deleteLater();
-            }
-            delete item;
-        }
-        screenBox->layout()->removeItem(screenBox->layout()->itemAt(0));
-    }
-
     // New screen
     Screen *newScreen = nullptr;
     switch (screenType)
@@ -199,7 +180,7 @@ void MainWindow::switchScreenTo(ScreenType screenType, QVector<QVariant> args)
         }
     }
 
-    screenBox->layout()->addWidget(newScreen);
+    screenStack->layout()->addWidget(newScreen);
     newScreen->setFocus();
     prevScreen = newScreen->getPrevScreen();
     connect(newScreen, &Screen::switchScreenTo, this, &MainWindow::switchScreenTo);
@@ -213,12 +194,97 @@ void MainWindow::switchScreenTo(ScreenType screenType, QVector<QVariant> args)
     connect(m_controller.get(), &Controller::triggerDownAction, newScreen, &Screen::downAction);
     connect(m_controller.get(), &Controller::triggerBackAction, newScreen, &Screen::backAction);
     connect(m_controller.get(), &Controller::triggerConfirmAction, newScreen, &Screen::confirmAction);
+
+
+    // Delete old screen
+    if (screenStack->layout()->count() > 1)
+    {
+        Screen *oldScreen = static_cast<Screen *>(screenStack->layout()->itemAt(0)->widget());
+
+        QRect geo = screenStack->geometry();
+        int width = geo.width();
+        int height = geo.height();
+
+        newScreen->setGeometry(width, 0, width, geo.height());
+
+        QParallelAnimationGroup* group = new QParallelAnimationGroup;
+
+        switch (screenAnimationType)
+        {
+            case (ScreenAnimationType::Forward):
+            {
+                QPropertyAnimation* animCurrent = new QPropertyAnimation(oldScreen, "geometry");
+                animCurrent->setDuration(200);
+                animCurrent->setStartValue(QRect(0, 0, width, geo.height()));
+                animCurrent->setEndValue(QRect(-width, 0, width, geo.height()));
+
+                QPropertyAnimation* animNext = new QPropertyAnimation(newScreen, "geometry");
+                animNext->setDuration(200);
+                animNext->setStartValue(QRect(width, 0, width, geo.height()));
+                animNext->setEndValue(QRect(0, 0, width, geo.height()));
+
+                group->addAnimation(animCurrent);
+                group->addAnimation(animNext);
+                break;
+            }
+            case (ScreenAnimationType::Backward):
+            {
+                newScreen->setGeometry(-width, 0, width, height);
+
+                QPropertyAnimation* animCurrent = new QPropertyAnimation(oldScreen, "geometry");
+                animCurrent->setDuration(200);
+                animCurrent->setStartValue(QRect(0, 0, width, height));
+                animCurrent->setEndValue(QRect(width, 0, width, height));
+
+                QPropertyAnimation* animNext = new QPropertyAnimation(newScreen, "geometry");
+                animNext->setDuration(200);
+                animNext->setStartValue(QRect(-width, 0, width, height));
+                animNext->setEndValue(QRect(0, 0, width, height));
+
+                group->addAnimation(animCurrent);
+                group->addAnimation(animNext);
+                break;
+            }
+            default:
+            {
+                break;
+            }
+        }
+
+        oldScreen->raise();
+        oldScreen->show();
+        newScreen->show();
+
+        connect(group, &QParallelAnimationGroup::finished, [=]() {
+            screenStack->setCurrentIndex(1);
+            disconnect(oldScreen, &Screen::switchScreenTo, this, &MainWindow::switchScreenTo);
+            disconnect(oldScreen, &Screen::switchToPreviousScreen, this, &MainWindow::switchToPreviousScreen);
+
+            disconnect(m_controller.get(), &Controller::triggerLeftAction, oldScreen, &Screen::leftAction);
+            disconnect(m_controller.get(), &Controller::triggerRightAction, oldScreen, &Screen::rightAction);
+            disconnect(m_controller.get(), &Controller::triggerUpAction, oldScreen, &Screen::upAction);
+            disconnect(m_controller.get(), &Controller::triggerDownAction, oldScreen, &Screen::downAction);
+            disconnect(m_controller.get(), &Controller::triggerBackAction, oldScreen, &Screen::backAction);
+            disconnect(m_controller.get(), &Controller::triggerConfirmAction, oldScreen, &Screen::confirmAction);
+
+            QLayoutItem *item = screenStack->layout()->takeAt(0);
+            if (item) {
+                QWidget *widget = item->widget();
+                if (widget) {
+                    widget->deleteLater();
+                }
+                delete item;
+            }
+        });
+
+        group->start(QAbstractAnimation::DeleteWhenStopped);
+    }
 }
 
 void MainWindow::switchToPreviousScreen(QVector<QVariant> args)
 {
     if (prevScreen != ScreenType::None)
     {
-        switchScreenTo(prevScreen, args);
+        switchScreenTo(prevScreen, args, ScreenAnimationType::Backward);
     }
 }

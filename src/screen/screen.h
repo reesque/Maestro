@@ -26,6 +26,15 @@ enum class ScreenType
     Controller
 };
 
+enum class ScreenAnimationType
+{
+    Forward = 0,
+    Backward,
+    None
+};
+
+Q_DECLARE_METATYPE(ScreenAnimationType);
+
 class Screen : public QWidget
 {
     Q_OBJECT
@@ -35,7 +44,9 @@ public:
     ScreenType getPrevScreen();
 
 signals:
-    void switchScreenTo(ScreenType, QVector<QVariant> = QVector<QVariant>());
+    void switchScreenTo(ScreenType,
+                        QVector<QVariant> = QVector<QVariant>(),
+                        ScreenAnimationType = ScreenAnimationType::Forward);
     void switchToPreviousScreen(QVector<QVariant>);
     void playTrack(QVector<Track>, int);
     void queueTrack(int);

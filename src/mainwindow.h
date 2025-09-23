@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QStackedWidget>
 
 #include "controller.h"
 #include "screen.h"
@@ -24,12 +25,15 @@ signals:
     void changeTitle(QString title);
 
 private slots:
-    void switchScreenTo(ScreenType screenType, QVector<QVariant> args = QVector<QVariant>());
+    void switchScreenTo(ScreenType screenType,
+                        QVector<QVariant> args = QVector<QVariant>(),
+                        ScreenAnimationType screenAnimationType = ScreenAnimationType::Forward);
     void switchToPreviousScreen(QVector<QVariant> args);
 
 private:
     Ui::MainWindow *ui;
-    QWidget *screenBox;
+    //QWidget *screenBox;
+    QStackedWidget *screenStack;
     std::shared_ptr<Database> m_database;
     std::shared_ptr<MediaPlayer> m_mediaPlayer;
     std::shared_ptr<Controller> m_controller;
