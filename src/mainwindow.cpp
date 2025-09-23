@@ -195,11 +195,14 @@ void MainWindow::switchScreenTo(ScreenType screenType,
     connect(m_controller.get(), &Controller::triggerBackAction, newScreen, &Screen::backAction);
     connect(m_controller.get(), &Controller::triggerConfirmAction, newScreen, &Screen::confirmAction);
 
-
     // Delete old screen
     if (screenStack->layout()->count() > 1)
     {
         Screen *oldScreen = static_cast<Screen *>(screenStack->layout()->itemAt(0)->widget());
+
+        // Lock input
+        oldScreen->setInputLock(true);
+        newScreen->setInputLock(true);
 
         QRect geo = screenStack->geometry();
         int width = geo.width();
@@ -275,6 +278,9 @@ void MainWindow::switchScreenTo(ScreenType screenType,
                 }
                 delete item;
             }
+
+            // Release input for new screen
+            newScreen->setInputLock(false);
         });
 
         group->start(QAbstractAnimation::DeleteWhenStopped);

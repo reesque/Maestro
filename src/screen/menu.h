@@ -97,8 +97,11 @@ protected:
 protected slots:
     void onItemClicked(QListWidgetItem *item)
     {
-        QWidget *qw = ui->ListObject->itemWidget(item);
-        static_cast<MenuWidget&>(*qw).activate();
+        if (!m_inputLock)
+        {
+            QWidget *qw = ui->ListObject->itemWidget(item);
+            static_cast<MenuWidget&>(*qw).activate();
+        }
     }
 
 protected slots:

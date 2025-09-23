@@ -42,12 +42,13 @@ public:
     Screen(QWidget *parent = nullptr);
     virtual ~Screen();
     ScreenType getPrevScreen();
+    void setInputLock(bool isLocked);
 
 signals:
     void switchScreenTo(ScreenType,
                         QVector<QVariant> = QVector<QVariant>(),
                         ScreenAnimationType = ScreenAnimationType::Forward);
-    void switchToPreviousScreen(QVector<QVariant>);
+    void switchToPreviousScreen(QVector<QVariant> = QVector<QVariant>());
     void playTrack(QVector<Track>, int);
     void queueTrack(int);
 
@@ -62,6 +63,7 @@ public slots:
 protected:
     ScreenType prevScreen;
     QVector<QVariant> prevScreenArgs;
+    bool m_inputLock;
 };
 
 #endif // SCREEN_H

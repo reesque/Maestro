@@ -5,10 +5,17 @@ Screen::Screen(QWidget *parent) :
 {
     prevScreen = ScreenType::None;
     setFocusPolicy(Qt::StrongFocus);
+
+    m_inputLock = false;
 }
 
 Screen::~Screen()
 {}
+
+void Screen::setInputLock(bool isLocked)
+{
+    m_inputLock = isLocked;
+}
 
 ScreenType Screen::getPrevScreen()
 {
@@ -29,7 +36,10 @@ void Screen::leftAction()
 
 void Screen::backAction()
 {
-    emit switchToPreviousScreen(prevScreenArgs);
+    if (!m_inputLock)
+    {
+        emit switchToPreviousScreen(prevScreenArgs);
+    }
 }
 
 void Screen::confirmAction()

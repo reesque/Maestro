@@ -11,6 +11,7 @@ ReindexScreen::ReindexScreen(std::shared_ptr<MediaPlayer> mediaPlayer, QWidget *
     Screen(parent),
     ui(new Ui::ReindexScreen)
 {
+    prevScreen = ScreenType::Setting;
     m_mediaPlayer = mediaPlayer;
 
     ui->setupUi(this);
@@ -43,6 +44,6 @@ void ReindexScreen::onIndexProgress(int progress, int total)
     if (progress == total)
     {
         disconnect(m_mediaPlayer.get(), &MediaPlayer::onIndexProgress, this, &ReindexScreen::onIndexProgress);
-        switchScreenTo(ScreenType::Setting);
+        switchToPreviousScreen();
     }
 }
