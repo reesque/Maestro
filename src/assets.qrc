@@ -1,8 +1,8 @@
 <RCC>
-    <qresource prefix="/icons">
+    <qresource prefix="/app">
         <file>assets/cover.png</file>
         <file>assets/sync.png</file>
-        <file>assets/pause.png</file>
         <file>assets/play.png</file>
+        <file>assets/pause.png</file>
     </qresource>
 </RCC>

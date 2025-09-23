@@ -53,7 +53,7 @@ void NowPlaying::onTrackInfoUpdate(Track track)
         ui->TimeRight->setText("-00:00");
         ui->Seekbar->setValue(0);
 
-        ui->CoverArt->setPixmap(QPixmap(":/icons/assets/cover.png"));
+        ui->CoverArt->setPixmap(QPixmap(":/app/assets/cover.png"));
         return;
     }
 

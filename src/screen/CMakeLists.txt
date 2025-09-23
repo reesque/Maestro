@@ -32,7 +32,6 @@ add_library(Screen STATIC
     statusbar.h
     statusbar.cpp
     statusbar.ui
-    ../assets.qrc
 )
 
 target_include_directories(Screen PUBLIC

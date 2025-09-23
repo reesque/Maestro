@@ -24,12 +24,12 @@ void StatusBar::onPlaybackStateChanged(PlaybackStatus playbackStatus)
     {
         case (PlaybackStatus::Playing):
         {
-            ui->PlaybackStatus->setPixmap(QPixmap(":/icons/assets/play.png"));
+            ui->PlaybackStatus->setPixmap(QPixmap(":/app/assets/play.png"));
             break;
         }
         case (PlaybackStatus::Paused):
         {
-            ui->PlaybackStatus->setPixmap(QPixmap(":/icons/assets/pause.png"));
+            ui->PlaybackStatus->setPixmap(QPixmap(":/app/assets/pause.png"));
             break;
         }
         case (PlaybackStatus::Stopped):

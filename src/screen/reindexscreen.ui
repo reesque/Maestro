@@ -77,7 +77,7 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="assets.qrc">:/icons/assets/sync.png</pixmap>
+            <pixmap resource="../assets.qrc">:/app/assets/sync.png</pixmap>
            </property>
            <property name="scaledContents">
             <bool>true</bool>
@@ -164,7 +164,7 @@ QProgressBar::chunk {
   </layout>
  </widget>
  <resources>
-  <include location="assets.qrc"/>
+  <include location="../assets.qrc"/>
  </resources>
  <connections/>
 </ui>

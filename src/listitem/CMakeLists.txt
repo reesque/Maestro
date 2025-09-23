@@ -13,7 +13,6 @@ add_library(ListItem STATIC
     settingssliderlistitem.h
     settingssliderlistitem.cpp
     settingssliderlistitem.ui
-    ../assets.qrc
 )
 
 target_include_directories(ListItem PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

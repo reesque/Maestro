@@ -10,6 +10,9 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
+# Resource
+set(APP_RESOURCES assets.qrc)
+
 # Find taglib
 find_path(TAGLIB_INCLUDE_DIR taglib/tag.h PATHS /usr/include)
 find_library(TAGLIB_LIBRARY tag PATHS /usr/lib)
@@ -37,7 +40,7 @@ set(SOURCES
 )
 
 # Executable
-add_executable(Maestro ${SOURCES})
+add_executable(Maestro ${SOURCES} ${APP_RESOURCES})
 
 # Sub-project
 add_subdirectory(model)
