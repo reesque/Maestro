@@ -1,10 +1,10 @@
 #ifndef MENU_H
 #define MENU_H
 
+#include "ui_menu.h"
+
 #include "screen.h"
 #include "menuentry.h"
-
-#include "ui_menu.h"
 
 #include <memory>
 
