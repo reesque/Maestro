@@ -173,11 +173,6 @@
         <property name="lineWrapMode">
          <enum>QTextEdit::NoWrap</enum>
         </property>
-        <property name="markdown">
-         <string>**Label**
-
-</string>
-        </property>
         <property name="overwriteMode">
          <bool>false</bool>
         </property>
@@ -235,11 +230,6 @@
         </property>
         <property name="lineWrapMode">
          <enum>QTextEdit::NoWrap</enum>
-        </property>
-        <property name="markdown">
-         <string>Subtext
-
-</string>
         </property>
         <property name="textInteractionFlags">
          <set>Qt::NoTextInteraction</set>
