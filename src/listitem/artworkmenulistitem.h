@@ -17,6 +17,9 @@ public:
                                  QWidget *parent = nullptr);
     ~ArtworkMenuListItem();
 
+    void onFocus() override;
+    void onLoseFocus() override;
+
 private:
     Ui::ArtworkMenuListItem *ui;
 };

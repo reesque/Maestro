@@ -1,7 +1,7 @@
 #ifndef SCROLLTEXTEDIT_H
 #define SCROLLTEXTEDIT_H
 
-#define WAIT_TIME 2000
+#define WAIT_TIME 1000
 
 #include <QTextEdit>
 #include <QTimer>

@@ -124,7 +124,7 @@
        <number>8</number>
       </property>
       <item>
-       <widget class="QTextEdit" name="HeaderLabel">
+       <widget class="ScrollTextEdit" name="HeaderLabel">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
           <horstretch>0</horstretch>
@@ -187,7 +187,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QTextEdit" name="SubtextLabel">
+       <widget class="ScrollTextEdit" name="SubtextLabel">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
           <horstretch>0</horstretch>
@@ -251,6 +251,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ScrollTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header location="global">scrolltextedit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../assets.qrc"/>
  </resources>

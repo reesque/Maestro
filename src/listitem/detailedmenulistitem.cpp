@@ -24,3 +24,15 @@ DetailedMenuListItem::~DetailedMenuListItem()
 {
     delete ui;
 }
+
+void DetailedMenuListItem::onFocus()
+{
+    ui->HeaderLabel->startScrolling();
+    ui->SubtextLabel->startScrolling();
+}
+
+void DetailedMenuListItem::onLoseFocus()
+{
+    ui->HeaderLabel->stopScrolling();
+    ui->SubtextLabel->stopScrolling();
+}

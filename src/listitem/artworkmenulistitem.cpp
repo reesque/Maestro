@@ -21,3 +21,13 @@ ArtworkMenuListItem::~ArtworkMenuListItem()
 {
     delete ui;
 }
+
+void ArtworkMenuListItem::onFocus()
+{
+    ui->HeaderLabel->startScrolling();
+}
+
+void ArtworkMenuListItem::onLoseFocus()
+{
+    ui->HeaderLabel->stopScrolling();
+}

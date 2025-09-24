@@ -11,12 +11,13 @@ class BaseMenuListItem : public QWidget
 
 public:
     virtual void activate();
-    virtual void onFocus();
     virtual void onSideActivate(QVariant arg);
 
     void setActivator(std::function<void()> activator);
-    void setOnFocus(std::function<void()> focusActivator);
     void setSideActivator(std::function<void(QVariant)> sideActivator);
+
+    virtual void onFocus();
+    virtual void onLoseFocus();
 
     virtual ~BaseMenuListItem() = default;
 
@@ -25,7 +26,6 @@ protected:
 
 protected:
     std::function<void()> m_activator;
-    std::function<void()> m_focusActivator;
     std::function<void(QVariant)> m_sideActivator;
 };
 

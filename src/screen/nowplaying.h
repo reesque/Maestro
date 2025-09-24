@@ -30,6 +30,8 @@ private slots:
 
 private:
     void tickSeekBar();
+    void reset();
+    QPixmap roundPixmapCorner(const QPixmap& src, float radius);
 
 private:
     Ui::NowPlaying *ui;

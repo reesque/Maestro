@@ -4,6 +4,8 @@
 #include "roundedprogressbarstyle.h"
 
 #include <QDir>
+#include <QPainter>
+#include <QPainterPath>
 
 #include <filesystem>
 
@@ -19,6 +21,9 @@ NowPlaying::NowPlaying(std::shared_ptr<Database> db, std::shared_ptr<MediaPlayer
     ui->setupUi(this);
 
     ui->Seekbar->setStyle(new RoundedProgressBarStyle);
+    ui->Title->startScrolling();
+    ui->Artist->startScrolling();
+    ui->Album->startScrolling();
 
     seekTimer = std::make_unique<QTimer>();
     connect(seekTimer.get(), &QTimer::timeout, this, &NowPlaying::tickSeekBar);
@@ -28,6 +33,10 @@ NowPlaying::NowPlaying(std::shared_ptr<Database> db, std::shared_ptr<MediaPlayer
     if (m_mediaPlayer->isMediaReady())
     {
         onTrackInfoUpdate(m_mediaPlayer->getCurrentTrackMetaData());
+    }
+    else
+    {
+        reset();
     }
 }
 
@@ -43,17 +52,7 @@ void NowPlaying::onTrackInfoUpdate(Track track)
 {
     if (track == Track::NonExist())
     {
-        // Update track stats
-        ui->Title->setText("Title");
-        ui->Artist->setText("Artist");
-        ui->Album->setText("Album");
-
-        // Update player stats
-        ui->TimeLeft->setText("00:00");
-        ui->TimeRight->setText("-00:00");
-        ui->Seekbar->setValue(0);
-
-        ui->CoverArt->setPixmap(QPixmap(":/app/assets/cover.png"));
+        reset();
         return;
     }
 
@@ -84,9 +83,41 @@ void NowPlaying::onTrackInfoUpdate(Track track)
 
     if (artPath != "")
     {
-        QPixmap pixmap(QString::fromStdString(artPath));
-        ui->CoverArt->setPixmap(pixmap);
+        ui->CoverArt->setPixmap(roundPixmapCorner(QPixmap(QString::fromStdString(artPath)), 20));
     }
+}
+
+QPixmap NowPlaying::roundPixmapCorner(const QPixmap& src, float radius)
+{
+    if (src.isNull())
+            return QPixmap();
+
+    QPixmap dest(src.size());
+    dest.fill(Qt::transparent);
+
+    QPainter painter(&dest);
+    painter.setRenderHint(QPainter::Antialiasing);
+
+    QPainterPath path;
+    path.addRoundedRect(src.rect(), radius, radius);
+
+    painter.setClipPath(path);
+    painter.drawPixmap(0, 0, src);
+
+    return dest;
+}
+
+void NowPlaying::reset()
+{
+    ui->Title->setText("");
+    ui->Artist->setText("");
+    ui->Album->setText("");
+
+    ui->TimeLeft->setText("00:00");
+    ui->TimeRight->setText("-00:00");
+    ui->Seekbar->setValue(0);
+
+    ui->CoverArt->setPixmap(roundPixmapCorner(QPixmap(":/app/assets/cover.png"), 20));
 }
 
 void NowPlaying::tickSeekBar()

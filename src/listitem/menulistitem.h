@@ -15,6 +15,9 @@ public:
     explicit MenuListItem(const std::string& label, QWidget *parent = nullptr);
     ~MenuListItem() override;
 
+    void onFocus() override;
+    void onLoseFocus() override;
+
 private:
     Ui::MenuListItem *ui;
 };

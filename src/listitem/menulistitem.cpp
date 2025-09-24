@@ -13,3 +13,13 @@ MenuListItem::~MenuListItem()
 {
     delete ui;
 }
+
+void MenuListItem::onFocus()
+{
+    ui->MenuLabel->startScrolling();
+}
+
+void MenuListItem::onLoseFocus()
+{
+    ui->MenuLabel->stopScrolling();
+}

@@ -16,9 +16,6 @@ ScrollTextEdit::ScrollTextEdit(QWidget *parent)
     connect(scrollTimer, &QTimer::timeout, this, &ScrollTextEdit::scrollStep);
     connect(startTimer, &QTimer::timeout, this, &ScrollTextEdit::waitAtTheStart);
     connect(endTimer, &QTimer::timeout, this, &ScrollTextEdit::waitAtTheEnd);
-
-    // Start chain of timer
-    startScrolling();
 }
 
 ScrollTextEdit::~ScrollTextEdit()

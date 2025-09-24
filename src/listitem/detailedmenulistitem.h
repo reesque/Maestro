@@ -16,6 +16,9 @@ public:
                                   const std::string& artworkPath, QWidget *parent = nullptr);
     ~DetailedMenuListItem() override;
 
+    void onFocus() override;
+    void onLoseFocus() override;
+
 private:
     Ui::DetailedMenuListItem *ui;
 };
