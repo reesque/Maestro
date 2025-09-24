@@ -16,5 +16,7 @@ SettingMenu::~SettingMenu()
 
 MenuListItem* SettingMenu::createListItem(std::shared_ptr<LabelMenuEntry> entry)
 {
-    return new MenuListItem(entry->label, entry->activator, ui->ListObject);
+    MenuListItem *item = new MenuListItem(entry->label, ui->ListObject);
+    item->setActivator(entry->activator);
+    return item;
 }

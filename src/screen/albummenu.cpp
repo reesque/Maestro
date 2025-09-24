@@ -86,5 +86,7 @@ AlbumMenu::~AlbumMenu()
 
 ArtworkMenuListItem* AlbumMenu::createListItem(std::shared_ptr<ArtworkMenuEntry> entry)
 {
-    return new ArtworkMenuListItem(entry->header, entry->artPath, entry->activator, ui->ListObject);
+    ArtworkMenuListItem *item = new ArtworkMenuListItem(entry->header, entry->artPath, ui->ListObject);
+    item->setActivator(entry->activator);
+    return item;
 }

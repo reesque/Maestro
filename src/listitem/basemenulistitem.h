@@ -11,13 +11,22 @@ class BaseMenuListItem : public QWidget
 
 public:
     virtual void activate();
+    virtual void onFocus();
+    virtual void onSideActivate(QVariant arg);
+
+    void setActivator(std::function<void()> activator);
+    void setOnFocus(std::function<void()> focusActivator);
+    void setSideActivator(std::function<void(QVariant)> sideActivator);
+
     virtual ~BaseMenuListItem() = default;
 
 protected:
-    BaseMenuListItem(std::function<void()> activator, QWidget *parent = nullptr);
+    BaseMenuListItem(QWidget *parent = nullptr);
 
 protected:
     std::function<void()> m_activator;
+    std::function<void()> m_focusActivator;
+    std::function<void(QVariant)> m_sideActivator;
 };
 
 #endif // BASEMENULISTITEM_H

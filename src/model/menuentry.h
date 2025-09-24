@@ -4,6 +4,8 @@
 #include <string>
 #include <functional>
 
+#include <QVariant>
+
 struct BaseMenuEntry
 {
     std::function<void()> activator;
@@ -62,10 +64,10 @@ struct SliderSettingMenuEntry : public BaseMenuEntry
     int max;
     int stepSize;
     int value;
-    std::function<void(int)> slideAction;
+    std::function<void(QVariant)> slideAction;
 
     SliderSettingMenuEntry(std::string v_label, int v_min, int v_max, int v_stepSize, int v_value,
-                           std::function<void(int)> v_slideAction, std::function<void()> v_activator) :
+                           std::function<void(QVariant)> v_slideAction, std::function<void()> v_activator) :
         BaseMenuEntry(v_activator)
     {
         label = v_label;

@@ -64,6 +64,7 @@ public:
 
         menuList = std::make_unique<std::vector<std::shared_ptr<BaseMenuEntry>>>();
         connect(ui->ListObject, &QListWidget::itemClicked, this, &Menu::onItemClicked);
+        connect(ui->ListObject, &QListWidget::currentRowChanged, this, &Menu::currentRowChanged);
     }
 
     virtual ~Menu()
@@ -102,6 +103,12 @@ protected slots:
             QWidget *qw = ui->ListObject->itemWidget(item);
             static_cast<MenuWidget&>(*qw).activate();
         }
+    }
+
+    void currentRowChanged(int currentRow)
+    {
+        QWidget *qw = ui->ListObject->itemWidget(ui->ListObject->item(currentRow));
+        static_cast<MenuWidget&>(*qw).onFocus();
     }
 
 protected slots:

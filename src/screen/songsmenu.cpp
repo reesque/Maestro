@@ -48,7 +48,9 @@ SongsMenu::~SongsMenu()
 
 DetailedMenuListItem* SongsMenu::createListItem(std::shared_ptr<DetailedMenuEntry> entry)
 {
-    return new DetailedMenuListItem(entry->header, entry->subtext, entry->artPath, entry->activator, ui->ListObject);
+    DetailedMenuListItem *item = new DetailedMenuListItem(entry->header, entry->subtext, entry->artPath, ui->ListObject);
+    item->setActivator(entry->activator);
+    return item;
 }
 
 void SongsMenu::fillSongRecords(std::vector<Track> records)

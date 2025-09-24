@@ -3,10 +3,10 @@
 
 #include "roundedprogressbarstyle.h"
 
-SettingsSliderListItem::SettingsSliderListItem(const std::string& label, int min, int max, int stepSize, int value,
-                                        std::function<void(int)> slideAction, std::function<void()> activator,
-                                        QWidget *parent) :
-    BaseMenuListItem(activator, parent),
+SettingsSliderListItem::SettingsSliderListItem(const std::string& label, int min, int max,
+                                               int stepSize, int value,
+                                               QWidget *parent) :
+    BaseMenuListItem(parent),
     ui(new Ui::SettingsSliderListItem)
 {
     ui->setupUi(this);
@@ -14,7 +14,6 @@ SettingsSliderListItem::SettingsSliderListItem(const std::string& label, int min
     m_min = min;
     m_max = max;
     m_stepSize = stepSize;
-    m_slideAction = slideAction;
 
     ui->ValueBar->setStyle(new RoundedProgressBarStyle);
 
@@ -42,5 +41,5 @@ void SettingsSliderListItem::slide(bool isForward)
     }
 
     ui->Value->setText(QString::number(ui->ValueBar->value()));
-    m_slideAction(ui->ValueBar->value());
+    m_sideActivator(ui->ValueBar->value());
 }

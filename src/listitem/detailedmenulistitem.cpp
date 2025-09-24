@@ -4,9 +4,8 @@
 #include <QPixmap>
 
 DetailedMenuListItem::DetailedMenuListItem(const std::string& header, const std::string& subtext,
-                                           const std::string& artworkPath, std::function<void()> activator,
-                                           QWidget *parent) :
-    BaseMenuListItem(activator, parent),
+                                           const std::string& artworkPath, QWidget *parent) :
+    BaseMenuListItem(parent),
     ui(new Ui::DetailedMenuListItem)
 {
     ui->setupUi(this);
