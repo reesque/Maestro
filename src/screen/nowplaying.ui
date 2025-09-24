@@ -307,9 +307,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
               <property name="readOnly">
                <bool>true</bool>
               </property>
-              <property name="markdown">
-               <string/>
-              </property>
               <property name="acceptRichText">
                <bool>true</bool>
               </property>
