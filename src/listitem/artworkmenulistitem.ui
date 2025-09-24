@@ -85,7 +85,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="HeaderLabel">
+    <widget class="ScrollTextEdit" name="HeaderLabel">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
        <horstretch>0</horstretch>
@@ -106,20 +106,53 @@
      </property>
      <property name="font">
       <font>
-       <pointsize>20</pointsize>
+       <pointsize>16</pointsize>
        <bold>true</bold>
       </font>
      </property>
-     <property name="styleSheet">
-      <string notr="true">background: transparent;</string>
+     <property name="mouseTracking">
+      <bool>false</bool>
      </property>
-     <property name="text">
-      <string>Label</string>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="acceptDrops">
+      <bool>false</bool>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="lineWrapMode">
+      <enum>QTextEdit::NoWrap</enum>
+     </property>
+     <property name="markdown">
+      <string>**Label**
+
+</string>
+     </property>
+     <property name="textInteractionFlags">
+      <set>Qt::NoTextInteraction</set>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ScrollTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header location="global">scrolltextedit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../assets.qrc"/>
  </resources>

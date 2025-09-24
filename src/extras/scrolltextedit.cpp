@@ -10,6 +10,7 @@ ScrollTextEdit::ScrollTextEdit(QWidget *parent)
     endTimer = new QTimer(this);
 
     setReadOnly(true);
+    viewport()->setCursor(Qt::ArrowCursor);
 
     // Connect all the timers
     connect(scrollTimer, &QTimer::timeout, this, &ScrollTextEdit::scrollStep);

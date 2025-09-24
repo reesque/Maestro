@@ -36,7 +36,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="spacing">
-    <number>10</number>
+    <number>8</number>
    </property>
    <property name="leftMargin">
     <number>0</number>
@@ -95,13 +95,13 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>54</height>
+       <height>72</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
        <width>16777215</width>
-       <height>54</height>
+       <height>72</height>
       </size>
      </property>
      <property name="styleSheet">
@@ -115,16 +115,16 @@
        <number>0</number>
       </property>
       <property name="topMargin">
-       <number>0</number>
+       <number>6</number>
       </property>
       <property name="rightMargin">
        <number>10</number>
       </property>
       <property name="bottomMargin">
-       <number>0</number>
+       <number>8</number>
       </property>
       <item>
-       <widget class="QLabel" name="HeaderLabel">
+       <widget class="QTextEdit" name="HeaderLabel">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
           <horstretch>0</horstretch>
@@ -145,20 +145,49 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>20</pointsize>
+          <pointsize>18</pointsize>
           <bold>true</bold>
          </font>
         </property>
-        <property name="styleSheet">
-         <string notr="true">background: transparent;</string>
+        <property name="mouseTracking">
+         <bool>false</bool>
         </property>
-        <property name="text">
-         <string>Label</string>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="acceptDrops">
+         <bool>false</bool>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="lineWrapMode">
+         <enum>QTextEdit::NoWrap</enum>
+        </property>
+        <property name="markdown">
+         <string>**Label**
+
+</string>
+        </property>
+        <property name="overwriteMode">
+         <bool>false</bool>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::NoTextInteraction</set>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="SubtextLabel">
+       <widget class="QTextEdit" name="SubtextLabel">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
           <horstretch>0</horstretch>
@@ -168,25 +197,52 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>20</height>
+          <height>36</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>20</height>
+          <height>36</height>
          </size>
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <pointsize>14</pointsize>
+          <bold>false</bold>
          </font>
         </property>
-        <property name="styleSheet">
-         <string notr="true">background: transparent; color: #222222;</string>
+        <property name="mouseTracking">
+         <bool>false</bool>
         </property>
-        <property name="text">
-         <string>Subtext</string>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="acceptDrops">
+         <bool>false</bool>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="lineWrapMode">
+         <enum>QTextEdit::NoWrap</enum>
+        </property>
+        <property name="markdown">
+         <string>Subtext
+
+</string>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::NoTextInteraction</set>
         </property>
        </widget>
       </item>

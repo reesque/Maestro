@@ -209,6 +209,12 @@
               <property name="mouseTracking">
                <bool>false</bool>
               </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+              <property name="acceptDrops">
+               <bool>false</bool>
+              </property>
               <property name="frameShape">
                <enum>QFrame::NoFrame</enum>
               </property>
@@ -282,6 +288,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
               <property name="mouseTracking">
                <bool>false</bool>
               </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+              <property name="acceptDrops">
+               <bool>false</bool>
+              </property>
               <property name="frameShape">
                <enum>QFrame::NoFrame</enum>
               </property>
@@ -353,6 +365,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
                </font>
               </property>
               <property name="mouseTracking">
+               <bool>false</bool>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+              <property name="acceptDrops">
                <bool>false</bool>
               </property>
               <property name="frameShape">
@@ -586,7 +604,7 @@ QProgressBar::chunk {
   <customwidget>
    <class>ScrollTextEdit</class>
    <extends>QTextEdit</extends>
-   <header>scrolltextedit.h</header>
+   <header location="global">scrolltextedit.h</header>
   </customwidget>
  </customwidgets>
  <resources>
