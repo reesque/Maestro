@@ -10,6 +10,7 @@
 
 #include <QListWidgetItem>
 #include <QScrollBar>
+#include <QTimer>
 
 namespace Ui {
 class Menu;
@@ -24,6 +25,10 @@ public:
         ui(new Ui::Menu)
     {
         ui->setupUi(this);
+
+        populateCounter = 0;
+        populateTimer = new QTimer(this);
+        populateTimer->setSingleShot(true);
 
         // Background on focus
         ui->ListObject->setStyleSheet(
@@ -65,6 +70,7 @@ public:
         menuList = std::make_unique<std::vector<std::shared_ptr<BaseMenuEntry>>>();
         connect(ui->ListObject, &QListWidget::itemClicked, this, &Menu::onItemClicked);
         connect(ui->ListObject, &QListWidget::currentItemChanged, this, &Menu::currentItemChanged);
+        connect(populateTimer, &QTimer::timeout, this, &Menu::onPopulate);
     }
 
     virtual ~Menu()
@@ -77,16 +83,9 @@ public:
 protected:
     void populateMenu()
     {
-        for (auto entry : *menuList)
-        {
-            QListWidgetItem *qitem = new QListWidgetItem(ui->ListObject);
-            QWidget *item = createListItem(std::static_pointer_cast<MenuEntry>(entry));
-            qitem->setSizeHint(item->sizeHint());
-            ui->ListObject->addItem(qitem);
-            ui->ListObject->setItemWidget(qitem, item);
-        }
-
+        onPopulate();
         ui->ListObject->setCurrentRow(0);
+        populateTimer->start(0);
     }
 
     virtual MenuWidget* createListItem(std::shared_ptr<MenuEntry> entry) = 0;
@@ -129,6 +128,34 @@ protected slots:
     {
         emit ui->ListObject->itemClicked(ui->ListObject->currentItem());
     }
+
+private slots:
+    void onPopulate()
+    {
+        if (populateCounter < menuList->size())
+        {
+            // Add item
+            QListWidgetItem *qitem = new QListWidgetItem(ui->ListObject);
+            QWidget *item = createListItem(std::static_pointer_cast<MenuEntry>(menuList->at(populateCounter)));
+            qitem->setSizeHint(item->sizeHint());
+            ui->ListObject->addItem(qitem);
+            ui->ListObject->setItemWidget(qitem, item);
+
+            // Re-calculate interval
+            populateTimer->setInterval(std::min(populateCounter, static_cast<unsigned>(100)));
+            populateTimer->start();
+
+            ++populateCounter;
+        }
+        else
+        {
+            delete populateTimer;
+        }
+    }
+
+private:
+    unsigned populateCounter;
+    QTimer *populateTimer;
 };
 
 #endif // MENU_H
