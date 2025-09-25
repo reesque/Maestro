@@ -7,10 +7,10 @@
 #include "menuentry.h"
 
 #include <memory>
+#include <cmath>
 
 #include <QListWidgetItem>
 #include <QScrollBar>
-#include <QTimer>
 
 namespace Ui {
 class Menu;
@@ -26,9 +26,8 @@ public:
     {
         ui->setupUi(this);
 
-        populateCounter = 0;
-        populateTimer = new QTimer(this);
-        populateTimer->setSingleShot(true);
+        numItems = 0;
+        currentPage = 0;
 
         // Background on focus
         ui->ListObject->setStyleSheet(
@@ -42,35 +41,9 @@ public:
         ui->ListObject->setSpacing(0);
         ui->ListObject->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
-        // Scroll bar
-        ui->ListObject->verticalScrollBar()->setStyleSheet(R"(
-            QScrollBar:vertical {
-                background: transparent;
-                width: 10px;
-                margin: 0px;
-            }
-
-            QScrollBar::handle:vertical {
-                background: rgba(100, 100, 100, 180);
-                min-height: 20px;
-                border-radius: 3px;
-            }
-
-            QScrollBar::add-line:vertical,
-            QScrollBar::sub-line:vertical {
-                height: 0px;
-            }
-
-            QScrollBar::add-page:vertical,
-            QScrollBar::sub-page:vertical {
-                background: none;
-            }
-        )");
-
         menuList = std::make_unique<std::vector<std::shared_ptr<BaseMenuEntry>>>();
         connect(ui->ListObject, &QListWidget::itemClicked, this, &Menu::onItemClicked);
         connect(ui->ListObject, &QListWidget::currentItemChanged, this, &Menu::currentItemChanged);
-        connect(populateTimer, &QTimer::timeout, this, &Menu::onPopulate);
     }
 
     virtual ~Menu()
@@ -80,12 +53,39 @@ public:
         delete ui;
     }
 
+public slots:
+    void resizeEvent(QResizeEvent *event) override
+    {
+        // Re-index pages
+        numItems = measure();
+        currentPage = 0;
+        render();
+        ui->ListObject->setCurrentRow(0);
+
+        // Resize and move widgets
+        ui->ListObject->setGeometry(0, 0, width(), height());
+        ui->Scroll->setGeometry(width() - ui->Scroll->width(), 0,
+                                ui->Scroll->width(), height());
+
+        ui->Scroll->setPageStep(numItems);
+        ui->Scroll->setMaximum(menuList->size() - 1);
+        ui->Scroll->setValue(0);
+        if (numItems < menuList->size() - 1)
+        {
+            ui->Scroll->show();
+        }
+        else
+        {
+            ui->Scroll->hide();
+        }
+    }
+
 protected:
     void populateMenu()
     {
-        onPopulate();
+        numItems = measure();
+        render();
         ui->ListObject->setCurrentRow(0);
-        populateTimer->start(0);
     }
 
     virtual MenuWidget* createListItem(std::shared_ptr<MenuEntry> entry) = 0;
@@ -93,6 +93,8 @@ protected:
 protected:
     Ui::Menu *ui;
     std::unique_ptr<std::vector<std::shared_ptr<BaseMenuEntry>>> menuList;
+    unsigned numItems;
+    unsigned currentPage;
 
 protected slots:
     void onItemClicked(QListWidgetItem *item)
@@ -106,7 +108,10 @@ protected slots:
 
     void currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
     {
-        static_cast<MenuWidget&>(*ui->ListObject->itemWidget(current)).onFocus();
+        if (current)
+        {
+            static_cast<MenuWidget&>(*ui->ListObject->itemWidget(current)).onFocus();
+        }
         if (previous)
         {
             static_cast<MenuWidget&>(*ui->ListObject->itemWidget(previous)).onLoseFocus();
@@ -116,12 +121,36 @@ protected slots:
 protected slots:
     void upAction() override
     {
-        ui->ListObject->setCurrentRow(std::max(ui->ListObject->currentRow() - 1, 0));
+        if (ui->ListObject->currentRow() == 0 && currentPage != 0)
+        {
+            currentPage -= 1;
+            render();
+            ui->ListObject->setCurrentRow(ui->ListObject->count() - 1);
+        }
+        else
+        {
+            ui->ListObject->setCurrentRow(std::max(ui->ListObject->currentRow() - 1, 0));
+        }
+
+        ui->Scroll->setValue(numItems * currentPage + ui->ListObject->currentRow());
     }
 
     void downAction() override
     {
-        ui->ListObject->setCurrentRow(std::min(ui->ListObject->currentRow() + 1, ui->ListObject->count() - 1));
+        unsigned maxPage = std::ceil(static_cast<float>(menuList->size()) / numItems);
+        if (ui->ListObject->currentRow() == ui->ListObject->count() - 1 && currentPage < maxPage - 1)
+        {
+            currentPage += 1;
+            render();
+            ui->ListObject->setCurrentRow(0);
+        }
+        else
+        {
+
+            ui->ListObject->setCurrentRow(std::min(ui->ListObject->currentRow() + 1, ui->ListObject->count() - 1));
+        }
+
+        ui->Scroll->setValue(numItems * currentPage + ui->ListObject->currentRow());
     }
 
     void confirmAction() override
@@ -129,33 +158,31 @@ protected slots:
         emit ui->ListObject->itemClicked(ui->ListObject->currentItem());
     }
 
-private slots:
-    void onPopulate()
+private:
+    unsigned measure()
     {
-        if (populateCounter < menuList->size())
+        QWidget *item = createListItem(std::static_pointer_cast<MenuEntry>(menuList->at(0)));
+        float itemHeight = item->sizeHint().height();
+        delete item;
+        return std::ceil(ui->ListObject->height() / itemHeight);
+    }
+
+    void render()
+    {
+        ui->ListObject->clear();
+
+        unsigned start = currentPage * numItems;
+
+        for (unsigned i = start;
+             i < std::min(start + numItems, static_cast<unsigned>(menuList->size())); ++i)
         {
-            // Add item
             QListWidgetItem *qitem = new QListWidgetItem(ui->ListObject);
-            QWidget *item = createListItem(std::static_pointer_cast<MenuEntry>(menuList->at(populateCounter)));
+            QWidget *item = createListItem(std::static_pointer_cast<MenuEntry>(menuList->at(i)));
             qitem->setSizeHint(item->sizeHint());
             ui->ListObject->addItem(qitem);
             ui->ListObject->setItemWidget(qitem, item);
-
-            // Re-calculate interval
-            populateTimer->setInterval(std::min(populateCounter, static_cast<unsigned>(100)));
-            populateTimer->start();
-
-            ++populateCounter;
-        }
-        else
-        {
-            delete populateTimer;
         }
     }
-
-private:
-    unsigned populateCounter;
-    QTimer *populateTimer;
 };
 
 #endif // MENU_H

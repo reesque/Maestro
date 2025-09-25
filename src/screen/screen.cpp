@@ -34,6 +34,9 @@ void Screen::rightAction()
 void Screen::leftAction()
 {}
 
+void Screen::resizeEvent(QResizeEvent *event)
+{}
+
 void Screen::backAction()
 {
     if (!m_inputLock)

@@ -31,36 +31,79 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="spacing">
-    <number>0</number>
+  <widget class="QListWidget" name="ListObject">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>640</width>
+     <height>440</height>
+    </rect>
    </property>
-   <property name="leftMargin">
-    <number>0</number>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
    </property>
-   <property name="topMargin">
-    <number>0</number>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>440</height>
+    </size>
    </property>
-   <property name="rightMargin">
-    <number>0</number>
+   <property name="styleSheet">
+    <string notr="true">background: #ffffff;</string>
    </property>
-   <property name="bottomMargin">
-    <number>0</number>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
    </property>
-   <item>
-    <widget class="QListWidget" name="ListObject">
-     <property name="styleSheet">
-      <string notr="true">background: #ffffff;</string>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="horizontalScrollBarPolicy">
-      <enum>Qt::ScrollBarAlwaysOff</enum>
-     </property>
-    </widget>
-   </item>
-  </layout>
+   <property name="verticalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOff</enum>
+   </property>
+   <property name="horizontalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOff</enum>
+   </property>
+  </widget>
+  <widget class="QScrollBar" name="Scroll">
+   <property name="geometry">
+    <rect>
+     <x>632</x>
+     <y>0</y>
+     <width>8</width>
+     <height>440</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QScrollBar:vertical {
+   background: transparent;
+   width: 10px;
+   margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+   background: rgba(0, 0, 0, 200);
+   border-radius: 3px;
+   min-height: 5px;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+   height: 0px;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+   background: none;
+}</string>
+   </property>
+   <property name="maximum">
+    <number>100</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

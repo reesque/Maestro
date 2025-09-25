@@ -24,6 +24,9 @@ public:
 signals:
     void changeTitle(QString title);
 
+protected slots:
+    void resizeEvent(QResizeEvent* event) override;
+
 private slots:
     void switchScreenTo(ScreenType screenType,
                         QVector<QVariant> args = QVector<QVariant>(),

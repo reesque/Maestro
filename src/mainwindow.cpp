@@ -23,6 +23,7 @@
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
 #include <QPropertyAnimation>
+#include <QResizeEvent>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -57,18 +58,9 @@ MainWindow::MainWindow(QWidget *parent) :
             statusBar, &StatusBar::onPlaybackStateChanged);
 
     // Content pane
-    //screenBox = new QWidget(this);
-    //screenBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
     screenStack = new QStackedWidget(this);
     screenStack->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    //QHBoxLayout *screenLayout = new QHBoxLayout(screenBox);
-    //screenLayout->setAlignment(Qt::AlignCenter);
-    //screenLayout->setSpacing(0);
-    //screenLayout->setMargin(0);
-
-    //layout->addWidget(screenBox);
     layout->addWidget(screenStack);
 
     ui->centralwidget->setLayout(layout);
@@ -195,6 +187,8 @@ void MainWindow::switchScreenTo(ScreenType screenType,
     connect(m_controller.get(), &Controller::triggerBackAction, newScreen, &Screen::backAction);
     connect(m_controller.get(), &Controller::triggerConfirmAction, newScreen, &Screen::confirmAction);
 
+    connect(this, &MainWindow::resizeEvent, newScreen, &Screen::resizeEvent);
+
     // Delete old screen
     if (screenStack->layout()->count() > 1)
     {
@@ -270,6 +264,8 @@ void MainWindow::switchScreenTo(ScreenType screenType,
             disconnect(m_controller.get(), &Controller::triggerBackAction, oldScreen, &Screen::backAction);
             disconnect(m_controller.get(), &Controller::triggerConfirmAction, oldScreen, &Screen::confirmAction);
 
+            disconnect(this, &MainWindow::resizeEvent, oldScreen, &Screen::resizeEvent);
+
             QLayoutItem *item = screenStack->layout()->takeAt(0);
             if (item) {
                 QWidget *widget = item->widget();
@@ -293,4 +289,9 @@ void MainWindow::switchToPreviousScreen(QVector<QVariant> args)
     {
         switchScreenTo(prevScreen, args, ScreenAnimationType::Backward);
     }
+}
+
+void MainWindow::resizeEvent(QResizeEvent* event)
+{
+   QMainWindow::resizeEvent(event);
 }

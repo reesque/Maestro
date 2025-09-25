@@ -59,6 +59,7 @@ public slots:
     virtual void leftAction();
     virtual void backAction();
     virtual void confirmAction();
+    virtual void resizeEvent(QResizeEvent *event);
 
 protected:
     ScreenType prevScreen;
