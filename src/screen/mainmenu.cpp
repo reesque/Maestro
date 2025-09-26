@@ -10,8 +10,6 @@ MainMenu::MainMenu(QWidget *parent) :
     menuList->push_back(std::make_shared<LabelMenuEntry>("Shuffle Songs", [](){}));
     menuList->push_back(std::make_shared<LabelMenuEntry>("Now Playing", [=](){switchScreenTo(ScreenType::NowPlaying);}));
     menuList->push_back(std::make_shared<LabelMenuEntry>("Quit", [](){QApplication::quit();}));
-
-    populateMenu();
 }
 
 MainMenu::~MainMenu()

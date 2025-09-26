@@ -80,45 +80,6 @@ public slots:
         }
     }
 
-protected:
-    void populateMenu()
-    {
-        numItems = measure();
-        render();
-        ui->ListObject->setCurrentRow(0);
-    }
-
-    virtual MenuWidget* createListItem(std::shared_ptr<MenuEntry> entry) = 0;
-
-protected:
-    Ui::Menu *ui;
-    std::unique_ptr<std::vector<std::shared_ptr<BaseMenuEntry>>> menuList;
-    unsigned numItems;
-    unsigned currentPage;
-
-protected slots:
-    void onItemClicked(QListWidgetItem *item)
-    {
-        if (!m_inputLock)
-        {
-            QWidget *qw = ui->ListObject->itemWidget(item);
-            static_cast<MenuWidget&>(*qw).activate();
-        }
-    }
-
-    void currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
-    {
-        if (current)
-        {
-            static_cast<MenuWidget&>(*ui->ListObject->itemWidget(current)).onFocus();
-        }
-        if (previous)
-        {
-            static_cast<MenuWidget&>(*ui->ListObject->itemWidget(previous)).onLoseFocus();
-        }
-    }
-
-protected slots:
     void upAction() override
     {
         if (ui->ListObject->currentRow() == 0 && currentPage != 0)
@@ -158,9 +119,45 @@ protected slots:
         emit ui->ListObject->itemClicked(ui->ListObject->currentItem());
     }
 
+protected:
+    virtual MenuWidget* createListItem(std::shared_ptr<MenuEntry> entry) = 0;
+
+protected:
+    Ui::Menu *ui;
+    std::unique_ptr<std::vector<std::shared_ptr<BaseMenuEntry>>> menuList;
+    unsigned numItems;
+    unsigned currentPage;
+
+protected slots:
+    void onItemClicked(QListWidgetItem *item)
+    {
+        if (!m_inputLock)
+        {
+            QWidget *qw = ui->ListObject->itemWidget(item);
+            static_cast<MenuWidget&>(*qw).activate();
+        }
+    }
+
+    void currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
+    {
+        if (current)
+        {
+            static_cast<MenuWidget&>(*ui->ListObject->itemWidget(current)).onFocus();
+        }
+        if (previous)
+        {
+            static_cast<MenuWidget&>(*ui->ListObject->itemWidget(previous)).onLoseFocus();
+        }
+    }
+
 private:
     unsigned measure()
     {
+        if (menuList->size() == 0)
+        {
+            return 0;
+        }
+
         QWidget *item = createListItem(std::static_pointer_cast<MenuEntry>(menuList->at(0)));
         float itemHeight = item->sizeHint().height();
         delete item;

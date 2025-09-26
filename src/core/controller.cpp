@@ -106,9 +106,12 @@ void Controller::controllerButtonUpChanged(bool value)
 {
     if (!value && m_acceptDpadInput)
     {
-        emit triggerUpAction();
         m_acceptDpadInput = false;
-        m_dpadDebounceTimer->start();
+        emit triggerUpAction();
+        if (!m_dpadDebounceTimer->isActive())
+        {
+            m_dpadDebounceTimer->start();
+        }
     }
 }
 
@@ -116,9 +119,12 @@ void Controller::controllerButtonDownChanged(bool value)
 {
     if (!value && m_acceptDpadInput)
     {
-        emit triggerDownAction();
         m_acceptDpadInput = false;
-        m_dpadDebounceTimer->start();
+        emit triggerDownAction();
+        if (!m_dpadDebounceTimer->isActive())
+        {
+            m_dpadDebounceTimer->start();
+        }
     }
 }
 
@@ -126,9 +132,12 @@ void Controller::controllerButtonLeftChanged(bool value)
 {
     if (!value && m_acceptDpadInput)
     {
-        emit triggerLeftAction();
         m_acceptDpadInput = false;
-        m_dpadDebounceTimer->start();
+        emit triggerLeftAction();
+        if (!m_dpadDebounceTimer->isActive())
+        {
+            m_dpadDebounceTimer->start();
+        }
     }
 }
 
@@ -136,9 +145,12 @@ void Controller::controllerButtonRightChanged(bool value)
 {
     if (!value && m_acceptDpadInput)
     {
-        emit triggerRightAction();
         m_acceptDpadInput = false;
-        m_dpadDebounceTimer->start();
+        emit triggerRightAction();
+        if (!m_dpadDebounceTimer->isActive())
+        {
+            m_dpadDebounceTimer->start();
+        }
     }
 }
 
@@ -146,9 +158,12 @@ void Controller::controllerButtonAChanged(bool value)
 {
     if (!value && m_acceptFaceBtnInput)
     {
-        emit triggerConfirmAction();
         m_acceptFaceBtnInput = false;
-        m_faceBtnDebounceTimer->start();
+        emit triggerConfirmAction();
+        if (!m_faceBtnDebounceTimer->isActive())
+        {
+            m_faceBtnDebounceTimer->start();
+        }
     }
 }
 
@@ -156,9 +171,12 @@ void Controller::controllerButtonBChanged(bool value)
 {
     if (!value && m_acceptFaceBtnInput)
     {
-        emit triggerBackAction();
         m_acceptFaceBtnInput = false;
-        m_faceBtnDebounceTimer->start();
+        emit triggerBackAction();
+        if (!m_faceBtnDebounceTimer->isActive())
+        {
+            m_faceBtnDebounceTimer->start();
+        }
     }
 }
 

@@ -39,8 +39,6 @@ AlbumMenu::AlbumMenu(std::shared_ptr<Database> db, QWidget *parent) :
             emit switchScreenTo(ScreenType::SongsByAlbum, args);
         }));
     }
-
-    populateMenu();
 }
 
 AlbumMenu::AlbumMenu(std::shared_ptr<Database> db, const std::string& byArtist, QWidget *parent) :
@@ -77,8 +75,6 @@ AlbumMenu::AlbumMenu(std::shared_ptr<Database> db, const std::string& byArtist, 
             emit switchScreenTo(ScreenType::SongsByAlbumArtist, args);
         }));
     }
-
-    populateMenu();
 }
 
 AlbumMenu::~AlbumMenu()

@@ -12,8 +12,6 @@ ArtistFilterMenu::ArtistFilterMenu(const std::string& artistName, QWidget *paren
         switchScreenTo(ScreenType::SongsByArtist, args);}));
     menuList->push_back(std::make_shared<LabelMenuEntry>("by Album", [=](){
         switchScreenTo(ScreenType::AlbumByArtist, args);}));
-
-    populateMenu();
 }
 
 ArtistFilterMenu::~ArtistFilterMenu()

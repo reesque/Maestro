@@ -90,7 +90,5 @@ void SongsMenu::fillSongRecords(std::vector<Track> records)
             }
         ));
     }
-
-    populateMenu();
 }
 

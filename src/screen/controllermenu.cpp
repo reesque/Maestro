@@ -13,8 +13,6 @@ ControllerMenu::ControllerMenu(std::shared_ptr<Settings> setting, QWidget *paren
         "Face Button Responsiveness", 0, 10, 1, setting->getFaceBtnResponsiveLevel(), [setting](QVariant arg){
             setting->setFaceBtnResponsiveLevel(arg.toInt());
         }, [](){}));
-
-    populateMenu();
 }
 
 ControllerMenu::~ControllerMenu()

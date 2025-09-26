@@ -21,8 +21,6 @@ ArtistMenu::ArtistMenu(std::shared_ptr<Database> db, QWidget *parent) :
             emit switchScreenTo(ScreenType::ArtistFilter, args);
         }));
     }
-
-    populateMenu();
 }
 
 ArtistMenu::~ArtistMenu()
