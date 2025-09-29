@@ -11,14 +11,10 @@ Controller::Controller(std::shared_ptr<Settings> setting, QWidget *parent)
     m_faceBtnDebounceTimer = new QTimer(this);
     m_faceBtnDebounceTimer->setSingleShot(true);
     m_faceBtnDebounceTimer->setInterval(levelToMillisec(m_setting->getFaceBtnResponsiveLevel()));
-    m_acceptFaceBtnInput = true;
-    connect(m_faceBtnDebounceTimer, &QTimer::timeout, this, &Controller::allowFaceBtnInput);
 
     m_dpadDebounceTimer = new QTimer(this);
     m_dpadDebounceTimer->setSingleShot(true);
     m_dpadDebounceTimer->setInterval(levelToMillisec(m_setting->getDpadResponsiveLevel()));
-    m_acceptDpadInput = true;
-    connect(m_dpadDebounceTimer, &QTimer::timeout, this, &Controller::allowDpadInput);
 
     // Keyboard config
     m_leftKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Left), parent);
@@ -64,16 +60,6 @@ void Controller::onFaceBtnResponsiveLevelChanged(int level)
     m_faceBtnDebounceTimer->setInterval(levelToMillisec(level));
 }
 
-void Controller::allowFaceBtnInput()
-{
-    m_acceptFaceBtnInput = true;
-}
-
-void Controller::allowDpadInput()
-{
-    m_acceptDpadInput = true;
-}
-
 void Controller::disconnectGamepad()
 {
     if (m_currentGamepad)
@@ -104,79 +90,55 @@ void Controller::connectGamepad(int id)
 
 void Controller::controllerButtonUpChanged(bool value)
 {
-    if (!value && m_acceptDpadInput)
+    if (!value && !m_dpadDebounceTimer->isActive())
     {
-        m_acceptDpadInput = false;
+        m_dpadDebounceTimer->start();
         emit triggerUpAction();
-        if (!m_dpadDebounceTimer->isActive())
-        {
-            m_dpadDebounceTimer->start();
-        }
     }
 }
 
 void Controller::controllerButtonDownChanged(bool value)
 {
-    if (!value && m_acceptDpadInput)
+    if (!value && !m_dpadDebounceTimer->isActive())
     {
-        m_acceptDpadInput = false;
+        m_dpadDebounceTimer->start();
         emit triggerDownAction();
-        if (!m_dpadDebounceTimer->isActive())
-        {
-            m_dpadDebounceTimer->start();
-        }
     }
 }
 
 void Controller::controllerButtonLeftChanged(bool value)
 {
-    if (!value && m_acceptDpadInput)
+    if (!value && !m_dpadDebounceTimer->isActive())
     {
-        m_acceptDpadInput = false;
+        m_dpadDebounceTimer->start();
         emit triggerLeftAction();
-        if (!m_dpadDebounceTimer->isActive())
-        {
-            m_dpadDebounceTimer->start();
-        }
     }
 }
 
 void Controller::controllerButtonRightChanged(bool value)
 {
-    if (!value && m_acceptDpadInput)
+    if (!value && !m_dpadDebounceTimer->isActive())
     {
-        m_acceptDpadInput = false;
+        m_dpadDebounceTimer->start();
         emit triggerRightAction();
-        if (!m_dpadDebounceTimer->isActive())
-        {
-            m_dpadDebounceTimer->start();
-        }
     }
 }
 
 void Controller::controllerButtonAChanged(bool value)
 {
-    if (!value && m_acceptFaceBtnInput)
+    if (!value && !m_faceBtnDebounceTimer->isActive())
     {
-        m_acceptFaceBtnInput = false;
+        m_faceBtnDebounceTimer->start();
         emit triggerConfirmAction();
-        if (!m_faceBtnDebounceTimer->isActive())
-        {
-            m_faceBtnDebounceTimer->start();
-        }
     }
 }
 
 void Controller::controllerButtonBChanged(bool value)
 {
-    if (!value && m_acceptFaceBtnInput)
+    if (!value && !m_faceBtnDebounceTimer->isActive())
     {
-        m_acceptFaceBtnInput = false;
+        m_faceBtnDebounceTimer->start();
         emit triggerBackAction();
-        if (!m_faceBtnDebounceTimer->isActive())
-        {
-            m_faceBtnDebounceTimer->start();
-        }
     }
 }
 

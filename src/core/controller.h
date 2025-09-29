@@ -31,8 +31,6 @@ signals:
     void triggerConfirmAction();
 
 private slots:
-    void allowFaceBtnInput();
-    void allowDpadInput();
     void connectedGamepadsChanged();
     void controllerButtonUpChanged(bool value);
     void controllerButtonDownChanged(bool value);
@@ -59,9 +57,6 @@ private:
     QTimer *m_faceBtnDebounceTimer;
     QTimer *m_dpadDebounceTimer;
     QGamepad *m_currentGamepad;
-
-    bool m_acceptFaceBtnInput;
-    bool m_acceptDpadInput;
 };
 
 #endif // CONTROLLER_H
