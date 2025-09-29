@@ -6,11 +6,11 @@ ControllerMenu::ControllerMenu(std::shared_ptr<Settings> setting, QWidget *paren
     prevScreen = ScreenType::Setting;
 
     menuList->push_back(std::make_shared<SliderSettingMenuEntry>(
-        "DPAD Responsiveness", 0, 10, 1, setting->getDpadResponsiveLevel(), [setting](QVariant arg){
+        "DPAD Responsiveness", 0, 50, 1, setting->getDpadResponsiveLevel(), [setting](QVariant arg){
             setting->setDpadResponsiveLevel(arg.toInt());
         },[](){}));
     menuList->push_back(std::make_shared<SliderSettingMenuEntry>(
-        "Face Button Responsiveness", 0, 10, 1, setting->getFaceBtnResponsiveLevel(), [setting](QVariant arg){
+        "Face Button Responsiveness", 0, 50, 1, setting->getFaceBtnResponsiveLevel(), [setting](QVariant arg){
             setting->setFaceBtnResponsiveLevel(arg.toInt());
         }, [](){}));
 }
