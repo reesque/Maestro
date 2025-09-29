@@ -12,9 +12,13 @@ SettingMenu::SettingMenu(QWidget *parent) :
 SettingMenu::~SettingMenu()
 {}
 
-MenuListItem* SettingMenu::createListItem(std::shared_ptr<LabelMenuEntry> entry)
+MenuListItem* SettingMenu::createDefaultItem()
 {
-    MenuListItem *item = new MenuListItem(entry->label, ui->ListObject);
-    item->setActivator(entry->activator);
-    return item;
+    return new MenuListItem(ui->ListObject);
+}
+
+void SettingMenu::updateListItem(std::shared_ptr<LabelMenuEntry> entry, MenuListItem *widget)
+{
+    widget->setProperties(entry->label);
+    widget->setActivator(entry->activator);
 }

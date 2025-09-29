@@ -12,10 +12,12 @@ class DetailedMenuListItem : public BaseMenuListItem
     Q_OBJECT
 
 public:
-    explicit DetailedMenuListItem(const std::string& header, const std::string& subtext,
-                                  const std::string& artworkPath, QWidget *parent = nullptr);
+    explicit DetailedMenuListItem(QWidget *parent = nullptr);
     ~DetailedMenuListItem() override;
 
+    void setProperties(const std::string& header,
+                       const std::string& subtext,
+                       const std::string& artworkPath);
     void onFocus() override;
     void onLoseFocus() override;
 

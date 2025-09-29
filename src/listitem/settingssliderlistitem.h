@@ -12,10 +12,10 @@ class SettingsSliderListItem : public BaseMenuListItem
     Q_OBJECT
 
 public:
-    explicit SettingsSliderListItem(const std::string& label, int min, int max,
-                                    int stepSize, int value,
-                                    QWidget *parent = nullptr);
+    explicit SettingsSliderListItem(QWidget *parent = nullptr);
     ~SettingsSliderListItem();
+
+    void setProperties(const std::string& label, int min, int max, int stepSize, int value);
     void slide(bool isForward);
 
 private:

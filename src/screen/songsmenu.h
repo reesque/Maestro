@@ -21,7 +21,8 @@ public:
     ~SongsMenu() override;
 
 protected:
-    DetailedMenuListItem* createListItem(std::shared_ptr<DetailedMenuEntry> entry) override;
+    DetailedMenuListItem* createDefaultItem() override;
+    void updateListItem(std::shared_ptr<DetailedMenuEntry> entry, DetailedMenuListItem *widget) override;
 
 private:
     void fillSongRecords(std::vector<Track> records);

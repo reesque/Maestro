@@ -1,17 +1,21 @@
 #include "menulistitem.h"
 #include "ui_menulistitem.h"
 
-MenuListItem::MenuListItem(const std::string& label, QWidget *parent) :
+MenuListItem::MenuListItem(QWidget *parent) :
     BaseMenuListItem(parent),
     ui(new Ui::MenuListItem)
 {
     ui->setupUi(this);
-    ui->MenuLabel->setText(QString::fromStdString(label));
 }
 
 MenuListItem::~MenuListItem()
 {
     delete ui;
+}
+
+void MenuListItem::setProperties(const std::string& label)
+{
+    ui->MenuLabel->setText(QString::fromStdString(label));
 }
 
 void MenuListItem::onFocus()

@@ -18,12 +18,15 @@ ControllerMenu::ControllerMenu(std::shared_ptr<Settings> setting, QWidget *paren
 ControllerMenu::~ControllerMenu()
 {}
 
-SettingsSliderListItem* ControllerMenu::createListItem(std::shared_ptr<SliderSettingMenuEntry> entry)
+SettingsSliderListItem* ControllerMenu::createDefaultItem()
 {
-    SettingsSliderListItem *item = new SettingsSliderListItem(entry->label, entry->min, entry->max,
-                                                              entry->stepSize, entry->value, ui->ListObject);
-    item->setSideActivator(entry->slideAction);
-    return item;
+    return new SettingsSliderListItem(ui->ListObject);
+}
+
+void ControllerMenu::updateListItem(std::shared_ptr<SliderSettingMenuEntry> entry, SettingsSliderListItem *widget)
+{
+    widget->setProperties(entry->label, entry->min, entry->max, entry->stepSize, entry->value);
+    widget->setSideActivator(entry->slideAction);
 }
 
 void ControllerMenu::leftAction()

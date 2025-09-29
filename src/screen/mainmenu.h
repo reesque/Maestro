@@ -11,7 +11,8 @@ public:
     ~MainMenu() override;
 
 protected:
-    MenuListItem* createListItem(std::shared_ptr<LabelMenuEntry> entry) override;
+    virtual MenuListItem* createDefaultItem() override;
+    virtual void updateListItem(std::shared_ptr<LabelMenuEntry> entry, MenuListItem *widget) override;
 };
 
 #endif // MAINMENU_H

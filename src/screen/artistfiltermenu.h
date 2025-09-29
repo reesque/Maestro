@@ -11,7 +11,8 @@ public:
     ~ArtistFilterMenu() override;
 
 protected:
-    MenuListItem* createListItem(std::shared_ptr<LabelMenuEntry> entry) override;
+    MenuListItem* createDefaultItem() override;
+    void updateListItem(std::shared_ptr<LabelMenuEntry> entry, MenuListItem *widget) override;
 };
 
 #endif // ARTISTFILTERMENU_H

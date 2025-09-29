@@ -17,9 +17,13 @@ ArtistFilterMenu::ArtistFilterMenu(const std::string& artistName, QWidget *paren
 ArtistFilterMenu::~ArtistFilterMenu()
 {}
 
-MenuListItem* ArtistFilterMenu::createListItem(std::shared_ptr<LabelMenuEntry> entry)
+MenuListItem* ArtistFilterMenu::createDefaultItem()
 {
-    MenuListItem *item = new MenuListItem(entry->label, ui->ListObject);
-    item->setActivator(entry->activator);
-    return item;
+    return new MenuListItem(ui->ListObject);
+}
+
+void ArtistFilterMenu::updateListItem(std::shared_ptr<LabelMenuEntry> entry, MenuListItem *widget)
+{
+    widget->setProperties(entry->label);
+    widget->setActivator(entry->activator);
 }

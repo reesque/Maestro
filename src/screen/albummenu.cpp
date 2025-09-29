@@ -80,9 +80,12 @@ AlbumMenu::AlbumMenu(std::shared_ptr<Database> db, const std::string& byArtist, 
 AlbumMenu::~AlbumMenu()
 {}
 
-ArtworkMenuListItem* AlbumMenu::createListItem(std::shared_ptr<ArtworkMenuEntry> entry)
+ArtworkMenuListItem* AlbumMenu::createDefaultItem()
 {
-    ArtworkMenuListItem *item = new ArtworkMenuListItem(entry->header, entry->artPath, ui->ListObject);
-    item->setActivator(entry->activator);
-    return item;
+    return new ArtworkMenuListItem();
+}
+void AlbumMenu::updateListItem(std::shared_ptr<ArtworkMenuEntry> entry, ArtworkMenuListItem *widget)
+{
+    widget->setProperties(entry->header, entry->artPath);
+    widget->setActivator(entry->activator);
 }

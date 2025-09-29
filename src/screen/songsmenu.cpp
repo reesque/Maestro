@@ -46,11 +46,15 @@ SongsMenu::SongsMenu(std::shared_ptr<Database> db, Filter filter, QVector<QVaria
 SongsMenu::~SongsMenu()
 {}
 
-DetailedMenuListItem* SongsMenu::createListItem(std::shared_ptr<DetailedMenuEntry> entry)
+DetailedMenuListItem* SongsMenu::createDefaultItem()
 {
-    DetailedMenuListItem *item = new DetailedMenuListItem(entry->header, entry->subtext, entry->artPath, ui->ListObject);
-    item->setActivator(entry->activator);
-    return item;
+    return new DetailedMenuListItem(ui->ListObject);
+}
+
+void SongsMenu::updateListItem(std::shared_ptr<DetailedMenuEntry> entry, DetailedMenuListItem *widget)
+{
+    widget->setProperties(entry->header, entry->subtext, entry->artPath);
+    widget->setActivator(entry->activator);
 }
 
 void SongsMenu::fillSongRecords(std::vector<Track> records)

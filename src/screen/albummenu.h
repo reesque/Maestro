@@ -13,7 +13,8 @@ public:
     ~AlbumMenu() override;
 
 protected:
-    ArtworkMenuListItem* createListItem(std::shared_ptr<ArtworkMenuEntry> entry) override;
+    ArtworkMenuListItem* createDefaultItem() override;
+    void updateListItem(std::shared_ptr<ArtworkMenuEntry> entry, ArtworkMenuListItem *widget) override;
 };
 
 #endif // ALBUMMENU_H

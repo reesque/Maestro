@@ -12,11 +12,10 @@ class ArtworkMenuListItem : public BaseMenuListItem
     Q_OBJECT
 
 public:
-    explicit ArtworkMenuListItem(const std::string& header,
-                                 const std::string& artworkPath,
-                                 QWidget *parent = nullptr);
+    explicit ArtworkMenuListItem(QWidget *parent = nullptr);
     ~ArtworkMenuListItem();
 
+    void setProperties(const std::string& header, const std::string& artworkPath);
     void onFocus() override;
     void onLoseFocus() override;
 

@@ -26,9 +26,13 @@ ArtistMenu::ArtistMenu(std::shared_ptr<Database> db, QWidget *parent) :
 ArtistMenu::~ArtistMenu()
 {}
 
-MenuListItem* ArtistMenu::createListItem(std::shared_ptr<LabelMenuEntry> entry)
+MenuListItem* ArtistMenu::createDefaultItem()
 {
-    MenuListItem *item = new MenuListItem(entry->label, ui->ListObject);
-    item->setActivator(entry->activator);
-    return item;
+    return new MenuListItem(ui->ListObject);
+}
+
+void ArtistMenu::updateListItem(std::shared_ptr<LabelMenuEntry> entry, MenuListItem *widget)
+{
+    widget->setProperties(entry->label);
+    widget->setActivator(entry->activator);
 }

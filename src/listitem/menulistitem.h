@@ -12,9 +12,10 @@ class MenuListItem : public BaseMenuListItem
     Q_OBJECT
 
 public:
-    explicit MenuListItem(const std::string& label, QWidget *parent = nullptr);
+    explicit MenuListItem(QWidget *parent = nullptr);
     ~MenuListItem() override;
 
+    void setProperties(const std::string& label);
     void onFocus() override;
     void onLoseFocus() override;
 

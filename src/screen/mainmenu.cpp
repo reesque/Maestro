@@ -15,9 +15,13 @@ MainMenu::MainMenu(QWidget *parent) :
 MainMenu::~MainMenu()
 {}
 
-MenuListItem* MainMenu::createListItem(std::shared_ptr<LabelMenuEntry> entry)
+MenuListItem* MainMenu::createDefaultItem()
 {
-    MenuListItem *item = new MenuListItem(entry->label, ui->ListObject);
-    item->setActivator(entry->activator);
-    return item;
+    return new MenuListItem(ui->ListObject);
+}
+
+void MainMenu::updateListItem(std::shared_ptr<LabelMenuEntry> entry, MenuListItem *widget)
+{
+    widget->setProperties(entry->label);
+    widget->setActivator(entry->activator);
 }

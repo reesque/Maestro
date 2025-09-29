@@ -12,7 +12,8 @@ public:
     ~ControllerMenu() override;
 
 protected:
-    SettingsSliderListItem* createListItem(std::shared_ptr<SliderSettingMenuEntry> entry) override;
+    SettingsSliderListItem* createDefaultItem() override;
+    void updateListItem(std::shared_ptr<SliderSettingMenuEntry> entry, SettingsSliderListItem *widget) override;
 
 protected slots:
     void leftAction() override;

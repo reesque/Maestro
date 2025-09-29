@@ -60,6 +60,7 @@ public slots:
         numItems = measure();
         currentPage = 0;
         render();
+        update();
         ui->ListObject->setCurrentRow(0);
 
         // Resize and move widgets
@@ -85,7 +86,7 @@ public slots:
         if (ui->ListObject->currentRow() == 0 && currentPage != 0)
         {
             currentPage -= 1;
-            render();
+            update();
             ui->ListObject->setCurrentRow(ui->ListObject->count() - 1);
         }
         else
@@ -98,16 +99,20 @@ public slots:
 
     void downAction() override
     {
+        if (numItems * currentPage + ui->ListObject->currentRow() + 1 >= menuList->size())
+        {
+            return;
+        }
+
         unsigned maxPage = std::ceil(static_cast<float>(menuList->size()) / numItems);
         if (ui->ListObject->currentRow() == ui->ListObject->count() - 1 && currentPage < maxPage - 1)
         {
             currentPage += 1;
-            render();
+            update();
             ui->ListObject->setCurrentRow(0);
         }
         else
         {
-
             ui->ListObject->setCurrentRow(std::min(ui->ListObject->currentRow() + 1, ui->ListObject->count() - 1));
         }
 
@@ -120,7 +125,8 @@ public slots:
     }
 
 protected:
-    virtual MenuWidget* createListItem(std::shared_ptr<MenuEntry> entry) = 0;
+    virtual MenuWidget* createDefaultItem() = 0;
+    virtual void updateListItem(std::shared_ptr<MenuEntry> entry, MenuWidget *widget) = 0;
 
 protected:
     Ui::Menu *ui;
@@ -158,7 +164,7 @@ private:
             return 0;
         }
 
-        QWidget *item = createListItem(std::static_pointer_cast<MenuEntry>(menuList->at(0)));
+        QWidget *item = createDefaultItem();
         float itemHeight = item->sizeHint().height();
         delete item;
         return std::ceil(ui->ListObject->height() / itemHeight);
@@ -168,16 +174,32 @@ private:
     {
         ui->ListObject->clear();
 
-        unsigned start = currentPage * numItems;
-
-        for (unsigned i = start;
-             i < std::min(start + numItems, static_cast<unsigned>(menuList->size())); ++i)
+        for (unsigned i = 0; i < numItems; ++i)
         {
             QListWidgetItem *qitem = new QListWidgetItem(ui->ListObject);
-            QWidget *item = createListItem(std::static_pointer_cast<MenuEntry>(menuList->at(i)));
+            QWidget *item = createDefaultItem();
             qitem->setSizeHint(item->sizeHint());
             ui->ListObject->addItem(qitem);
             ui->ListObject->setItemWidget(qitem, item);
+        }
+    }
+
+    void update()
+    {
+        unsigned start = currentPage * numItems;
+
+        for (unsigned i = start; i < start + numItems; ++i)
+        {
+            if (i < menuList->size())
+            {
+                updateListItem(std::static_pointer_cast<MenuEntry>(menuList->at(i)),
+                               static_cast<MenuWidget *>(ui->ListObject->itemWidget(ui->ListObject->item(i - start))));
+                ui->ListObject->item(i - start)->setHidden(false);
+            }
+            else
+            {
+                ui->ListObject->item(i - start)->setHidden(true);
+            }
         }
     }
 };
