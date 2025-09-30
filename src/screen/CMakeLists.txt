@@ -10,6 +10,13 @@ add_library(Screen STATIC
     artistfiltermenu.cpp
     artistmenu.h
     artistmenu.cpp
+    bluetoothmenu.h
+    bluetoothmenu.cpp
+    bluetoothscanmenu.h
+    bluetoothscanmenu.cpp
+    bluetoothpairscreen.h
+    bluetoothpairscreen.cpp
+    bluetoothpair.ui
     controllermenu.h
     controllermenu.cpp
     mainmenu.h

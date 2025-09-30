@@ -15,6 +15,7 @@
 
 ## Credits
 - Icons by [Artur Lopato](https://thenounproject.com/creator/lopato/)
+- Icons by [Artur Royyan Wijaya](https://thenounproject.com/creator/roywj/)
 
 ## License
 This program is under GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007.

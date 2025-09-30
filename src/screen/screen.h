@@ -23,7 +23,10 @@ enum class ScreenType
     NowPlaying,
     Setting,
     Reindex,
-    Controller
+    Controller,
+    Bluetooth,
+    BluetoothScan,
+    BluetoothPair
 };
 
 enum class ScreenAnimationType

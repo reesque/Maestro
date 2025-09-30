@@ -13,6 +13,9 @@
 #include "settingmenu.h"
 #include "reindexscreen.h"
 #include "controllermenu.h"
+#include "bluetoothmenu.h"
+#include "bluetoothscanmenu.h"
+#include "bluetoothpairscreen.h"
 
 #include <memory>
 #include <iomanip>
@@ -164,6 +167,24 @@ void MainWindow::switchScreenTo(ScreenType screenType,
         {
             newScreen = new ControllerMenu(m_setting, this);
             emit changeTitle("Controller Settings");
+            break;
+        }
+        case ScreenType::Bluetooth:
+        {
+            newScreen = new BluetoothMenu(this);
+            emit changeTitle("Bluetooth");
+            break;
+        }
+        case ScreenType::BluetoothScan:
+        {
+            newScreen = new BluetoothScanMenu(this);
+            emit changeTitle("Bluetooth Scan");
+            break;
+        }
+        case ScreenType::BluetoothPair:
+        {
+            newScreen = new BluetoothPairScreen(args.at(0).value<QBluetoothAddress>(), this);
+            emit changeTitle("Bluetooth Pair");
             break;
         }
         default:

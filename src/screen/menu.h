@@ -8,6 +8,7 @@
 
 #include <memory>
 #include <cmath>
+#include <deque>
 
 #include <QListWidgetItem>
 #include <QScrollBar>
@@ -41,7 +42,7 @@ public:
         ui->ListObject->setSpacing(0);
         ui->ListObject->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
-        menuList = std::make_unique<std::vector<std::shared_ptr<BaseMenuEntry>>>();
+        menuList = std::make_unique<std::deque<std::shared_ptr<BaseMenuEntry>>>();
         connect(ui->ListObject, &QListWidget::itemClicked, this, &Menu::onItemClicked);
         connect(ui->ListObject, &QListWidget::currentItemChanged, this, &Menu::currentItemChanged);
     }
@@ -58,9 +59,8 @@ public slots:
     {
         // Re-index pages
         numItems = measure();
-        currentPage = 0;
         render();
-        update();
+        toTop();
         ui->ListObject->setCurrentRow(0);
 
         // Resize and move widgets
@@ -128,9 +128,15 @@ protected:
     virtual MenuWidget* createDefaultItem() = 0;
     virtual void updateListItem(std::shared_ptr<MenuEntry> entry, MenuWidget *widget) = 0;
 
+    void toTop()
+    {
+        currentPage = 0;
+        update();
+    }
+
 protected:
     Ui::Menu *ui;
-    std::unique_ptr<std::vector<std::shared_ptr<BaseMenuEntry>>> menuList;
+    std::unique_ptr<std::deque<std::shared_ptr<BaseMenuEntry>>> menuList;
     unsigned numItems;
     unsigned currentPage;
 
