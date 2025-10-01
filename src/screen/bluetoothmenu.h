@@ -2,17 +2,22 @@
 #define BLUETOOTHMENU_H
 
 #include "menu.h"
-#include "menulistitem.h"
+#include "menuwithtogglelistitem.h"
 
-class BluetoothMenu : public Menu<LabelMenuEntry, MenuListItem>
+#include <QtBluetooth/QBluetoothLocalDevice>
+
+class BluetoothMenu : public Menu<LabelWithToggleMenuEntry, MenuWithToggleListItem>
 {
 public:
     explicit BluetoothMenu(QWidget *parent = nullptr);
     ~BluetoothMenu() override;
 
 protected:
-    MenuListItem* createDefaultItem() override;
-    void updateListItem(std::shared_ptr<LabelMenuEntry> entry, MenuListItem *widget) override;
+    MenuWithToggleListItem* createDefaultItem() override;
+    void updateListItem(std::shared_ptr<LabelWithToggleMenuEntry> entry, MenuWithToggleListItem *widget) override;
+
+private:
+    std::unique_ptr<QBluetoothLocalDevice> m_localDevice;
 };
 
 #endif // BLUETOOTHMENU_H

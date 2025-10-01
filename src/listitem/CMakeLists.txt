@@ -10,6 +10,9 @@ add_library(ListItem STATIC
     menulistitem.h
     menulistitem.cpp
     menulistitem.ui
+    menuwithtogglelistitem.h
+    menuwithtogglelistitem.cpp
+    menuwithtogglelistitem.ui
     settingssliderlistitem.h
     settingssliderlistitem.cpp
     settingssliderlistitem.ui

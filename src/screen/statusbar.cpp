@@ -10,15 +10,18 @@ StatusBar::StatusBar(QWidget *parent) :
     m_localDevice = std::make_unique<QBluetoothLocalDevice>();
 
     // Initial check
-    if (m_localDevice->hostMode() != QBluetoothLocalDevice::HostMode::HostPoweredOff)
+    if (m_localDevice->isValid())
     {
-        if (m_localDevice->connectedDevices().empty())
+        if (m_localDevice->hostMode() != QBluetoothLocalDevice::HostMode::HostPoweredOff)
         {
-            ui->BluetoothStatus->setPixmap(QPixmap(":/app/assets/bluetooth.png"));
-        }
-        else
-        {
-            ui->BluetoothStatus->setPixmap(QPixmap(":/app/assets/bluetooth_connect.png"));
+            if (m_localDevice->connectedDevices().empty())
+            {
+                ui->BluetoothStatus->setPixmap(QPixmap(":/app/assets/bluetooth.png"));
+            }
+            else
+            {
+                ui->BluetoothStatus->setPixmap(QPixmap(":/app/assets/bluetooth_connect.png"));
+            }
         }
     }
 

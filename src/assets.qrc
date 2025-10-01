@@ -6,5 +6,7 @@
         <file>assets/pause.png</file>
         <file>assets/bluetooth.png</file>
         <file>assets/bluetooth_connect.png</file>
+        <file>assets/off_toggle.png</file>
+        <file>assets/on_toggle.png</file>
     </qresource>
 </RCC>

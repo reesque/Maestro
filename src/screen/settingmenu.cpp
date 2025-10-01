@@ -1,5 +1,7 @@
 #include "settingmenu.h"
 
+#include <QtBluetooth/QBluetoothLocalDevice>
+
 SettingMenu::SettingMenu(QWidget *parent) :
     Menu(parent)
 {
@@ -7,7 +9,12 @@ SettingMenu::SettingMenu(QWidget *parent) :
 
     menuList->push_back(std::make_shared<LabelMenuEntry>("Sync Library", [=](){switchScreenTo(ScreenType::Reindex);}));
     menuList->push_back(std::make_shared<LabelMenuEntry>("Controller", [=](){switchScreenTo(ScreenType::Controller);}));
-    menuList->push_back(std::make_shared<LabelMenuEntry>("Bluetooth", [=](){switchScreenTo(ScreenType::Bluetooth);}));
+
+    QBluetoothLocalDevice localDevice;
+    if (localDevice.isValid())
+    {
+        menuList->push_back(std::make_shared<LabelMenuEntry>("Bluetooth", [=](){switchScreenTo(ScreenType::Bluetooth);}));
+    }
 }
 
 SettingMenu::~SettingMenu()
