@@ -2,6 +2,7 @@
 #define MENUWITHTOGGLELISTITEM_H
 
 #include "basemenulistitem.h"
+#include "menuentry.h"
 
 namespace Ui {
 class MenuWithToggleListItem;
@@ -15,7 +16,7 @@ public:
     explicit MenuWithToggleListItem(QWidget *parent = nullptr);
     ~MenuWithToggleListItem() override;
 
-    void setProperties(const std::string& label, bool toggleable, bool initValue);
+    void setProperties(std::shared_ptr<LabelWithToggleMenuEntry> entry);
     void onFocus() override;
     void onLoseFocus() override;
 
@@ -23,7 +24,7 @@ public:
 
 private:
     Ui::MenuWithToggleListItem *ui;
-    bool m_toggleable;
+    std::shared_ptr<LabelWithToggleMenuEntry> m_entry;
 };
 
 #endif // MENUWITHTOGGLELISTITEM_H

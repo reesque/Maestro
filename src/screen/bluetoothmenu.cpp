@@ -8,7 +8,7 @@ BluetoothMenu::BluetoothMenu(QWidget *parent) :
 
     // Build the toggle entry
     menuList->push_back(std::make_shared<LabelWithToggleMenuEntry>("Status", true, [=](){
-        if (m_localDevice->hostMode() == QBluetoothLocalDevice::HostPoweredOff) {
+        if (static_cast<LabelWithToggleMenuEntry*>(menuList->at(0).get())->value) {
             m_localDevice->powerOn();
         }
         else
@@ -32,6 +32,6 @@ MenuWithToggleListItem* BluetoothMenu::createDefaultItem()
 
 void BluetoothMenu::updateListItem(std::shared_ptr<LabelWithToggleMenuEntry> entry, MenuWithToggleListItem *widget)
 {
-    widget->setProperties(entry->label, entry->toggleable, entry->initValue);
+    widget->setProperties(entry);
     widget->setActivator(entry->activator);
 }

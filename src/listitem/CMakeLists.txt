@@ -21,6 +21,7 @@ add_library(ListItem STATIC
 target_include_directories(ListItem PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(ListItem PUBLIC
     CommonDeps
+    Maestro::Model
     Maestro::Extras
 )
 

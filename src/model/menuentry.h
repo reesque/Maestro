@@ -83,16 +83,16 @@ struct LabelWithToggleMenuEntry : public BaseMenuEntry
 {
     std::string label;
     bool toggleable;
-    bool initValue;
+    bool value;
 
     LabelWithToggleMenuEntry(std::string v_label, bool v_toggleable,
                              std::function<void()> v_activator,
-                             bool v_initValue = false) :
+                             bool v_value = false) :
         BaseMenuEntry(v_activator)
     {
         label = v_label;
         toggleable = v_toggleable;
-        initValue = v_initValue;
+        value = v_value;
     }
 };
 

@@ -6,7 +6,6 @@ MenuWithToggleListItem::MenuWithToggleListItem(QWidget *parent) :
     ui(new Ui::MenuWithToggleListItem)
 {
     ui->setupUi(this);
-    m_toggleable = true;
 }
 
 MenuWithToggleListItem::~MenuWithToggleListItem()
@@ -14,18 +13,17 @@ MenuWithToggleListItem::~MenuWithToggleListItem()
     delete ui;
 }
 
-void MenuWithToggleListItem::setProperties(const std::string& label,
-                                           bool toggleable, bool initValue)
+void MenuWithToggleListItem::setProperties(std::shared_ptr<LabelWithToggleMenuEntry> entry)
 {
-    ui->MenuLabel->setText(QString::fromStdString(label));
-    m_toggleable = toggleable;
-    if (!toggleable)
+    m_entry = entry;
+    ui->MenuLabel->setText(QString::fromStdString(m_entry->label));
+    if (!m_entry->toggleable)
     {
         ui->Toggle->setVisible(false);
     }
     else
     {
-        if (initValue)
+        if (m_entry->value)
         {
             ui->Toggle->setChecked(true);
         }
@@ -48,16 +46,18 @@ void MenuWithToggleListItem::onLoseFocus()
 
 void MenuWithToggleListItem::activate()
 {
-    if (m_toggleable)
+    if (m_entry->toggleable)
     {
         if (ui->Toggle->isChecked())
         {
-            ui->Toggle->setChecked(false);
+            m_entry->value = false;
         }
         else
         {
-            ui->Toggle->setChecked(true);
+            m_entry->value = true;
         }
+
+        ui->Toggle->setChecked(m_entry->value);
     }
 
     m_activator();

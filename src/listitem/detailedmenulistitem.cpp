@@ -28,6 +28,10 @@ void DetailedMenuListItem::setProperties(const std::string& header,
         QPixmap pixmap(QString::fromStdString(artworkPath));
         ui->CoverArt->setPixmap(pixmap);
     }
+    else
+    {
+        ui->CoverArt->setPixmap(QPixmap(":/app/assets/cover.png"));
+    }
 }
 
 void DetailedMenuListItem::onFocus()

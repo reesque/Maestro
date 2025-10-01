@@ -21,6 +21,10 @@ void ArtworkMenuListItem::setProperties(const std::string& header, const std::st
         QPixmap pixmap(QString::fromStdString(artworkPath));
         ui->CoverArt->setPixmap(pixmap);
     }
+    else
+    {
+        ui->CoverArt->setPixmap(QPixmap(":/app/assets/cover.png"));
+    }
 }
 
 void ArtworkMenuListItem::onFocus()
