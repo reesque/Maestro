@@ -8,10 +8,16 @@ ArtistFilterMenu::ArtistFilterMenu(const std::string& artistName, QWidget *paren
     QVector<QVariant> args;
     args.push_back(QVariant(QString::fromStdString(artistName)));
 
-    menuList->push_back(std::make_shared<LabelMenuEntry>("by Songs", [=](){
-        switchScreenTo(ScreenType::SongsByArtist, args);}));
-    menuList->push_back(std::make_shared<LabelMenuEntry>("by Album", [=](){
-        switchScreenTo(ScreenType::AlbumByArtist, args);}));
+    menuList->push_back(std::make_shared<LabelMenuEntry>("by Songs",
+        [=](std::shared_ptr<LabelMenuEntry>){
+            switchScreenTo(ScreenType::SongsByArtist, args);
+        }
+    ));
+    menuList->push_back(std::make_shared<LabelMenuEntry>("by Album",
+        [=](std::shared_ptr<LabelMenuEntry>){
+            switchScreenTo(ScreenType::AlbumByArtist, args);
+        }
+    ));
 }
 
 ArtistFilterMenu::~ArtistFilterMenu()
@@ -24,6 +30,5 @@ MenuListItem* ArtistFilterMenu::createDefaultItem()
 
 void ArtistFilterMenu::updateListItem(std::shared_ptr<LabelMenuEntry> entry, MenuListItem *widget)
 {
-    widget->setProperties(entry->label);
-    widget->setActivator(entry->activator);
+    widget->setProperties(entry);
 }

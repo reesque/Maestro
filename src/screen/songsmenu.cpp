@@ -53,8 +53,7 @@ DetailedMenuListItem* SongsMenu::createDefaultItem()
 
 void SongsMenu::updateListItem(std::shared_ptr<DetailedMenuEntry> entry, DetailedMenuListItem *widget)
 {
-    widget->setProperties(entry->header, entry->subtext, entry->artPath);
-    widget->setActivator(entry->activator);
+    widget->setProperties(entry);
 }
 
 void SongsMenu::fillSongRecords(std::vector<Track> records)
@@ -83,14 +82,17 @@ void SongsMenu::fillSongRecords(std::vector<Track> records)
 
         // Create menu list
         menuList->push_back(std::make_shared<DetailedMenuEntry>(
-            records[queueNum].title, records[queueNum].artist, artPath, [=](){
+            records[queueNum].title, records[queueNum].artist, artPath,
+            [=](std::shared_ptr<DetailedMenuEntry>){
                 emit switchScreenTo(ScreenType::NowPlaying);
+
                 QVector<Track> vec;
-		vec.reserve(records.size());
-		for (const auto& track : records) {
-    		    vec.append(track);
-		}
-		emit playTrack(vec, queueNum);
+                vec.reserve(records.size());
+                for (const auto& track : records) {
+                    vec.append(track);
+                }
+
+                emit playTrack(vec, queueNum);
             }
         ));
     }

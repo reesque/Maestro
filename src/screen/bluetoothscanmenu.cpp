@@ -10,7 +10,8 @@ BluetoothScanMenu::BluetoothScanMenu(QWidget *parent) :
     m_localDevice = std::make_unique<QBluetoothLocalDevice>();
 
     // Temp list data to display while scanning
-    menuList->push_back(std::make_shared<LabelMenuEntry>("Scanning...", [=](){}));
+    menuList->push_back(std::make_shared<LabelMenuEntry>("Scanning...",
+        [=](std::shared_ptr<LabelMenuEntry>){}));
 
     // Start BT agent
     m_bluetoothAgent = std::make_unique<QBluetoothDeviceDiscoveryAgent>();
@@ -41,13 +42,15 @@ void BluetoothScanMenu::deviceDiscovered(const QBluetoothDeviceInfo &device)
         major == QBluetoothDeviceInfo::PeripheralDevice))
     {
         m_scannedEntries.push_back(std::make_shared<LabelMenuEntry>(
-                                device.name().isEmpty() ?
-                                device.address().toString().toStdString() :
-                                device.name().toStdString(), [=](){
-            QVector<QVariant> arg;
-            arg.append(QVariant::fromValue(device.address()));
-            switchScreenTo(ScreenType::BluetoothPair, arg);
-        }));
+            device.name().isEmpty() ?
+            device.address().toString().toStdString() :
+            device.name().toStdString(),
+            [=](std::shared_ptr<LabelMenuEntry>){
+                QVector<QVariant> arg;
+                arg.append(QVariant::fromValue(device.address()));
+                switchScreenTo(ScreenType::BluetoothPair, arg);
+            }
+        ));
     }
 }
 
@@ -70,6 +73,5 @@ MenuListItem* BluetoothScanMenu::createDefaultItem()
 
 void BluetoothScanMenu::updateListItem(std::shared_ptr<LabelMenuEntry> entry, MenuListItem *widget)
 {
-    widget->setProperties(entry->label);
-    widget->setActivator(entry->activator);
+    widget->setProperties(entry);
 }

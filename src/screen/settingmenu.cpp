@@ -7,13 +7,16 @@ SettingMenu::SettingMenu(QWidget *parent) :
 {
     prevScreen = ScreenType::Main;
 
-    menuList->push_back(std::make_shared<LabelMenuEntry>("Sync Library", [=](){switchScreenTo(ScreenType::Reindex);}));
-    menuList->push_back(std::make_shared<LabelMenuEntry>("Controller", [=](){switchScreenTo(ScreenType::Controller);}));
+    menuList->push_back(std::make_shared<LabelMenuEntry>("Sync Library",
+        [=](std::shared_ptr<LabelMenuEntry>){switchScreenTo(ScreenType::Reindex);}));
+    menuList->push_back(std::make_shared<LabelMenuEntry>("Controller",
+        [=](std::shared_ptr<LabelMenuEntry>){switchScreenTo(ScreenType::Controller);}));
 
     QBluetoothLocalDevice localDevice;
     if (localDevice.isValid())
     {
-        menuList->push_back(std::make_shared<LabelMenuEntry>("Bluetooth", [=](){switchScreenTo(ScreenType::Bluetooth);}));
+        menuList->push_back(std::make_shared<LabelMenuEntry>("Bluetooth",
+            [=](std::shared_ptr<LabelMenuEntry>){switchScreenTo(ScreenType::Bluetooth);}));
     }
 }
 
@@ -27,6 +30,5 @@ MenuListItem* SettingMenu::createDefaultItem()
 
 void SettingMenu::updateListItem(std::shared_ptr<LabelMenuEntry> entry, MenuListItem *widget)
 {
-    widget->setProperties(entry->label);
-    widget->setActivator(entry->activator);
+    widget->setProperties(entry);
 }

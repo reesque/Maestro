@@ -2,7 +2,7 @@
 #include "ui_menuwithtogglelistitem.h"
 
 MenuWithToggleListItem::MenuWithToggleListItem(QWidget *parent) :
-    BaseMenuListItem(parent),
+    QWidget(parent),
     ui(new Ui::MenuWithToggleListItem)
 {
     ui->setupUi(this);
@@ -13,9 +13,8 @@ MenuWithToggleListItem::~MenuWithToggleListItem()
     delete ui;
 }
 
-void MenuWithToggleListItem::setProperties(std::shared_ptr<LabelWithToggleMenuEntry> entry)
+void MenuWithToggleListItem::updateItem()
 {
-    m_entry = entry;
     ui->MenuLabel->setText(QString::fromStdString(m_entry->label));
     if (!m_entry->toggleable)
     {
@@ -60,5 +59,5 @@ void MenuWithToggleListItem::activate()
         ui->Toggle->setChecked(m_entry->value);
     }
 
-    m_activator();
+    BaseMenuListItem::activate();
 }

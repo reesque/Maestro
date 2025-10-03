@@ -2,12 +2,14 @@
 #define DETAILEDMENULISTITEM_H
 
 #include "basemenulistitem.h"
+#include "menuentry.h"
 
 namespace Ui {
 class DetailedMenuListItem;
 }
 
-class DetailedMenuListItem : public BaseMenuListItem
+class DetailedMenuListItem : public QWidget,
+    public BaseMenuListItem<DetailedMenuEntry>
 {
     Q_OBJECT
 
@@ -15,9 +17,7 @@ public:
     explicit DetailedMenuListItem(QWidget *parent = nullptr);
     ~DetailedMenuListItem() override;
 
-    void setProperties(const std::string& header,
-                       const std::string& subtext,
-                       const std::string& artworkPath);
+    void updateItem() override;
     void onFocus() override;
     void onLoseFocus() override;
 

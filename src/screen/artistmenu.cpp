@@ -15,11 +15,13 @@ ArtistMenu::ArtistMenu(std::shared_ptr<Database> db, QWidget *parent) :
 
     for (auto artist : db->getAllArtists())
     {
-        menuList->push_back(std::make_shared<LabelMenuEntry>(artist, [=](){
-            QVector<QVariant> args;
-            args.push_back(QVariant(QString::fromStdString(artist)));
-            emit switchScreenTo(ScreenType::ArtistFilter, args);
-        }));
+        menuList->push_back(std::make_shared<LabelMenuEntry>(artist,
+            [=](std::shared_ptr<LabelMenuEntry>){
+                QVector<QVariant> args;
+                args.push_back(QVariant(QString::fromStdString(artist)));
+                emit switchScreenTo(ScreenType::ArtistFilter, args);
+            }
+        ));
     }
 }
 
@@ -33,6 +35,5 @@ MenuListItem* ArtistMenu::createDefaultItem()
 
 void ArtistMenu::updateListItem(std::shared_ptr<LabelMenuEntry> entry, MenuListItem *widget)
 {
-    widget->setProperties(entry->label);
-    widget->setActivator(entry->activator);
+    widget->setProperties(entry);
 }

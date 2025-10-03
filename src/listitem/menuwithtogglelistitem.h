@@ -8,7 +8,8 @@ namespace Ui {
 class MenuWithToggleListItem;
 }
 
-class MenuWithToggleListItem : public BaseMenuListItem
+class MenuWithToggleListItem : public QWidget,
+    public BaseMenuListItem<LabelWithToggleMenuEntry>
 {
     Q_OBJECT
 
@@ -16,7 +17,7 @@ public:
     explicit MenuWithToggleListItem(QWidget *parent = nullptr);
     ~MenuWithToggleListItem() override;
 
-    void setProperties(std::shared_ptr<LabelWithToggleMenuEntry> entry);
+    void updateItem() override;
     void onFocus() override;
     void onLoseFocus() override;
 
@@ -24,7 +25,6 @@ public:
 
 private:
     Ui::MenuWithToggleListItem *ui;
-    std::shared_ptr<LabelWithToggleMenuEntry> m_entry;
 };
 
 #endif // MENUWITHTOGGLELISTITEM_H

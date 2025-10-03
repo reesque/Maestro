@@ -3,7 +3,6 @@ add_library(ListItem STATIC
     artworkmenulistitem.cpp
     artworkmenulistitem.ui
     basemenulistitem.h
-    basemenulistitem.cpp
     detailedmenulistitem.h
     detailedmenulistitem.cpp
     detailedmenulistitem.ui

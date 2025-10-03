@@ -6,13 +6,17 @@ ControllerMenu::ControllerMenu(std::shared_ptr<Settings> setting, QWidget *paren
     prevScreen = ScreenType::Setting;
 
     menuList->push_back(std::make_shared<SliderSettingMenuEntry>(
-        "DPAD Responsiveness", 0, 50, 1, setting->getDpadResponsiveLevel(), [setting](QVariant arg){
-            setting->setDpadResponsiveLevel(arg.toInt());
-        },[](){}));
+        "DPAD Responsiveness", 0, 50, 1, setting->getDpadResponsiveLevel(),
+        [=](std::shared_ptr<SliderSettingMenuEntry> entry){
+            setting->setDpadResponsiveLevel(entry->value);
+        }
+    ));
     menuList->push_back(std::make_shared<SliderSettingMenuEntry>(
-        "Face Button Responsiveness", 0, 50, 1, setting->getFaceBtnResponsiveLevel(), [setting](QVariant arg){
-            setting->setFaceBtnResponsiveLevel(arg.toInt());
-        }, [](){}));
+        "Face Button Responsiveness", 0, 50, 1, setting->getFaceBtnResponsiveLevel(),
+        [=](std::shared_ptr<SliderSettingMenuEntry> entry){
+            setting->setFaceBtnResponsiveLevel(entry->value);
+        }
+    ));
 }
 
 ControllerMenu::~ControllerMenu()
@@ -25,8 +29,7 @@ SettingsSliderListItem* ControllerMenu::createDefaultItem()
 
 void ControllerMenu::updateListItem(std::shared_ptr<SliderSettingMenuEntry> entry, SettingsSliderListItem *widget)
 {
-    widget->setProperties(entry->label, entry->min, entry->max, entry->stepSize, entry->value);
-    widget->setSideActivator(entry->slideAction);
+    widget->setProperties(entry);
 }
 
 void ControllerMenu::leftAction()

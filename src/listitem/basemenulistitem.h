@@ -5,28 +5,36 @@
 
 #include <QWidget>
 
-class BaseMenuListItem : public QWidget
+template<typename EntryType>
+class BaseMenuListItem
 {
-    Q_OBJECT
-
 public:
-    virtual void activate();
-    virtual void onSideActivate(QVariant arg);
+    virtual void activate()
+    {
+        m_entry->activator(m_entry);
+    }
 
-    void setActivator(std::function<void()> activator);
-    void setSideActivator(std::function<void(QVariant)> sideActivator);
+    virtual void onFocus()
+    {}
 
-    virtual void onFocus();
-    virtual void onLoseFocus();
+    virtual void onLoseFocus()
+    {}
+
+    virtual void setProperties(std::shared_ptr<EntryType> entry)
+    {
+        m_entry = entry;
+        updateItem();
+    }
 
     virtual ~BaseMenuListItem() = default;
 
 protected:
-    BaseMenuListItem(QWidget *parent = nullptr);
+    BaseMenuListItem(){}
+
+    virtual void updateItem() = 0;
 
 protected:
-    std::function<void()> m_activator;
-    std::function<void(QVariant)> m_sideActivator;
+    std::shared_ptr<EntryType> m_entry;
 };
 
 #endif // BASEMENULISTITEM_H
