@@ -2,7 +2,7 @@
 #include "ui_menulistitem.h"
 
 MenuListItem::MenuListItem(QWidget *parent) :
-    BaseMenuListItem(parent),
+    QWidget(parent),
     ui(new Ui::MenuListItem)
 {
     ui->setupUi(this);
@@ -13,9 +13,9 @@ MenuListItem::~MenuListItem()
     delete ui;
 }
 
-void MenuListItem::setProperties(const std::string& label)
+void MenuListItem::updateItem()
 {
-    ui->MenuLabel->setText(QString::fromStdString(label));
+    ui->MenuLabel->setText(QString::fromStdString(m_entry->label));
 }
 
 void MenuListItem::onFocus()

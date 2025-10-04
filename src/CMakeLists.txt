@@ -26,6 +26,7 @@ find_package(Qt5 REQUIRED COMPONENTS
     Multimedia
     MultimediaWidgets
     Gamepad
+    Bluetooth
 )
 
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release;" CACHE STRING "" FORCE)
@@ -60,6 +61,7 @@ target_link_libraries(CommonDeps INTERFACE
     Qt5::Multimedia
     Qt5::MultimediaWidgets
     Qt5::Gamepad
+    Qt5::Bluetooth
     ${TAGLIB_LIBRARY}
     stdc++fs
 )

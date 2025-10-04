@@ -33,11 +33,13 @@ AlbumMenu::AlbumMenu(std::shared_ptr<Database> db, QWidget *parent) :
             artPath = trackArtPathJpg.toStdString();
         }
 
-        menuList->push_back(std::make_shared<ArtworkMenuEntry>(album, artPath, [=](){
-            QVector<QVariant> args;
-            args.push_back(QVariant(QString::fromStdString(album)));
-            emit switchScreenTo(ScreenType::SongsByAlbum, args);
-        }));
+        menuList->push_back(std::make_shared<ArtworkMenuEntry>(album, artPath,
+            [=](std::shared_ptr<ArtworkMenuEntry>){
+                QVector<QVariant> args;
+                args.push_back(QVariant(QString::fromStdString(album)));
+                emit switchScreenTo(ScreenType::SongsByAlbum, args);
+            }
+        ));
     }
 }
 
@@ -68,12 +70,14 @@ AlbumMenu::AlbumMenu(std::shared_ptr<Database> db, const std::string& byArtist, 
             artPath = trackArtPathJpg.toStdString();
         }
 
-        menuList->push_back(std::make_shared<ArtworkMenuEntry>(album, artPath, [=](){
-            QVector<QVariant> args;
-            args.push_back(QVariant(QString::fromStdString(album)));
-            args.push_back(QVariant(QString::fromStdString(byArtist)));
-            emit switchScreenTo(ScreenType::SongsByAlbumArtist, args);
-        }));
+        menuList->push_back(std::make_shared<ArtworkMenuEntry>(album, artPath,
+            [=](std::shared_ptr<ArtworkMenuEntry>){
+                QVector<QVariant> args;
+                args.push_back(QVariant(QString::fromStdString(album)));
+                args.push_back(QVariant(QString::fromStdString(byArtist)));
+                emit switchScreenTo(ScreenType::SongsByAlbumArtist, args);
+            }
+        ));
     }
 }
 
@@ -86,6 +90,5 @@ ArtworkMenuListItem* AlbumMenu::createDefaultItem()
 }
 void AlbumMenu::updateListItem(std::shared_ptr<ArtworkMenuEntry> entry, ArtworkMenuListItem *widget)
 {
-    widget->setProperties(entry->header, entry->artPath);
-    widget->setActivator(entry->activator);
+    widget->setProperties(entry);
 }

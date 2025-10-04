@@ -2,7 +2,7 @@
 #include "ui_artworkmenulistitem.h"
 
 ArtworkMenuListItem::ArtworkMenuListItem(QWidget *parent) :
-    BaseMenuListItem(parent),
+    QWidget(parent),
     ui(new Ui::ArtworkMenuListItem)
 {
     ui->setupUi(this);
@@ -13,13 +13,17 @@ ArtworkMenuListItem::~ArtworkMenuListItem()
     delete ui;
 }
 
-void ArtworkMenuListItem::setProperties(const std::string& header, const std::string& artworkPath)
+void ArtworkMenuListItem::updateItem()
 {
-    ui->HeaderLabel->setText(QString::fromStdString(header));
-    if (artworkPath != "")
+    ui->HeaderLabel->setText(QString::fromStdString(m_entry->header));
+    if (m_entry->artPath != "")
     {
-        QPixmap pixmap(QString::fromStdString(artworkPath));
+        QPixmap pixmap(QString::fromStdString(m_entry->artPath));
         ui->CoverArt->setPixmap(pixmap);
+    }
+    else
+    {
+        ui->CoverArt->setPixmap(QPixmap(":/app/assets/cover.png"));
     }
 }
 

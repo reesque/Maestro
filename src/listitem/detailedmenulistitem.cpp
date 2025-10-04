@@ -4,7 +4,7 @@
 #include <QPixmap>
 
 DetailedMenuListItem::DetailedMenuListItem(QWidget *parent) :
-    BaseMenuListItem(parent),
+    QWidget(parent),
     ui(new Ui::DetailedMenuListItem)
 {
     ui->setupUi(this);
@@ -16,17 +16,19 @@ DetailedMenuListItem::~DetailedMenuListItem()
 }
 
 
-void DetailedMenuListItem::setProperties(const std::string& header,
-                                         const std::string& subtext,
-                                         const std::string& artworkPath)
+void DetailedMenuListItem::updateItem()
 {
-    ui->HeaderLabel->setText(QString::fromStdString(header));
-    ui->SubtextLabel->setText(QString::fromStdString(subtext));
+    ui->HeaderLabel->setText(QString::fromStdString(m_entry->header));
+    ui->SubtextLabel->setText(QString::fromStdString(m_entry->subtext));
 
-    if (artworkPath != "")
+    if (m_entry->artPath != "")
     {
-        QPixmap pixmap(QString::fromStdString(artworkPath));
+        QPixmap pixmap(QString::fromStdString(m_entry->artPath));
         ui->CoverArt->setPixmap(pixmap);
+    }
+    else
+    {
+        ui->CoverArt->setPixmap(QPixmap(":/app/assets/cover.png"));
     }
 }
 

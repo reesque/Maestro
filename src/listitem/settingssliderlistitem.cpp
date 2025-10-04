@@ -4,7 +4,7 @@
 #include "roundedprogressbarstyle.h"
 
 SettingsSliderListItem::SettingsSliderListItem(QWidget *parent) :
-    BaseMenuListItem(parent),
+    QWidget(parent),
     ui(new Ui::SettingsSliderListItem)
 {
     ui->setupUi(this);
@@ -16,33 +16,31 @@ SettingsSliderListItem::~SettingsSliderListItem()
 }
 
 
-void SettingsSliderListItem::setProperties(const std::string& label, int min, int max,
-                                           int stepSize, int value)
+void SettingsSliderListItem::updateItem()
 {
-    m_min = min;
-    m_max = max;
-    m_stepSize = stepSize;
-
     ui->ValueBar->setStyle(new RoundedProgressBarStyle);
 
-    ui->Label->setText(QString::fromStdString(label));
-    ui->ValueBar->setMinimum(min);
-    ui->ValueBar->setMaximum(max);
-    ui->ValueBar->setValue(value);
-    ui->Value->setText(QString::number(value));
+    ui->Label->setText(QString::fromStdString(m_entry->label));
+    ui->ValueBar->setMinimum(m_entry->min);
+    ui->ValueBar->setMaximum(m_entry->max);
+    ui->ValueBar->setValue(m_entry->value);
+    ui->Value->setText(QString::number(m_entry->value));
 }
 
 void SettingsSliderListItem::slide(bool isForward)
 {
     if (isForward)
     {
-        ui->ValueBar->setValue(std::min(ui->ValueBar->value() + m_stepSize, m_max));
+        m_entry->value = std::min(ui->ValueBar->value() + m_entry->stepSize, m_entry->max);
+        ui->ValueBar->setValue(m_entry->value);
     }
     else
     {
-        ui->ValueBar->setValue(std::max(ui->ValueBar->value() - m_stepSize, m_min));
+        m_entry->value = std::max(ui->ValueBar->value() - m_entry->stepSize, m_entry->min);
+        ui->ValueBar->setValue(m_entry->value);
     }
 
-    ui->Value->setText(QString::number(ui->ValueBar->value()));
-    m_sideActivator(ui->ValueBar->value());
+    ui->Value->setText(QString::number(m_entry->value));
+
+    activate();
 }

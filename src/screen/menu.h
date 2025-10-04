@@ -4,10 +4,10 @@
 #include "ui_menu.h"
 
 #include "screen.h"
-#include "menuentry.h"
 
 #include <memory>
 #include <cmath>
+#include <deque>
 
 #include <QListWidgetItem>
 #include <QScrollBar>
@@ -41,7 +41,7 @@ public:
         ui->ListObject->setSpacing(0);
         ui->ListObject->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
-        menuList = std::make_unique<std::vector<std::shared_ptr<BaseMenuEntry>>>();
+        menuList = std::make_unique<std::deque<std::shared_ptr<MenuEntry>>>();
         connect(ui->ListObject, &QListWidget::itemClicked, this, &Menu::onItemClicked);
         connect(ui->ListObject, &QListWidget::currentItemChanged, this, &Menu::currentItemChanged);
     }
@@ -54,13 +54,12 @@ public:
     }
 
 public slots:
-    void resizeEvent(QResizeEvent *event) override
+    void resizeEvent(QResizeEvent *) override
     {
         // Re-index pages
         numItems = measure();
-        currentPage = 0;
         render();
-        update();
+        toTop();
         ui->ListObject->setCurrentRow(0);
 
         // Resize and move widgets
@@ -71,7 +70,7 @@ public slots:
         ui->Scroll->setPageStep(numItems);
         ui->Scroll->setMaximum(menuList->size() - 1);
         ui->Scroll->setValue(0);
-        if (numItems < menuList->size() - 1)
+        if (numItems <= menuList->size() - 1)
         {
             ui->Scroll->show();
         }
@@ -128,9 +127,15 @@ protected:
     virtual MenuWidget* createDefaultItem() = 0;
     virtual void updateListItem(std::shared_ptr<MenuEntry> entry, MenuWidget *widget) = 0;
 
+    void toTop()
+    {
+        currentPage = 0;
+        update();
+    }
+
 protected:
     Ui::Menu *ui;
-    std::unique_ptr<std::vector<std::shared_ptr<BaseMenuEntry>>> menuList;
+    std::unique_ptr<std::deque<std::shared_ptr<MenuEntry>>> menuList;
     unsigned numItems;
     unsigned currentPage;
 
@@ -192,8 +197,7 @@ private:
         {
             if (i < menuList->size())
             {
-                updateListItem(std::static_pointer_cast<MenuEntry>(menuList->at(i)),
-                               static_cast<MenuWidget *>(ui->ListObject->itemWidget(ui->ListObject->item(i - start))));
+                updateListItem(menuList->at(i), static_cast<MenuWidget *>(ui->ListObject->itemWidget(ui->ListObject->item(i - start))));
                 ui->ListObject->item(i - start)->setHidden(false);
             }
             else
