@@ -21,7 +21,7 @@ BluetoothMenu::BluetoothMenu(QWidget *parent) :
     ));
 
     // Any other entries
-    menuList->push_back(std::make_shared<LabelWithToggleMenuEntry>("Scan", false,
+    menuList->push_back(std::make_shared<LabelWithToggleMenuEntry>("Devices", false,
         [=](std::shared_ptr<LabelWithToggleMenuEntry>){
             switchScreenTo(ScreenType::BluetoothScan);
         }

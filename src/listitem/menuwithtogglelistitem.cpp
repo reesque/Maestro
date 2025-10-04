@@ -22,6 +22,7 @@ void MenuWithToggleListItem::updateItem()
     }
     else
     {
+        ui->Toggle->setVisible(true);
         if (m_entry->value)
         {
             ui->Toggle->setChecked(true);

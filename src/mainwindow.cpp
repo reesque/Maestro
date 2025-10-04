@@ -178,12 +178,13 @@ void MainWindow::switchScreenTo(ScreenType screenType,
         case ScreenType::BluetoothScan:
         {
             newScreen = new BluetoothScanMenu(this);
-            emit changeTitle("Bluetooth Scan");
+            emit changeTitle("Bluetooth Devices");
             break;
         }
         case ScreenType::BluetoothPair:
         {
-            newScreen = new BluetoothPairScreen(args.at(0).value<QBluetoothAddress>(), this);
+            newScreen = new BluetoothPairScreen(args.at(0).value<QBluetoothAddress>(),
+                                                args.at(1).value<bool>(), this);
             emit changeTitle("Bluetooth Pair");
             break;
         }

@@ -14,7 +14,7 @@ class BluetoothPairScreen : public Screen
     Q_OBJECT
 
 public:
-    explicit BluetoothPairScreen(QBluetoothAddress pairAddress, QWidget *parent = nullptr);
+    explicit BluetoothPairScreen(QBluetoothAddress pairAddress, bool isParing, QWidget *parent = nullptr);
     ~BluetoothPairScreen() override;
 
 private slots:

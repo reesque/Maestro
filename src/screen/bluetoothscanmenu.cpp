@@ -6,12 +6,12 @@ BluetoothScanMenu::BluetoothScanMenu(QWidget *parent) :
     Menu(parent)
 {
     prevScreen = ScreenType::Bluetooth;
-    m_scannedEntries = std::deque<std::shared_ptr<LabelMenuEntry>>();
+    m_scannedEntries = std::deque<std::shared_ptr<LabelWithToggleMenuEntry>>();
     m_localDevice = std::make_unique<QBluetoothLocalDevice>();
 
     // Temp list data to display while scanning
-    menuList->push_back(std::make_shared<LabelMenuEntry>("Scanning...",
-        [=](std::shared_ptr<LabelMenuEntry>){}));
+    menuList->push_back(std::make_shared<LabelWithToggleMenuEntry>("Scanning...", false,
+        [=](std::shared_ptr<LabelWithToggleMenuEntry>){}));
 
     // Start BT agent
     m_bluetoothAgent = std::make_unique<QBluetoothDeviceDiscoveryAgent>();
@@ -37,19 +37,20 @@ BluetoothScanMenu::~BluetoothScanMenu()
 void BluetoothScanMenu::deviceDiscovered(const QBluetoothDeviceInfo &device)
 {
     quint8 major = device.majorDeviceClass();
-    if (m_localDevice->pairingStatus(device.address()) == QBluetoothLocalDevice::Pairing::Unpaired &&
-        (major == QBluetoothDeviceInfo::AudioVideoDevice ||
-        major == QBluetoothDeviceInfo::PeripheralDevice))
+    if (major == QBluetoothDeviceInfo::AudioVideoDevice ||
+        major == QBluetoothDeviceInfo::PeripheralDevice)
     {
-        m_scannedEntries.push_back(std::make_shared<LabelMenuEntry>(
-            device.name().isEmpty() ?
-            device.address().toString().toStdString() :
-            device.name().toStdString(),
-            [=](std::shared_ptr<LabelMenuEntry>){
+        bool paired = m_localDevice->pairingStatus(device.address())
+                != QBluetoothLocalDevice::Pairing::Unpaired;
+        m_scannedEntries.push_back(std::make_shared<LabelWithToggleMenuEntry>(
+            device.name().isEmpty() ? device.address().toString().toStdString()
+                                    : device.name().toStdString(), true,
+            [=](std::shared_ptr<LabelWithToggleMenuEntry>){
                 QVector<QVariant> arg;
                 arg.append(QVariant::fromValue(device.address()));
+                arg.append(QVariant::fromValue(!paired));
                 switchScreenTo(ScreenType::BluetoothPair, arg);
-            }
+            }, paired
         ));
     }
 }
@@ -66,12 +67,12 @@ void BluetoothScanMenu::scanFinished()
     toTop();
 }
 
-MenuListItem* BluetoothScanMenu::createDefaultItem()
+MenuWithToggleListItem* BluetoothScanMenu::createDefaultItem()
 {
-    return new MenuListItem(ui->ListObject);
+    return new MenuWithToggleListItem(ui->ListObject);
 }
 
-void BluetoothScanMenu::updateListItem(std::shared_ptr<LabelMenuEntry> entry, MenuListItem *widget)
+void BluetoothScanMenu::updateListItem(std::shared_ptr<LabelWithToggleMenuEntry> entry, MenuWithToggleListItem *widget)
 {
     widget->setProperties(entry);
 }

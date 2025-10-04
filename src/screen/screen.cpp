@@ -34,7 +34,7 @@ void Screen::rightAction()
 void Screen::leftAction()
 {}
 
-void Screen::resizeEvent(QResizeEvent *event)
+void Screen::resizeEvent(QResizeEvent *)
 {}
 
 void Screen::backAction()

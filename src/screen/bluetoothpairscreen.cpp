@@ -2,7 +2,9 @@
 
 #include "ui_bluetoothpair.h"
 
-BluetoothPairScreen::BluetoothPairScreen(QBluetoothAddress pairAddress, QWidget *parent) :
+BluetoothPairScreen::BluetoothPairScreen(QBluetoothAddress pairAddress,
+                                         bool isPairing,
+                                         QWidget *parent) :
     Screen(parent),
     ui(new Ui::BluetoothPairScreen)
 {
@@ -20,7 +22,16 @@ BluetoothPairScreen::BluetoothPairScreen(QBluetoothAddress pairAddress, QWidget 
     connect(m_localDevice.get(), &QBluetoothLocalDevice::error,
             this, &BluetoothPairScreen::pairError);
 
-    m_localDevice->requestPairing(pairAddress, QBluetoothLocalDevice::Paired);
+    if (isPairing)
+    {
+        ui->PairLabel->setText("Pairing Bluetooth Device");
+        m_localDevice->requestPairing(pairAddress, QBluetoothLocalDevice::Paired);
+    }
+    else
+    {
+        ui->PairLabel->setText("Unpairing Bluetooth Device");
+        m_localDevice->requestPairing(pairAddress, QBluetoothLocalDevice::Unpaired);
+    }
 }
 
 BluetoothPairScreen::~BluetoothPairScreen()
@@ -36,7 +47,9 @@ BluetoothPairScreen::~BluetoothPairScreen()
 void BluetoothPairScreen::pairSuccess(const QBluetoothAddress &address,
                                       QBluetoothLocalDevice::Pairing pairing)
 {
-    if (address == targetAddress && pairing == QBluetoothLocalDevice::Pairing::Paired)
+    if (address == targetAddress && (
+        pairing == QBluetoothLocalDevice::Pairing::Paired ||
+        pairing == QBluetoothLocalDevice::Pairing::Unpaired))
     {
         switchToPreviousScreen();
     }
