@@ -70,7 +70,7 @@ public slots:
         ui->Scroll->setPageStep(numItems);
         ui->Scroll->setMaximum(menuList->size() - 1);
         ui->Scroll->setValue(0);
-        if (numItems < menuList->size() - 1)
+        if (numItems <= menuList->size() - 1)
         {
             ui->Scroll->show();
         }
