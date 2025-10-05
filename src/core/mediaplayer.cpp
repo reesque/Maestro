@@ -122,7 +122,7 @@ MediaPlayer::~MediaPlayer()
     disconnect(m_player, &QMediaPlayer::stateChanged, this, &MediaPlayer::onStateChanged);
 }
 
-void MediaPlayer::currentMediaChanged(const QMediaContent &media)
+void MediaPlayer::currentMediaChanged(const QMediaContent &)
 {
     emit onTrackInfoUpdate(getCurrentTrackMetaData());
 }

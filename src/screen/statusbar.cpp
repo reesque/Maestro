@@ -84,7 +84,7 @@ void StatusBar::bluetoothModeStateChanged(QBluetoothLocalDevice::HostMode state)
     ui->BluetoothStatus->setPixmap(QPixmap(":/app/assets/bluetooth.png"));
 }
 
-void StatusBar::bluetoothDeviceConnected(const QBluetoothAddress &address)
+void StatusBar::bluetoothDeviceConnected(const QBluetoothAddress &)
 {
     if (m_localDevice->hostMode() == QBluetoothLocalDevice::HostMode::HostPoweredOff)
     {
@@ -94,7 +94,7 @@ void StatusBar::bluetoothDeviceConnected(const QBluetoothAddress &address)
     ui->BluetoothStatus->setPixmap(QPixmap(":/app/assets/bluetooth_connect.png"));
 }
 
-void StatusBar::bluetoothDeviceDisconnected(const QBluetoothAddress &address)
+void StatusBar::bluetoothDeviceDisconnected(const QBluetoothAddress &)
 {
     if (m_localDevice->hostMode() == QBluetoothLocalDevice::HostMode::HostPoweredOff)
     {

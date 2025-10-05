@@ -1,18 +1,20 @@
-add_library(Core STATIC
-    controller.h
+set (SOURCES
     controller.cpp
-    database.h
     database.cpp
-    mediaplayer.h
     mediaplayer.cpp
-    settings.h
     settings.cpp
 )
 
-target_include_directories(Core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(Core PUBLIC
-    CommonDeps
+set (HEADERS
+    controller.h
+    database.h
+    mediaplayer.h
+    settings.h
+)
+
+link_libraries(
     Maestro::Model
 )
 
+add_library(Core STATIC ${SOURCES} ${HEADERS})
 add_library(Maestro::Core ALIAS Core)

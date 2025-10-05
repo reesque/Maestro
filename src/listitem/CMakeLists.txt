@@ -1,27 +1,32 @@
-add_library(ListItem STATIC
-    artworkmenulistitem.h
+set (SOURCES
     artworkmenulistitem.cpp
-    artworkmenulistitem.ui
+    detailedmenulistitem.cpp
+    menulistitem.cpp
+    menuwithtogglelistitem.cpp
+    settingssliderlistitem.cpp
+)
+
+set (HEADERS
+    artworkmenulistitem.h
     basemenulistitem.h
     detailedmenulistitem.h
-    detailedmenulistitem.cpp
-    detailedmenulistitem.ui
     menulistitem.h
-    menulistitem.cpp
-    menulistitem.ui
     menuwithtogglelistitem.h
-    menuwithtogglelistitem.cpp
-    menuwithtogglelistitem.ui
     settingssliderlistitem.h
-    settingssliderlistitem.cpp
     settingssliderlistitem.ui
 )
 
-target_include_directories(ListItem PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(ListItem PUBLIC
-    CommonDeps
+set (FORMS
+    artworkmenulistitem.ui
+    detailedmenulistitem.ui
+    menulistitem.ui
+    menuwithtogglelistitem.ui
+)
+
+link_libraries(
     Maestro::Model
     Maestro::Extras
 )
 
+add_library(ListItem STATIC ${SOURCES} ${HEADERS} ${FORMS})
 add_library(Maestro::ListItem ALIAS ListItem)

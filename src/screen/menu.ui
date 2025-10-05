@@ -31,7 +31,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QListWidget" name="ListObject">
+  <widget class="ControllerListWidget" name="ListObject">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -105,6 +105,13 @@ QScrollBar::sub-page:vertical {
    </property>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ControllerListWidget</class>
+   <extends>QListWidget</extends>
+   <header>controllerlistwidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
