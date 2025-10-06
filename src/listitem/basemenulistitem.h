@@ -2,6 +2,7 @@
 #define BASEMENULISTITEM_H
 
 #include <functional>
+#include <memory>
 
 #include <QWidget>
 

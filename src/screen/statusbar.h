@@ -3,6 +3,8 @@
 
 #include "datastruct.h"
 
+#include <memory>
+
 #include <QWidget>
 #include <QtBluetooth/QBluetoothLocalDevice>
 
