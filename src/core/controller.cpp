@@ -22,7 +22,7 @@ Controller::Controller(std::shared_ptr<Settings> setting, QWidget *parent)
     m_upKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Up), parent);
     m_downKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Down), parent);
     m_backKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Escape), parent);
-    m_confirmKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Space), parent);
+    m_confirmKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Return), parent);
 
     connect(m_leftKey.get(), &QShortcut::activated, this, &Controller::triggerLeftAction);
     connect(m_rightKey.get(), &QShortcut::activated, this, &Controller::triggerRightAction);
