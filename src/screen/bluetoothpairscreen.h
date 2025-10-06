@@ -3,6 +3,8 @@
 
 #include "screen.h"
 
+#include <memory>
+
 #include <QtBluetooth/QBluetoothLocalDevice>
 
 namespace Ui {

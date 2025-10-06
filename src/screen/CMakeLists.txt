@@ -50,6 +50,8 @@ set (FORMS
 )
 
 link_libraries(
+    pthread
+
     Maestro::Core
     Maestro::ListItem
     Maestro::Extras
