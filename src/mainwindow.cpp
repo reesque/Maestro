@@ -16,6 +16,7 @@
 #include "bluetoothmenu.h"
 #include "bluetoothscanmenu.h"
 #include "bluetoothpairscreen.h"
+#include "aboutmenu.h"
 
 #include <memory>
 #include <iomanip>
@@ -186,6 +187,12 @@ void MainWindow::switchScreenTo(ScreenType screenType,
             newScreen = new BluetoothPairScreen(args.at(0).value<QBluetoothAddress>(),
                                                 args.at(1).value<bool>(), this);
             emit changeTitle("Bluetooth Pair");
+            break;
+        }
+        case ScreenType::About:
+        {
+            newScreen = new AboutMenu(this);
+            emit changeTitle("About");
             break;
         }
         default:

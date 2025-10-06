@@ -395,39 +395,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
            </layout>
           </widget>
          </item>
-         <item>
-          <widget class="QWidget" name="Controls" native="true">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>100</height>
-            </size>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <property name="spacing">
-             <number>70</number>
-            </property>
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-           </layout>
-          </widget>
-         </item>
         </layout>
        </widget>
       </item>

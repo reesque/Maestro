@@ -28,6 +28,11 @@ public:
 
     virtual ~BaseMenuListItem() = default;
 
+    static std::function<void(std::shared_ptr<EntryType>)> DefaultActivator()
+    {
+        return [](std::shared_ptr<EntryType>){};
+    }
+
 protected:
     BaseMenuListItem(){}
 

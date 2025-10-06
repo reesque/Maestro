@@ -1,5 +1,23 @@
 cmake_minimum_required(VERSION 3.16)
-project(Maestro LANGUAGES CXX)
+
+# Version
+set(PROJECT_VERSION_MAJOR 0)
+set(PROJECT_VERSION_MINOR 1)
+set(PROJECT_VERSION_PATCH 0)
+
+# Define root project
+project(Maestro VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH} LANGUAGES CXX)
+
+# Generate version
+configure_file(
+    ${CMAKE_SOURCE_DIR}/../include/version.h.in
+    ${CMAKE_SOURCE_DIR}/model/version.h
+)
+
+# Platform definition
+if (UNIX)
+    add_compile_definitions(UNIX)
+endif()
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -40,20 +58,16 @@ set(SOURCES
     mainwindow.ui
 )
 
-# Executable
-add_executable(Maestro ${SOURCES} ${APP_RESOURCES})
+include_directories(
+    ${TAGLIB_INCLUDE_DIR}
+    ${CMAKE_SOURCE_DIR}/core
+    ${CMAKE_SOURCE_DIR}/extras
+    ${CMAKE_SOURCE_DIR}/listitem
+    ${CMAKE_SOURCE_DIR}/model
+    ${CMAKE_SOURCE_DIR}/screen
+)
 
-# Sub-project
-add_subdirectory(model)
-add_subdirectory(extras)
-add_subdirectory(listitem)
-add_subdirectory(screen)
-add_subdirectory(core)
-
-# Common dependencies
-add_library(CommonDeps INTERFACE)
-target_include_directories(CommonDeps INTERFACE ${TAGLIB_INCLUDE_DIR})
-target_link_libraries(CommonDeps INTERFACE
+link_libraries(
     Qt5::Core
     Qt5::Gui
     Qt5::Sql
@@ -66,12 +80,20 @@ target_link_libraries(CommonDeps INTERFACE
     stdc++fs
 )
 
-# Link all libraries
+# Executable
+add_executable(Maestro ${SOURCES} ${APP_RESOURCES})
+
 target_link_libraries(Maestro PRIVATE
-    CommonDeps
     Maestro::Model
     Maestro::Extras
     Maestro::ListItem
     Maestro::Core
     Maestro::Screen
 )
+
+# Sub-project
+add_subdirectory(model)
+add_subdirectory(extras)
+add_subdirectory(listitem)
+add_subdirectory(screen)
+add_subdirectory(core)

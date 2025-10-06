@@ -4,6 +4,7 @@
 #include "ui_menu.h"
 
 #include "screen.h"
+#include "controllerlistwidget.h"
 
 #include <memory>
 #include <cmath>
@@ -40,6 +41,17 @@ public:
         ui->ListObject->viewport()->setContentsMargins(0, 0, 0, 0);
         ui->ListObject->setSpacing(0);
         ui->ListObject->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+
+        ui->ListObject->setAction([this](bool isDown){
+            if (isDown)
+            {
+                downAction();
+            }
+            else
+            {
+                upAction();
+            }
+        });
 
         menuList = std::make_unique<std::deque<std::shared_ptr<MenuEntry>>>();
         connect(ui->ListObject, &QListWidget::itemClicked, this, &Menu::onItemClicked);
