@@ -4,6 +4,7 @@ set (SOURCES
     menulistitem.cpp
     menuwithtogglelistitem.cpp
     settingssliderlistitem.cpp
+    twosidedlistitem.cpp
 )
 
 set (HEADERS
@@ -13,7 +14,7 @@ set (HEADERS
     menulistitem.h
     menuwithtogglelistitem.h
     settingssliderlistitem.h
-    settingssliderlistitem.ui
+    twosidedlistitem.h
 )
 
 set (FORMS
@@ -21,6 +22,8 @@ set (FORMS
     detailedmenulistitem.ui
     menulistitem.ui
     menuwithtogglelistitem.ui
+    settingssliderlistitem.ui
+    twosidedlistitem.ui
 )
 
 link_libraries(

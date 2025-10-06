@@ -1,6 +1,7 @@
 set (HEADERS
     datastruct.h
     menuentry.h
+    version.h
 )
 
 add_library(Model STATIC ${HEADERS})

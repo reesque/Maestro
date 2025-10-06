@@ -3,6 +3,7 @@ qt5_wrap_ui(UI_HEADERS
 )
 
 set (SOURCES
+    aboutmenu.cpp
     albummenu.cpp
     artistfiltermenu.cpp
     artistmenu.cpp
@@ -21,6 +22,7 @@ set (SOURCES
 )
 
 set (HEADERS
+    aboutmenu.h
     albummenu.h
     artistfiltermenu.h
     artistmenu.h

@@ -26,7 +26,8 @@ enum class ScreenType
     Controller,
     Bluetooth,
     BluetoothScan,
-    BluetoothPair
+    BluetoothPair,
+    About
 };
 
 enum class ScreenAnimationType

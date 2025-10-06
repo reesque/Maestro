@@ -23,7 +23,7 @@ struct LabelMenuEntry : public BaseMenuEntry<LabelMenuEntry>
 {
     std::string label;
 
-    LabelMenuEntry(std::string v_label, std::function<void(std::shared_ptr<LabelMenuEntry>)> v_activator) :
+    LabelMenuEntry(const std::string& v_label, std::function<void(std::shared_ptr<LabelMenuEntry>)> v_activator) :
         BaseMenuEntry(v_activator)
     {
         label = v_label;
@@ -36,8 +36,8 @@ struct DetailedMenuEntry : public BaseMenuEntry<DetailedMenuEntry>
     std::string subtext;
     std::string artPath;
 
-    DetailedMenuEntry(std::string v_header, std::string v_subtext,
-                      std::string v_artPath, std::function<void(std::shared_ptr<DetailedMenuEntry>)> v_activator) :
+    DetailedMenuEntry(const std::string& v_header, const std::string& v_subtext,
+                      const std::string& v_artPath, std::function<void(std::shared_ptr<DetailedMenuEntry>)> v_activator) :
         BaseMenuEntry(v_activator)
     {
         header = v_header;
@@ -51,7 +51,7 @@ struct ArtworkMenuEntry : public BaseMenuEntry<ArtworkMenuEntry>
     std::string header;
     std::string artPath;
 
-    ArtworkMenuEntry(std::string v_header, std::string v_artPath,
+    ArtworkMenuEntry(const std::string& v_header, const std::string& v_artPath,
                      std::function<void(std::shared_ptr<ArtworkMenuEntry>)> v_activator) :
         BaseMenuEntry(v_activator)
     {
@@ -68,7 +68,7 @@ struct SliderSettingMenuEntry : public BaseMenuEntry<SliderSettingMenuEntry>
     int stepSize;
     int value;
 
-    SliderSettingMenuEntry(std::string v_label, int v_min, int v_max, int v_stepSize, int v_value,
+    SliderSettingMenuEntry(const std::string& v_label, int v_min, int v_max, int v_stepSize, int v_value,
                            std::function<void(std::shared_ptr<SliderSettingMenuEntry>)> v_activator) :
         BaseMenuEntry(v_activator)
     {
@@ -86,7 +86,7 @@ struct LabelWithToggleMenuEntry : public BaseMenuEntry<LabelWithToggleMenuEntry>
     bool toggleable;
     bool value;
 
-    LabelWithToggleMenuEntry(std::string v_label, bool v_toggleable,
+    LabelWithToggleMenuEntry(const std::string& v_label, bool v_toggleable,
                              std::function<void(std::shared_ptr<LabelWithToggleMenuEntry>)> v_activator,
                              bool v_value = false) :
         BaseMenuEntry(v_activator)
@@ -96,5 +96,20 @@ struct LabelWithToggleMenuEntry : public BaseMenuEntry<LabelWithToggleMenuEntry>
         value = v_value;
     }
 };
+
+struct TwoSidedLabelMenuEntry : public BaseMenuEntry<TwoSidedLabelMenuEntry>
+{
+    std::string label;
+    std::string value;
+
+    TwoSidedLabelMenuEntry(const std::string& v_label, const std::string& v_value,
+                   std::function<void(std::shared_ptr<TwoSidedLabelMenuEntry>)> v_activator) :
+        BaseMenuEntry(v_activator)
+    {
+        label = v_label;
+        value = v_value;
+    }
+};
+
 
 #endif // MENUENTRY_H
