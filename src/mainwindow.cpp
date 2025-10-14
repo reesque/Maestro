@@ -204,19 +204,6 @@ void MainWindow::switchScreenTo(ScreenType screenType,
     screenStack->layout()->addWidget(newScreen);
     newScreen->setFocus();
     prevScreen = newScreen->getPrevScreen();
-    connect(newScreen, &Screen::switchScreenTo, this, &MainWindow::switchScreenTo);
-    connect(newScreen, &Screen::switchToPreviousScreen, this, &MainWindow::switchToPreviousScreen);
-    connect(newScreen, &Screen::playTrack, m_mediaPlayer.get(), &MediaPlayer::playTrack);
-    connect(newScreen, &Screen::queueTrack, m_mediaPlayer.get(), &MediaPlayer::queueTrack);
-
-    connect(m_controller.get(), &Controller::triggerLeftAction, newScreen, &Screen::leftAction);
-    connect(m_controller.get(), &Controller::triggerRightAction, newScreen, &Screen::rightAction);
-    connect(m_controller.get(), &Controller::triggerUpAction, newScreen, &Screen::upAction);
-    connect(m_controller.get(), &Controller::triggerDownAction, newScreen, &Screen::downAction);
-    connect(m_controller.get(), &Controller::triggerBackAction, newScreen, &Screen::backAction);
-    connect(m_controller.get(), &Controller::triggerConfirmAction, newScreen, &Screen::confirmAction);
-
-    connect(this, &MainWindow::resizeEvent, newScreen, &Screen::resizeEvent);
 
     // Delete old screen
     if (screenStack->layout()->count() > 1)
@@ -283,17 +270,7 @@ void MainWindow::switchScreenTo(ScreenType screenType,
 
         connect(group, &QParallelAnimationGroup::finished, [=]() {
             screenStack->setCurrentIndex(1);
-            disconnect(oldScreen, &Screen::switchScreenTo, this, &MainWindow::switchScreenTo);
-            disconnect(oldScreen, &Screen::switchToPreviousScreen, this, &MainWindow::switchToPreviousScreen);
-
-            disconnect(m_controller.get(), &Controller::triggerLeftAction, oldScreen, &Screen::leftAction);
-            disconnect(m_controller.get(), &Controller::triggerRightAction, oldScreen, &Screen::rightAction);
-            disconnect(m_controller.get(), &Controller::triggerUpAction, oldScreen, &Screen::upAction);
-            disconnect(m_controller.get(), &Controller::triggerDownAction, oldScreen, &Screen::downAction);
-            disconnect(m_controller.get(), &Controller::triggerBackAction, oldScreen, &Screen::backAction);
-            disconnect(m_controller.get(), &Controller::triggerConfirmAction, oldScreen, &Screen::confirmAction);
-
-            disconnect(this, &MainWindow::resizeEvent, oldScreen, &Screen::resizeEvent);
+            updateConnect(newScreen, oldScreen);
 
             QLayoutItem *item = screenStack->layout()->takeAt(0);
             if (item) {
@@ -310,6 +287,10 @@ void MainWindow::switchScreenTo(ScreenType screenType,
 
         group->start(QAbstractAnimation::DeleteWhenStopped);
     }
+    else
+    {
+        updateConnect(newScreen);
+    }
 }
 
 void MainWindow::switchToPreviousScreen(QVector<QVariant> args)
@@ -323,4 +304,36 @@ void MainWindow::switchToPreviousScreen(QVector<QVariant> args)
 void MainWindow::resizeEvent(QResizeEvent* event)
 {
    QMainWindow::resizeEvent(event);
+}
+
+void MainWindow::updateConnect(Screen *newScreen, Screen *oldScreen)
+{
+    connect(newScreen, &Screen::switchScreenTo, this, &MainWindow::switchScreenTo);
+    connect(newScreen, &Screen::switchToPreviousScreen, this, &MainWindow::switchToPreviousScreen);
+    connect(newScreen, &Screen::playTrack, m_mediaPlayer.get(), &MediaPlayer::playTrack);
+    connect(newScreen, &Screen::queueTrack, m_mediaPlayer.get(), &MediaPlayer::queueTrack);
+
+    connect(m_controller.get(), &Controller::triggerLeftAction, newScreen, &Screen::leftAction);
+    connect(m_controller.get(), &Controller::triggerRightAction, newScreen, &Screen::rightAction);
+    connect(m_controller.get(), &Controller::triggerUpAction, newScreen, &Screen::upAction);
+    connect(m_controller.get(), &Controller::triggerDownAction, newScreen, &Screen::downAction);
+    connect(m_controller.get(), &Controller::triggerBackAction, newScreen, &Screen::backAction);
+    connect(m_controller.get(), &Controller::triggerConfirmAction, newScreen, &Screen::confirmAction);
+
+    connect(this, &MainWindow::resizeEvent, newScreen, &Screen::resizeEvent);
+
+    if (oldScreen)
+    {
+        disconnect(oldScreen, &Screen::switchScreenTo, this, &MainWindow::switchScreenTo);
+        disconnect(oldScreen, &Screen::switchToPreviousScreen, this, &MainWindow::switchToPreviousScreen);
+
+        disconnect(m_controller.get(), &Controller::triggerLeftAction, oldScreen, &Screen::leftAction);
+        disconnect(m_controller.get(), &Controller::triggerRightAction, oldScreen, &Screen::rightAction);
+        disconnect(m_controller.get(), &Controller::triggerUpAction, oldScreen, &Screen::upAction);
+        disconnect(m_controller.get(), &Controller::triggerDownAction, oldScreen, &Screen::downAction);
+        disconnect(m_controller.get(), &Controller::triggerBackAction, oldScreen, &Screen::backAction);
+        disconnect(m_controller.get(), &Controller::triggerConfirmAction, oldScreen, &Screen::confirmAction);
+
+        disconnect(this, &MainWindow::resizeEvent, oldScreen, &Screen::resizeEvent);
+    }
 }
