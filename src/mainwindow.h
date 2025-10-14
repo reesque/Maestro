@@ -34,6 +34,9 @@ private slots:
     void switchToPreviousScreen(QVector<QVariant> args);
 
 private:
+    void updateConnect(Screen *newScreen, Screen *oldScreen = nullptr);
+
+private:
     Ui::MainWindow *ui;
     //QWidget *screenBox;
     QStackedWidget *screenStack;

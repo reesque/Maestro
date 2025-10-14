@@ -90,7 +90,7 @@ void Controller::connectGamepad(int id)
 
 void Controller::controllerButtonUpChanged(bool value)
 {
-    if (!value && !m_dpadDebounceTimer->isActive())
+    if (value && !m_dpadDebounceTimer->isActive())
     {
         m_dpadDebounceTimer->start();
         emit triggerUpAction();
@@ -99,7 +99,7 @@ void Controller::controllerButtonUpChanged(bool value)
 
 void Controller::controllerButtonDownChanged(bool value)
 {
-    if (!value && !m_dpadDebounceTimer->isActive())
+    if (value && !m_dpadDebounceTimer->isActive())
     {
         m_dpadDebounceTimer->start();
         emit triggerDownAction();
@@ -108,7 +108,7 @@ void Controller::controllerButtonDownChanged(bool value)
 
 void Controller::controllerButtonLeftChanged(bool value)
 {
-    if (!value && !m_dpadDebounceTimer->isActive())
+    if (value && !m_dpadDebounceTimer->isActive())
     {
         m_dpadDebounceTimer->start();
         emit triggerLeftAction();
@@ -117,7 +117,7 @@ void Controller::controllerButtonLeftChanged(bool value)
 
 void Controller::controllerButtonRightChanged(bool value)
 {
-    if (!value && !m_dpadDebounceTimer->isActive())
+    if (value && !m_dpadDebounceTimer->isActive())
     {
         m_dpadDebounceTimer->start();
         emit triggerRightAction();
@@ -126,7 +126,7 @@ void Controller::controllerButtonRightChanged(bool value)
 
 void Controller::controllerButtonAChanged(bool value)
 {
-    if (!value && !m_faceBtnDebounceTimer->isActive())
+    if (value && !m_faceBtnDebounceTimer->isActive())
     {
         m_faceBtnDebounceTimer->start();
         emit triggerConfirmAction();
@@ -135,7 +135,7 @@ void Controller::controllerButtonAChanged(bool value)
 
 void Controller::controllerButtonBChanged(bool value)
 {
-    if (!value && !m_faceBtnDebounceTimer->isActive())
+    if (value && !m_faceBtnDebounceTimer->isActive())
     {
         m_faceBtnDebounceTimer->start();
         emit triggerBackAction();
