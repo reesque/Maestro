@@ -47,3 +47,9 @@ void Screen::backAction()
 
 void Screen::confirmAction()
 {}
+
+void Screen::extra1Action()
+{}
+
+void Screen::extra2Action()
+{}

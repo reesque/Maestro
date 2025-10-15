@@ -23,6 +23,8 @@ Controller::Controller(std::shared_ptr<Settings> setting, QWidget *parent)
     m_downKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_S), parent);
     m_backKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Q), parent);
     m_confirmKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_E), parent);
+    m_extra1Key = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Z), parent);
+    m_extra2Key = std::make_unique<QShortcut>(QKeySequence(Qt::Key_X), parent);
 
     connect(m_leftKey.get(), &QShortcut::activated, this, &Controller::triggerLeftAction);
     connect(m_rightKey.get(), &QShortcut::activated, this, &Controller::triggerRightAction);
@@ -30,6 +32,8 @@ Controller::Controller(std::shared_ptr<Settings> setting, QWidget *parent)
     connect(m_downKey.get(), &QShortcut::activated, this, &Controller::triggerDownAction);
     connect(m_backKey.get(), &QShortcut::activated, this, &Controller::triggerBackAction);
     connect(m_confirmKey.get(), &QShortcut::activated, this, &Controller::triggerConfirmAction);
+    connect(m_extra1Key.get(), &QShortcut::activated, this, &Controller::triggerExtra1Action);
+    connect(m_extra2Key.get(), &QShortcut::activated, this, &Controller::triggerExtra2Action);
 
     // Gamepad config
     connect(QGamepadManager::instance(), &QGamepadManager::connectedGamepadsChanged, this, &Controller::connectedGamepadsChanged);
@@ -48,6 +52,8 @@ Controller::~Controller()
     disconnect(m_downKey.get(), &QShortcut::activated, this, &Controller::triggerDownAction);
     disconnect(m_backKey.get(), &QShortcut::activated, this, &Controller::triggerBackAction);
     disconnect(m_confirmKey.get(), &QShortcut::activated, this, &Controller::triggerConfirmAction);
+    disconnect(m_extra1Key.get(), &QShortcut::activated, this, &Controller::triggerExtra1Action);
+    disconnect(m_extra2Key.get(), &QShortcut::activated, this, &Controller::triggerExtra2Action);
 }
 
 void Controller::onDpadResponsiveLevelChanged(int level)
@@ -70,6 +76,8 @@ void Controller::disconnectGamepad()
         disconnect(m_currentGamepad, &QGamepad::buttonDownChanged, this, &Controller::controllerButtonDownChanged);
         disconnect(m_currentGamepad, &QGamepad::buttonBChanged, this, &Controller::controllerButtonBChanged);
         disconnect(m_currentGamepad, &QGamepad::buttonAChanged, this, &Controller::controllerButtonAChanged);
+        disconnect(m_currentGamepad, &QGamepad::buttonXChanged, this, &Controller::controllerButtonXChanged);
+        disconnect(m_currentGamepad, &QGamepad::buttonYChanged, this, &Controller::controllerButtonYChanged);
         delete m_currentGamepad;
         m_currentGamepad = nullptr;
     }
@@ -86,6 +94,8 @@ void Controller::connectGamepad(int id)
     connect(m_currentGamepad, &QGamepad::buttonDownChanged, this, &Controller::controllerButtonDownChanged);
     connect(m_currentGamepad, &QGamepad::buttonBChanged, this, &Controller::controllerButtonBChanged);
     connect(m_currentGamepad, &QGamepad::buttonAChanged, this, &Controller::controllerButtonAChanged);
+    connect(m_currentGamepad, &QGamepad::buttonXChanged, this, &Controller::controllerButtonXChanged);
+    connect(m_currentGamepad, &QGamepad::buttonYChanged, this, &Controller::controllerButtonYChanged);
 }
 
 void Controller::controllerButtonUpChanged(bool value)
@@ -139,6 +149,24 @@ void Controller::controllerButtonBChanged(bool value)
     {
         m_faceBtnDebounceTimer->start();
         emit triggerBackAction();
+    }
+}
+
+void Controller::controllerButtonXChanged(bool value)
+{
+    if (value && !m_faceBtnDebounceTimer->isActive())
+    {
+        m_faceBtnDebounceTimer->start();
+        emit triggerExtra1Action();
+    }
+}
+
+void Controller::controllerButtonYChanged(bool value)
+{
+    if (value && !m_faceBtnDebounceTimer->isActive())
+    {
+        m_faceBtnDebounceTimer->start();
+        emit triggerExtra2Action();
     }
 }
 

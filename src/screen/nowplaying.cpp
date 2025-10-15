@@ -38,12 +38,16 @@ NowPlaying::NowPlaying(std::shared_ptr<Database> db, std::shared_ptr<MediaPlayer
     {
         reset();
     }
+
+    connect(m_mediaPlayer.get(), &MediaPlayer::onPlaybackModeChanged, this, &NowPlaying::onPlaybackModeChanged);
+    setPlaybackMode(m_mediaPlayer->getPlaybackMode());
 }
 
 NowPlaying::~NowPlaying()
 {
     disconnect(m_mediaPlayer.get(), &MediaPlayer::onTrackInfoUpdate, this, &NowPlaying::onTrackInfoUpdate);
     disconnect(seekTimer.get(), &QTimer::timeout, this, &NowPlaying::tickSeekBar);
+    disconnect(m_mediaPlayer.get(), &MediaPlayer::onPlaybackModeChanged, this, &NowPlaying::onPlaybackModeChanged);
 
     delete ui;
 }
@@ -120,6 +124,27 @@ void NowPlaying::reset()
     ui->CoverArt->setPixmap(roundPixmapCorner(QPixmap(":/app/assets/cover.png"), 20));
 }
 
+void NowPlaying::onPlaybackModeChanged(QMediaPlaylist::PlaybackMode mode)
+{
+    setPlaybackMode(mode);
+}
+
+void NowPlaying::setPlaybackMode(QMediaPlaylist::PlaybackMode mode)
+{
+    if (mode == QMediaPlaylist::Sequential)
+    {
+        ui->PlaybackIcon->setPixmap(QPixmap(":/app/assets/repeat.png"));
+    }
+    else if (mode == QMediaPlaylist::CurrentItemInLoop)
+    {
+        ui->PlaybackIcon->setPixmap(QPixmap(":/app/assets/repeat_once.png"));
+    }
+    else if (mode == QMediaPlaylist::Random)
+    {
+        ui->PlaybackIcon->setPixmap(QPixmap(":/app/assets/shuffle.png"));
+    }
+}
+
 void NowPlaying::tickSeekBar()
 {
     if (m_mediaPlayer->isPlaying() && ui->Seekbar->value() + 1 != ui->Seekbar->maximum())
@@ -143,4 +168,14 @@ void NowPlaying::rightAction()
 void NowPlaying::confirmAction()
 {
     m_mediaPlayer->togglePause();
+}
+
+void NowPlaying::extra1Action()
+{
+    m_mediaPlayer->stop();
+}
+
+void NowPlaying::extra2Action()
+{
+    m_mediaPlayer->togglePlaybackMode();
 }

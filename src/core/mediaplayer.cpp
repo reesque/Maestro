@@ -94,9 +94,15 @@ MediaPlayer::MediaPlayer(std::shared_ptr<Database> db, QObject *parent)
     : QObject{parent}
 {
     m_db = db;
-    m_player = new QMediaPlayer;
-    m_playlist = new QMediaPlaylist;
+    m_player = new QMediaPlayer(this);
+    m_playlist = new QMediaPlaylist(this);
 
+    m_playlist->setPlaybackMode(QMediaPlaylist::Sequential);
+    connect(m_playlist, &QMediaPlaylist::playbackModeChanged, this,
+        [=](QMediaPlaylist::PlaybackMode mode){
+            emit onPlaybackModeChanged(mode);
+        }
+    );
     m_player->setPlaylist(m_playlist);
 
     // Check path exists
@@ -163,7 +169,15 @@ void MediaPlayer::onStateChanged(QMediaPlayer::State state)
         }
         default:
         {
-            emit onPlaybackStateChanged(PlaybackStatus::Stopped);
+            if (m_playlist->mediaCount() == 0)
+            {
+                emit onPlaybackStateChanged(PlaybackStatus::Stopped);
+            }
+            else
+            {
+                m_playlist->setCurrentIndex(0);
+                m_player->play();
+            }
             break;
         }
     }
@@ -302,6 +316,11 @@ bool MediaPlayer::isPlaying()
     return m_player->state() == QMediaPlayer::PlayingState;
 }
 
+QMediaPlaylist::PlaybackMode MediaPlayer::getPlaybackMode()
+{
+    return m_playlist->playbackMode();
+}
+
 void MediaPlayer::togglePause()
 {
     if (isPlaying())
@@ -311,6 +330,28 @@ void MediaPlayer::togglePause()
     else
     {
         m_player->play();
+    }
+}
+
+void MediaPlayer::stop()
+{
+    m_playlist->clear();
+    m_player->stop();
+}
+
+void MediaPlayer::togglePlaybackMode()
+{
+    if (m_playlist->playbackMode() == QMediaPlaylist::Sequential)
+    {
+        m_playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
+    }
+    else if (m_playlist->playbackMode() == QMediaPlaylist::CurrentItemInLoop)
+    {
+        m_playlist->setPlaybackMode(QMediaPlaylist::Random);
+    }
+    else if (m_playlist->playbackMode() == QMediaPlaylist::Random)
+    {
+        m_playlist->setPlaybackMode(QMediaPlaylist::Sequential);
     }
 }
 

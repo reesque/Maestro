@@ -63,6 +63,8 @@ public slots:
     virtual void leftAction();
     virtual void backAction();
     virtual void confirmAction();
+    virtual void extra1Action();
+    virtual void extra2Action();
     virtual void resizeEvent(QResizeEvent *event);
 
 protected:

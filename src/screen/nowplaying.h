@@ -24,12 +24,16 @@ protected slots:
     void leftAction() override;
     void rightAction() override;
     void confirmAction() override;
+    void extra1Action() override;
+    void extra2Action() override;
 
 private slots:
     void onTrackInfoUpdate(Track track);
+    void onPlaybackModeChanged(QMediaPlaylist::PlaybackMode mode);
 
 private:
     void tickSeekBar();
+    void setPlaybackMode(QMediaPlaylist::PlaybackMode mode);
     void reset();
     QPixmap roundPixmapCorner(const QPixmap& src, float radius);
 

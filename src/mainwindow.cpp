@@ -319,6 +319,8 @@ void MainWindow::updateConnect(Screen *newScreen, Screen *oldScreen)
     connect(m_controller.get(), &Controller::triggerDownAction, newScreen, &Screen::downAction);
     connect(m_controller.get(), &Controller::triggerBackAction, newScreen, &Screen::backAction);
     connect(m_controller.get(), &Controller::triggerConfirmAction, newScreen, &Screen::confirmAction);
+    connect(m_controller.get(), &Controller::triggerExtra1Action, newScreen, &Screen::extra1Action);
+    connect(m_controller.get(), &Controller::triggerExtra2Action, newScreen, &Screen::extra2Action);
 
     connect(this, &MainWindow::resizeEvent, newScreen, &Screen::resizeEvent);
 
@@ -333,6 +335,8 @@ void MainWindow::updateConnect(Screen *newScreen, Screen *oldScreen)
         disconnect(m_controller.get(), &Controller::triggerDownAction, oldScreen, &Screen::downAction);
         disconnect(m_controller.get(), &Controller::triggerBackAction, oldScreen, &Screen::backAction);
         disconnect(m_controller.get(), &Controller::triggerConfirmAction, oldScreen, &Screen::confirmAction);
+        disconnect(m_controller.get(), &Controller::triggerExtra1Action, oldScreen, &Screen::extra1Action);
+        disconnect(m_controller.get(), &Controller::triggerExtra2Action, oldScreen, &Screen::extra2Action);
 
         disconnect(this, &MainWindow::resizeEvent, oldScreen, &Screen::resizeEvent);
     }

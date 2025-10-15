@@ -39,7 +39,10 @@ public:
     int getPercentage();
     bool isPlaying();
     bool isMediaReady();
+    QMediaPlaylist::PlaybackMode getPlaybackMode();
     void togglePause();
+    void stop();
+    void togglePlaybackMode();
     void next();
     void previous();
 
@@ -47,6 +50,7 @@ signals:
     void onTrackInfoUpdate(Track track);
     void onIndexProgress(int progress, int total);
     void onPlaybackStateChanged(PlaybackStatus playbackStatus);
+    void onPlaybackModeChanged(QMediaPlaylist::PlaybackMode mode);
 
 public slots:
     void playTrack(QVector<Track> queue, int position);

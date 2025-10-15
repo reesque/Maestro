@@ -29,6 +29,8 @@ signals:
     void triggerLeftAction();
     void triggerBackAction();
     void triggerConfirmAction();
+    void triggerExtra1Action();
+    void triggerExtra2Action();
 
 private slots:
     void connectedGamepadsChanged();
@@ -38,6 +40,8 @@ private slots:
     void controllerButtonRightChanged(bool value);
     void controllerButtonAChanged(bool value);
     void controllerButtonBChanged(bool value);
+    void controllerButtonXChanged(bool value);
+    void controllerButtonYChanged(bool value);
 
 private:
     void disconnectGamepad();
@@ -51,6 +55,8 @@ private:
     std::unique_ptr<QShortcut> m_rightKey;
     std::unique_ptr<QShortcut> m_backKey;
     std::unique_ptr<QShortcut> m_confirmKey;
+    std::unique_ptr<QShortcut> m_extra1Key;
+    std::unique_ptr<QShortcut> m_extra2Key;
 
     std::shared_ptr<Settings> m_setting;
 
