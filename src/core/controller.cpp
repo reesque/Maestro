@@ -162,6 +162,5 @@ void Controller::connectedGamepadsChanged()
 
 int Controller::levelToMillisec(int level)
 {
-    // 250 base level
-    return 250 + level * 250;
+    return level * 50;
 }
