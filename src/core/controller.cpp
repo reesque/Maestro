@@ -17,12 +17,12 @@ Controller::Controller(std::shared_ptr<Settings> setting, QWidget *parent)
     m_dpadDebounceTimer->setInterval(levelToMillisec(m_setting->getDpadResponsiveLevel()));
 
     // Keyboard config
-    m_leftKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Left), parent);
-    m_rightKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Right), parent);
-    m_upKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Up), parent);
-    m_downKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Down), parent);
-    m_backKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Escape), parent);
-    m_confirmKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Return), parent);
+    m_leftKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_A), parent);
+    m_rightKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_D), parent);
+    m_upKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_W), parent);
+    m_downKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_S), parent);
+    m_backKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_Q), parent);
+    m_confirmKey = std::make_unique<QShortcut>(QKeySequence(Qt::Key_E), parent);
 
     connect(m_leftKey.get(), &QShortcut::activated, this, &Controller::triggerLeftAction);
     connect(m_rightKey.get(), &QShortcut::activated, this, &Controller::triggerRightAction);
