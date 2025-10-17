@@ -399,7 +399,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <property name="spacing">
-             <number>0</number>
+             <number>10</number>
             </property>
             <property name="leftMargin">
              <number>0</number>
@@ -414,7 +414,32 @@ li.checked::marker { content: &quot;\2612&quot;; }
              <number>0</number>
             </property>
             <item>
-             <widget class="QLabel" name="PlaybackIcon">
+             <widget class="QLabel" name="RepeatIcon">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>20</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../assets.qrc">:/app/assets/repeat.png</pixmap>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="ShuffleIcon">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                 <horstretch>0</horstretch>
@@ -431,7 +456,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="../assets.qrc">:/app/assets/repeat.png</pixmap>
+               <pixmap resource="../assets.qrc">:/app/assets/shuffle.png</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>

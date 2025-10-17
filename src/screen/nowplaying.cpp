@@ -133,15 +133,18 @@ void NowPlaying::setPlaybackMode(QMediaPlaylist::PlaybackMode mode)
 {
     if (mode == QMediaPlaylist::Sequential)
     {
-        ui->PlaybackIcon->setPixmap(QPixmap(":/app/assets/repeat.png"));
+        ui->RepeatIcon->setPixmap(QPixmap(":/app/assets/repeat.png"));
+        ui->ShuffleIcon->hide();
     }
     else if (mode == QMediaPlaylist::CurrentItemInLoop)
     {
-        ui->PlaybackIcon->setPixmap(QPixmap(":/app/assets/repeat_once.png"));
+        ui->RepeatIcon->setPixmap(QPixmap(":/app/assets/repeat_once.png"));
+        ui->ShuffleIcon->hide();
     }
     else if (mode == QMediaPlaylist::Random)
     {
-        ui->PlaybackIcon->setPixmap(QPixmap(":/app/assets/shuffle.png"));
+        ui->RepeatIcon->setPixmap(QPixmap(":/app/assets/repeat.png"));
+        ui->ShuffleIcon->show();
     }
 }
 
